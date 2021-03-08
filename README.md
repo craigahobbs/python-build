@@ -195,6 +195,8 @@ The following variables are supported:
 
 - `SPHINX_ARGS` - The sphinx-build global command line arguments. Default is "-W -a".
 
+- `TESTS_REQUIRE` - Additional Python packages to install for unit tests.
+
 - `NO_DOCKER` - Use the system python instead of docker. This is intended to be used from the comand line:
 
 ```
