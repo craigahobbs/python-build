@@ -57,13 +57,24 @@ class PythonBuildTest(unittest.TestCase):
             env = {'NO_DOCKER': ''}
         return subprocess.check_output(args, env=env, cwd=cwd, stderr=subprocess.STDOUT, encoding='utf-8')
 
+    def assert_make_output(self, actual, expected):
+        actual_clean = actual
+
+        # Cleanup make message for macOS
+        actual_clean = re.sub(r'^(make: Nothing to be done for )`', r"\1'", actual_clean, flags=re.MULTILINE)
+
+        # Cleanup leading tabs for macOS
+        actual_clean = re.sub(r'^\t\t', r'\t', actual_clean, flags=re.MULTILINE)
+
+        self.assertEqual(actual_clean, expected)
+
     def test_help(self):
         test_files = create_test_files([
             ('Makefile', DEFAULT_MAKEFILE),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', '-n'], test_dir),
                 '''\
 echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
@@ -76,7 +87,7 @@ echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'clean', '-n'], test_dir),
                 '''\
 rm -rf \\
@@ -95,7 +106,7 @@ rm -rf \\
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'superclean', '-n'], test_dir),
                 '''\
 rm -rf \\
@@ -116,7 +127,7 @@ docker rmi -f python:3.9 python:3.8 python:3.7
         ])
         with test_files as test_dir:
             # Check initial make test commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'test', '-n'], cwd=test_dir),
                 '''\
 docker pull -q python:3.9
@@ -147,7 +158,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/ven
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3.7.build')).touch()
 
             # Check subsequent make test commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'test', '-n'], test_dir),
                 '''\
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
@@ -163,7 +174,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/ven
         ])
         with test_files as test_dir:
             # Check initial make cover commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'cover', '-n'], test_dir),
                 '''\
 docker pull -q python:3.9
@@ -182,7 +193,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
             Path(os.path.join(test_dir, 'build', 'venv', 'cover-python-3.9.build')).touch()
 
             # Check subsequent make cover commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'cover', '-n'], test_dir),
                 '''\
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
@@ -198,7 +209,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
         ])
         with test_files as test_dir:
             # Check initial make lint commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'lint', '-n'], test_dir),
                 '''\
 docker pull -q python:3.9
@@ -215,7 +226,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
             Path(os.path.join(test_dir, 'build', 'venv', 'lint-python-3.9.build')).touch()
 
             # Check subsequent make lint commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'lint', '-n'], test_dir),
                 '''\
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/lint-python-3.9/bin/python3 -m pylint -j 0 setup.py src
@@ -229,7 +240,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
         ])
         with test_files as test_dir:
             # Check initial make doc commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'doc', '-n'], test_dir),
                 '''\
 docker pull -q python:3.9
@@ -247,7 +258,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
             Path(os.path.join(test_dir, 'build', 'venv', 'doc-python-3.9.build')).touch()
 
             # Check subsequent make doc commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'doc', '-n'], test_dir),
                 '''\
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
@@ -276,7 +287,7 @@ include Makefile.base
             Path(os.path.join(test_dir, 'build', 'venv', 'doc-python-3.9.build')).touch()
 
             # Check subsequent make doc commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'doc', '-n'], test_dir),
                 '''\
 make: Nothing to be done for 'doc'.
@@ -284,7 +295,7 @@ make: Nothing to be done for 'doc'.
             )
 
             # Check subsequent make doc commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'gh-pages', '-n'], cwd=test_dir),
                 '''\
 make: Nothing to be done for 'gh-pages'.
@@ -304,7 +315,7 @@ make: Nothing to be done for 'gh-pages'.
             # Check make gh-pages commands
             output = self.check_output(['make', 'gh-pages', '-n'], test_dir)
             output = re.sub(r'../tmp.*?\.gh-pages\b', '../tmp.gh-pages', output)
-            self.assertEqual(
+            self.assert_make_output(
                 output,
                 '''\
 rm -rf \\
@@ -338,7 +349,7 @@ rsync -rv --delete --exclude=.git/ build/doc/html/ ../tmp.gh-pages
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3.7.build')).touch()
 
             # Check make commit commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'commit', '-n'], test_dir),
                 '''\
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
@@ -360,7 +371,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
         ])
         with test_files as test_dir:
             # Check make commit commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'commit', '-n'], test_dir, env={'NO_DOCKER': '1'}),
                 '''\
 python3 -m venv build/venv/test-python-3.9
@@ -418,7 +429,7 @@ include Makefile.base
         ])
         with test_files as test_dir:
             # Check make commit commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(
                     ['make', 'commit', '-n'],
                     test_dir,
@@ -495,7 +506,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3.7.build')).touch()
 
             # Check make twine commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'twine', '-n'], test_dir),
                 '''\
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
@@ -522,7 +533,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  -i python:3.9 build/
             Path(os.path.join(test_dir, 'build', 'venv', 'twine-python-3.9.build')).touch()
 
             # Check subsequent make twine commands
-            self.assertEqual(
+            self.assert_make_output(
                 self.check_output(['make', 'twine', '-n'], test_dir),
                 '''\
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
