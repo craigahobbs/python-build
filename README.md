@@ -8,6 +8,7 @@
 - [Make Options](#make-options)
 - [Make Variables](#make-variables)
 - [Extending Python Build](#extending-python-build)
+- [Make Tips & Tricks](#make-tips--tricks)
 
 
 ## Introduction
@@ -79,7 +80,7 @@ Build. Python Build continually updates its development dependencies to the late
 
 Python Build exposes build commands as "phony" make targets. Make targets are executed as follows:
 
-``` sh
+```
 make <target>
 ```
 
@@ -102,13 +103,13 @@ Python "3.x", use the `test-python-3-x` target.
 
 To run a single unit test, use the `TEST` make variable:
 
-``` sh
+```
 make test TEST=tests.test_module_name.TestCase.test_name
 ```
 
 To run all unit tests in a test file:
 
-``` sh
+```
 make test TEST=tests.test_module_name
 ```
 
@@ -153,14 +154,14 @@ Publish the package to PyPI using twine.
 
 To view the commands of any make target without executing, use the "-n" make argument:
 
-``` sh
+```
 make -n test
 ```
 
 To run targets in parallel, use the "-j" make argument. This can significantly decrease the time of
 the [commit](#commit) target.
 
-``` sh
+```
 make -j commit
 ```
 
@@ -170,7 +171,7 @@ make -j commit
 Python Build exposes several make variables that can be modified in your makefile following the base
 makefile include. For example, to change minimum coverage level failure setting:
 
-``` sh
+```
 COVERAGE_REPORT_ARGS := --fail-under 75
 ```
 
@@ -194,6 +195,12 @@ The following variables are supported:
 
 - `SPHINX_ARGS` - The sphinx-build global command line arguments. Default is "-W -a".
 
+- `NO_DOCKER` - Use the system python instead of docker. This is intended to be used from the comand line:
+
+```
+make commit NO_DOCKER=1
+```
+
 
 ## Extending Python Build
 
@@ -202,17 +209,58 @@ targets may be extended either by adding target commands or adding a target depe
 
 Here's an example of adding commands to the `help` target:
 
-``` sh
+```
 help:
 	@echo '            [my-command]'
 ```
 
 Here's an example of adding a target dependency to the `commit` target:
 
-``` sh
+```
 commit: other-stuff
 
 .PHONY: other-stuff
 other-stuff:
     # do stuff...
+```
+
+
+## Make Tips & Tricks
+
+### Embed Python in a makefile
+
+Python can be embedded in a makefile by first defining the Python script, exporting the Python
+script, and executing the Python script with the "-c" argument. Make variables can even be
+incorporated into the Python script. Here's an example:
+
+``` make
+TITLE := Hello, World!
+
+define PYTHON_SCRIPT
+print('$(TITLE)')
+for x in range(10):
+    print(f'x = {x}')
+endef
+
+export PYTHON_SCRIPT
+
+.PHONY: python-script
+python-script:
+	python3 -c "$$PYTHON_SCRIPT"
+```
+
+Running make yields the following output:
+
+```
+Hello, World!
+x = 0
+x = 1
+x = 2
+x = 3
+x = 4
+x = 5
+x = 6
+x = 7
+x = 8
+x = 9
 ```
