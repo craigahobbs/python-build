@@ -83,7 +83,7 @@ ifeq '$(NO_DOCKER)' ''
 endif
 	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN) python3 -m venv $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_DIR)
 	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip -q $$(PIP_ARGS) install $(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
-	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip $$(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(2)
+	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip $$(PIP_ARGS) install $(PIP_INSTALL_ARGS) $$(strip $(2))
 	touch $$@
 
 .PHONY: $(strip $(1))-$(subst _,-,$(call LOWER_FN, $(call PYTHON_NAME_FN, $(4))))
