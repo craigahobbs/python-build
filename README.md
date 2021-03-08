@@ -1,5 +1,17 @@
 # Python Build
 
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Project Setup](#project-setup)
+- [Make Targets](#make-targets)
+- [Make Options](#make-options)
+- [Make Variables](#make-variables)
+- [Extending Python Build](#extending-python-build)
+
+
+## Introduction
+
 **Python Build** is a lightweight [GNU Make](https://www.gnu.org/software/make/)-based build system
 that encapsulates best practices for Python package development. Here are its features at a glance:
 
@@ -63,7 +75,7 @@ Note that the makefile automatically downloads `Makefile.base` and `pylintrc` fi
 Build. Python Build continually updates its development dependencies to the latest stable versions.
 
 
-## Build Commands
+## Make Targets
 
 Python Build exposes build commands as "phony" make targets. Make targets are executed as follows:
 
@@ -75,8 +87,8 @@ The following targets are available:
 
 ### commit
 
-Execute the `test`, `lint`, `doc`, and `cover` targets. This target should be run prior to any
-commit.
+Execute the [test](#test), [lint](#lint), [doc](#doc), and [cover](#cover) targets. This target
+should be run prior to any commit.
 
 ### test
 
@@ -114,7 +126,7 @@ variable). The HTML documentation index is located at `build/doc/html/index.html
 Run unit tests with coverage. By default, "make cover" fails if coverage is less than 100%. The HTML
 coverage report index is located at `build/coverage/index.html`.
 
-The `TEST` make variable is supported as described in the `test` target above.
+The `TEST` make variable is supported as described in the [test](#test) target above.
 
 ### clean
 
@@ -146,14 +158,14 @@ make -n test
 ```
 
 To run targets in parallel, use the "-j" make argument. This can significantly decrease the time of
-the `commit` target.
+the [commit](#commit) target.
 
 ``` sh
 make -j commit
 ```
 
 
-## Python Build Options
+## Make Variables
 
 Python Build exposes several make variables that can be modified in your makefile following the base
 makefile include. For example, to change minimum coverage level failure setting:
@@ -185,8 +197,8 @@ The following variables are supported:
 
 ## Extending Python Build
 
-The Python Build `help`, `commit`, `clean`, and `superclean` targets may be extended either
-by adding target commands or adding a target dependency.
+The Python Build `help`, [commit](#commit), [clean](#clean), and [superclean](#superclean)
+targets may be extended either by adding target commands or adding a target dependency.
 
 Here's an example of adding commands to the `help` target:
 
