@@ -133,19 +133,19 @@ docker rmi -f python:3.9 python:3.8 python:3.7
 docker pull -q python:3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/test-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . -e .[tests]
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e .
 touch build/venv/test-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
 docker pull -q python:3.8
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 python3 -m venv build/venv/test-python-3.8
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . -e .[tests]
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e .
 touch build/venv/test-python-3.8.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/python3 -m unittest discover -v -t src -s src/tests
 docker pull -q python:3.7
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 python3 -m venv build/venv/test-python-3.7
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . -e .[tests]
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e .
 touch build/venv/test-python-3.7.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/python3 -m unittest discover -v -t src -s src/tests
 '''
@@ -180,7 +180,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/ven
 docker pull -q python:3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/cover-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . -e .[tests] coverage==5.5
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . coverage==5.5
 touch build/venv/cover-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/python3 -m coverage html -d build/coverage
@@ -376,17 +376,17 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
                 '''\
 python3 -m venv build/venv/test-python-3.9
 build/venv/test-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-build/venv/test-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . -e .[tests]
+build/venv/test-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e .
 touch build/venv/test-python-3.9.build
 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
 python3 -m venv build/venv/test-python-3.8
 build/venv/test-python-3.8/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-build/venv/test-python-3.8/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . -e .[tests]
+build/venv/test-python-3.8/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e .
 touch build/venv/test-python-3.8.build
 build/venv/test-python-3.8/bin/python3 -m unittest discover -v -t src -s src/tests
 python3 -m venv build/venv/test-python-3.7
 build/venv/test-python-3.7/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-build/venv/test-python-3.7/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . -e .[tests]
+build/venv/test-python-3.7/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e .
 touch build/venv/test-python-3.7.build
 build/venv/test-python-3.7/bin/python3 -m unittest discover -v -t src -s src/tests
 python3 -m venv build/venv/lint-python-3.9
@@ -402,7 +402,7 @@ build/venv/doc-python-3.9/bin/sphinx-build -W -a -b doctest -d build/doc/doctree
 build/venv/doc-python-3.9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
 python3 -m venv build/venv/cover-python-3.9
 build/venv/cover-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-build/venv/cover-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . -e .[tests] coverage==5.5
+build/venv/cover-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off  -e . coverage==5.5
 touch build/venv/cover-python-3.9.build
 build/venv/cover-python-3.9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
 build/venv/cover-python-3.9/bin/python3 -m coverage html -d build/coverage
@@ -451,19 +451,19 @@ include Makefile.base
 docker pull -q python:3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/test-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args  -e . -e .[tests]
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args  -e .
 touch build/venv/test-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
 docker pull -q python:3.8
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 python3 -m venv build/venv/test-python-3.8
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip --bogus-pip-pargs install --bogus-pip-install-args  -e . -e .[tests]
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip --bogus-pip-pargs install --bogus-pip-install-args  -e .
 touch build/venv/test-python-3.8.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/python3 -m unittest discover -v -t src -s src/tests
 docker pull -q python:3.7
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 python3 -m venv build/venv/test-python-3.7
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip --bogus-pip-pargs install --bogus-pip-install-args  -e . -e .[tests]
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip --bogus-pip-pargs install --bogus-pip-install-args  -e .
 touch build/venv/test-python-3.7.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/python3 -m unittest discover -v -t src -s src/tests
 docker pull -q python:3.9
@@ -482,7 +482,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
 docker pull -q python:3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/cover-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args  -e . -e .[tests] coverage==bogus-coverage-version
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args  -e . coverage==bogus-coverage-version
 touch build/venv/cover-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/python3 -m coverage html -d build/coverage
