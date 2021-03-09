@@ -17,11 +17,11 @@ clean:
 
 .PHONY: test
 test:
-	python3 -m unittest -v test.py
+	python3 -m unittest -v tests.py
 
 .PHONY: lint
 lint: $(BUILD)/venv-lint.build
-	$(BUILD)/venv-lint/bin/pylint test.py
+	$(BUILD)/venv-lint/bin/pylint tests.py
 
 $(BUILD)/venv-lint.build:
 	python3 -m venv $(BUILD)/venv-lint
