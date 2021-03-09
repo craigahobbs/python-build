@@ -197,7 +197,13 @@ The following variables are supported:
 
 - `TESTS_REQUIRE` - Additional Python packages to install for unit tests.
 
-- `NO_DOCKER` - Use the system python instead of docker. This is intended to be used from the comand line:
+- `DUMP_RULES` - Dump generated make rules. This is intended to be used from the command line:
+
+```
+make DUMP_RULES=1
+```
+
+- `NO_DOCKER` - Use the system python instead of docker. This is intended to be used from the command line:
 
 ```
 make commit NO_DOCKER=1

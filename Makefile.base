@@ -98,7 +98,11 @@ endef
 define TEST_COMMANDS_FN
 	$(1)/python3 -m unittest $$(if $$(TEST),-v $$(TEST),discover -v -t src -s src/tests)$$(if $$(TEST_ARGS), $$(TEST_ARGS))
 endef
-$(foreach X, $(PYTHON_VERSIONS), $(eval $(call VENV_RULE_FN, test, -e . $$(TESTS_REQUIRE), TEST_COMMANDS_FN, $(X))))
+TEST_RULES_FN = $(call VENV_RULE_FN, test, -e . $$(TESTS_REQUIRE), TEST_COMMANDS_FN, $(1))
+$(foreach X, $(PYTHON_VERSIONS), $(eval $(call TEST_RULES_FN, $(X))))
+ifneq '$(DUMP_RULES)' ''
+$(foreach X, $(PYTHON_VERSIONS), $(info $(call TEST_RULES_FN, $(X))) $(info ))
+endif
 
 # Generate coverage rule
 define COVER_COMMANDS_FN
@@ -106,13 +110,23 @@ define COVER_COMMANDS_FN
 	$(1)/python3 -m coverage html -d $$(BUILD)/coverage
 	$(1)/python3 -m coverage report $$(COVERAGE_REPORT_ARGS)
 endef
-$(eval $(call VENV_RULE_FN, cover, -e . $(call PIP_VERSION_FN, coverage, $(COVERAGE_VERSION)) $$(TESTS_REQUIRE), COVER_COMMANDS_FN))
+COVER_RULES := $(call VENV_RULE_FN, cover, -e . $(call PIP_VERSION_FN, coverage, $(COVERAGE_VERSION)) $$(TESTS_REQUIRE), COVER_COMMANDS_FN)
+$(eval $(COVER_RULES))
+ifneq '$(DUMP_RULES)' ''
+$(info $(COVER_RULES))
+$(info )
+endif
 
 # Generate lint rule
 define LINT_COMMANDS_FN
 	$(1)/python3 -m pylint $$(PYLINT_ARGS) setup.py src
 endef
-$(eval $(call VENV_RULE_FN, lint, -e . $(call PIP_VERSION_FN, pylint, $(PYLINT_VERSION)), LINT_COMMANDS_FN))
+LINT_RULES := $(call VENV_RULE_FN, lint, -e . $(call PIP_VERSION_FN, pylint, $(PYLINT_VERSION)), LINT_COMMANDS_FN)
+$(eval $(LINT_RULES))
+ifneq '$(DUMP_RULES)' ''
+$(info $(LINT_RULES))
+$(info )
+endif
 
 # Generate sphinx rule
 ifeq '$(SPHINX_DOC)' ''
@@ -126,7 +140,12 @@ define DOC_COMMANDS_FN
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d $$(BUILD)/doc/doctrees $$(SPHINX_DOC) $$(BUILD)/doc/doctest
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d $$(BUILD)/doc/doctrees $$(SPHINX_DOC) $$(BUILD)/doc/html
 endef
-$(eval $(call VENV_RULE_FN, doc, -e . $(call PIP_VERSION_FN, sphinx, $(SPHINX_VERSION)) $(call PIP_VERSION_FN, sphinx_rtd_theme, $(SPHINX_RTD_THEME_VERSION)), DOC_COMMANDS_FN))
+DOC_RULES := $(call VENV_RULE_FN, doc, -e . $(call PIP_VERSION_FN, sphinx, $(SPHINX_VERSION)) $(call PIP_VERSION_FN, sphinx_rtd_theme, $(SPHINX_RTD_THEME_VERSION)), DOC_COMMANDS_FN)
+$(eval $(DOC_RULES))
+ifneq '$(DUMP_RULES)' ''
+$(info $(DOC_RULES))
+$(info )
+endif
 
 .PHONY: gh-pages
 gh-pages: clean doc
@@ -144,4 +163,9 @@ define TWINE_COMMANDS_FN
 	$(1)/twine check dist/*.tar.gz
 	$(1)/twine upload dist/*.tar.gz
 endef
-$(eval $(call VENV_RULE_FN, twine, -e . twine, TWINE_COMMANDS_FN,, -i))
+TWINE_RULES := $(call VENV_RULE_FN, twine, -e . twine, TWINE_COMMANDS_FN,, -i)
+$(eval $(TWINE_RULES))
+ifneq '$(DUMP_RULES)' ''
+$(info $(TWINE_RULES))
+$(info )
+endif

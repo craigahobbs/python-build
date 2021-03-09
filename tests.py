@@ -80,6 +80,177 @@ class PythonBuildTest(unittest.TestCase):
 echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
 '''
             )
+            self.assert_make_output(
+                self.check_output(['make', 'help', '-n'], test_dir),
+                '''\
+echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
+'''
+            )
+
+    def test_help_dump_rules(self):
+        test_files = create_test_files([
+            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            self.assert_make_output(
+                self.check_output(['make', 'DUMP_RULES=1', '-n'], test_dir),
+                '''\
+TEST_PYTHON_3_9_VENV_DIR := build/venv/test-python-3.9
+TEST_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9
+TEST_PYTHON_3_9_VENV_CMD := $(TEST_PYTHON_3_9_VENV_RUN) $(TEST_PYTHON_3_9_VENV_DIR)/bin
+TEST_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/test-python-3.9.build
+
+$(TEST_PYTHON_3_9_VENV_BUILD):
+ifeq '' ''
+\tdocker pull -q python:3.9
+endif
+\t$(TEST_PYTHON_3_9_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_9_VENV_DIR)
+\t$(TEST_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
+\t$(TEST_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . $(TESTS_REQUIRE))
+\ttouch $@
+
+.PHONY: test-python-3-9
+test-python-3-9: $(TEST_PYTHON_3_9_VENV_BUILD)
+\t $(TEST_PYTHON_3_9_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+
+.PHONY: test
+test: test-python-3-9
+
+TEST_PYTHON_3_8_VENV_DIR := build/venv/test-python-3.8
+TEST_PYTHON_3_8_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8
+TEST_PYTHON_3_8_VENV_CMD := $(TEST_PYTHON_3_8_VENV_RUN) $(TEST_PYTHON_3_8_VENV_DIR)/bin
+TEST_PYTHON_3_8_VENV_BUILD := $(BUILD)/venv/test-python-3.8.build
+
+$(TEST_PYTHON_3_8_VENV_BUILD):
+ifeq '' ''
+\tdocker pull -q python:3.8
+endif
+\t$(TEST_PYTHON_3_8_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_8_VENV_DIR)
+\t$(TEST_PYTHON_3_8_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
+\t$(TEST_PYTHON_3_8_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . $(TESTS_REQUIRE))
+\ttouch $@
+
+.PHONY: test-python-3-8
+test-python-3-8: $(TEST_PYTHON_3_8_VENV_BUILD)
+\t $(TEST_PYTHON_3_8_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+
+.PHONY: test
+test: test-python-3-8
+
+TEST_PYTHON_3_7_VENV_DIR := build/venv/test-python-3.7
+TEST_PYTHON_3_7_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7
+TEST_PYTHON_3_7_VENV_CMD := $(TEST_PYTHON_3_7_VENV_RUN) $(TEST_PYTHON_3_7_VENV_DIR)/bin
+TEST_PYTHON_3_7_VENV_BUILD := $(BUILD)/venv/test-python-3.7.build
+
+$(TEST_PYTHON_3_7_VENV_BUILD):
+ifeq '' ''
+\tdocker pull -q python:3.7
+endif
+\t$(TEST_PYTHON_3_7_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_7_VENV_DIR)
+\t$(TEST_PYTHON_3_7_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
+\t$(TEST_PYTHON_3_7_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . $(TESTS_REQUIRE))
+\ttouch $@
+
+.PHONY: test-python-3-7
+test-python-3-7: $(TEST_PYTHON_3_7_VENV_BUILD)
+\t $(TEST_PYTHON_3_7_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+
+.PHONY: test
+test: test-python-3-7
+
+COVER_PYTHON_3_9_VENV_DIR := build/venv/cover-python-3.9
+COVER_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9
+COVER_PYTHON_3_9_VENV_CMD := $(COVER_PYTHON_3_9_VENV_RUN) $(COVER_PYTHON_3_9_VENV_DIR)/bin
+COVER_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/cover-python-3.9.build
+
+$(COVER_PYTHON_3_9_VENV_BUILD):
+ifeq '' ''
+\tdocker pull -q python:3.9
+endif
+\t$(COVER_PYTHON_3_9_VENV_RUN) python3 -m venv $(COVER_PYTHON_3_9_VENV_DIR)
+\t$(COVER_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
+\t$(COVER_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . coverage==5.5 $(TESTS_REQUIRE))
+\ttouch $@
+
+.PHONY: cover-python-3-9
+cover-python-3-9: $(COVER_PYTHON_3_9_VENV_BUILD)
+\t $(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage run --branch --source src -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+\t $(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage html -d $(BUILD)/coverage
+\t $(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage report $(COVERAGE_REPORT_ARGS)
+
+.PHONY: cover
+cover: cover-python-3-9
+
+LINT_PYTHON_3_9_VENV_DIR := build/venv/lint-python-3.9
+LINT_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9
+LINT_PYTHON_3_9_VENV_CMD := $(LINT_PYTHON_3_9_VENV_RUN) $(LINT_PYTHON_3_9_VENV_DIR)/bin
+LINT_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/lint-python-3.9.build
+
+$(LINT_PYTHON_3_9_VENV_BUILD):
+ifeq '' ''
+\tdocker pull -q python:3.9
+endif
+\t$(LINT_PYTHON_3_9_VENV_RUN) python3 -m venv $(LINT_PYTHON_3_9_VENV_DIR)
+\t$(LINT_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
+\t$(LINT_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . pylint==2.7.2)
+\ttouch $@
+
+.PHONY: lint-python-3-9
+lint-python-3-9: $(LINT_PYTHON_3_9_VENV_BUILD)
+\t $(LINT_PYTHON_3_9_VENV_CMD)/python3 -m pylint $(PYLINT_ARGS) setup.py src
+
+.PHONY: lint
+lint: lint-python-3-9
+
+DOC_PYTHON_3_9_VENV_DIR := build/venv/doc-python-3.9
+DOC_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9
+DOC_PYTHON_3_9_VENV_CMD := $(DOC_PYTHON_3_9_VENV_RUN) $(DOC_PYTHON_3_9_VENV_DIR)/bin
+DOC_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/doc-python-3.9.build
+
+$(DOC_PYTHON_3_9_VENV_BUILD):
+ifeq '' ''
+\tdocker pull -q python:3.9
+endif
+\t$(DOC_PYTHON_3_9_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_9_VENV_DIR)
+\t$(DOC_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
+\t$(DOC_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . sphinx==3.5.1 sphinx_rtd_theme==0.5.1)
+\ttouch $@
+
+.PHONY: doc-python-3-9
+doc-python-3-9: $(DOC_PYTHON_3_9_VENV_BUILD)
+\t $(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b doctest -d $(BUILD)/doc/doctrees $(SPHINX_DOC) $(BUILD)/doc/doctest
+\t $(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b html -d $(BUILD)/doc/doctrees $(SPHINX_DOC) $(BUILD)/doc/html
+
+.PHONY: doc
+doc: doc-python-3-9
+
+TWINE_PYTHON_3_9_VENV_DIR := build/venv/twine-python-3.9
+TWINE_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  -i python:3.9
+TWINE_PYTHON_3_9_VENV_CMD := $(TWINE_PYTHON_3_9_VENV_RUN) $(TWINE_PYTHON_3_9_VENV_DIR)/bin
+TWINE_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/twine-python-3.9.build
+
+$(TWINE_PYTHON_3_9_VENV_BUILD):
+ifeq '' ''
+\tdocker pull -q python:3.9
+endif
+\t$(TWINE_PYTHON_3_9_VENV_RUN) python3 -m venv $(TWINE_PYTHON_3_9_VENV_DIR)
+\t$(TWINE_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
+\t$(TWINE_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . twine)
+\ttouch $@
+
+.PHONY: twine-python-3-9
+twine-python-3-9: $(TWINE_PYTHON_3_9_VENV_BUILD)
+\t $(TWINE_PYTHON_3_9_VENV_CMD)/python3 setup.py sdist
+\t $(TWINE_PYTHON_3_9_VENV_CMD)/twine check dist/*.tar.gz
+\t $(TWINE_PYTHON_3_9_VENV_CMD)/twine upload dist/*.tar.gz
+
+.PHONY: twine
+twine: twine-python-3-9
+
+echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
+'''
+            )
 
     def test_clean(self):
         test_files = create_test_files([
@@ -91,12 +262,12 @@ echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
                 self.check_output(['make', 'clean', '-n'], test_dir),
                 '''\
 rm -rf \\
-	build \\
-	.coverage \\
-	$(find src -name __pycache__) \\
-	dist/ \\
-	src/*.egg-info \\
-	*.eggs
+\tbuild \\
+\t.coverage \\
+\t$(find src -name __pycache__) \\
+\tdist/ \\
+\tsrc/*.egg-info \\
+\t*.eggs
 '''
             )
 
@@ -110,12 +281,12 @@ rm -rf \\
                 self.check_output(['make', 'superclean', '-n'], test_dir),
                 '''\
 rm -rf \\
-	build \\
-	.coverage \\
-	$(find src -name __pycache__) \\
-	dist/ \\
-	src/*.egg-info \\
-	*.eggs
+\tbuild \\
+\t.coverage \\
+\t$(find src -name __pycache__) \\
+\tdist/ \\
+\tsrc/*.egg-info \\
+\t*.eggs
 docker rmi -f python:3.9 python:3.8 python:3.7
 '''
             )
@@ -319,12 +490,12 @@ make: Nothing to be done for 'gh-pages'.
                 output,
                 '''\
 rm -rf \\
-	build \\
-	.coverage \\
-	$(find src -name __pycache__) \\
-	dist/ \\
-	src/*.egg-info \\
-	*.eggs
+\tbuild \\
+\t.coverage \\
+\t$(find src -name __pycache__) \\
+\tdist/ \\
+\tsrc/*.egg-info \\
+\t*.eggs
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
 if [ ! -d ../tmp.gh-pages ]; then git clone -b gh-pages `git config --get remote.origin.url` ../tmp.gh-pages; fi
