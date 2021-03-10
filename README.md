@@ -1,6 +1,6 @@
 # Python Build
 
-## Table of Contents
+## Contents
 
 - [Introduction](#introduction)
 - [Project Setup](#project-setup)
