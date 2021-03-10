@@ -97,12 +97,12 @@ echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
                 self.check_output(['make', 'DUMP_RULES=1', '-n'], test_dir),
                 '''\
 TEST_PYTHON_3_9_VENV_DIR := build/venv/test-python-3.9
-TEST_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9
+TEST_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9)
 TEST_PYTHON_3_9_VENV_CMD := $(TEST_PYTHON_3_9_VENV_RUN) $(TEST_PYTHON_3_9_VENV_DIR)/bin
 TEST_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/test-python-3.9.build
 
 $(TEST_PYTHON_3_9_VENV_BUILD):
-ifeq '' ''
+ifeq '$(NO_DOCKER)' ''
 \tdocker pull -q python:3.9
 endif
 \t$(TEST_PYTHON_3_9_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_9_VENV_DIR)
@@ -118,12 +118,12 @@ test-python-3-9: $(TEST_PYTHON_3_9_VENV_BUILD)
 test: test-python-3-9
 
 TEST_PYTHON_3_8_VENV_DIR := build/venv/test-python-3.8
-TEST_PYTHON_3_8_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8
+TEST_PYTHON_3_8_VENV_RUN := $(if $(NO_DOCKER),,docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8)
 TEST_PYTHON_3_8_VENV_CMD := $(TEST_PYTHON_3_8_VENV_RUN) $(TEST_PYTHON_3_8_VENV_DIR)/bin
 TEST_PYTHON_3_8_VENV_BUILD := $(BUILD)/venv/test-python-3.8.build
 
 $(TEST_PYTHON_3_8_VENV_BUILD):
-ifeq '' ''
+ifeq '$(NO_DOCKER)' ''
 \tdocker pull -q python:3.8
 endif
 \t$(TEST_PYTHON_3_8_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_8_VENV_DIR)
@@ -139,12 +139,12 @@ test-python-3-8: $(TEST_PYTHON_3_8_VENV_BUILD)
 test: test-python-3-8
 
 TEST_PYTHON_3_7_VENV_DIR := build/venv/test-python-3.7
-TEST_PYTHON_3_7_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7
+TEST_PYTHON_3_7_VENV_RUN := $(if $(NO_DOCKER),,docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7)
 TEST_PYTHON_3_7_VENV_CMD := $(TEST_PYTHON_3_7_VENV_RUN) $(TEST_PYTHON_3_7_VENV_DIR)/bin
 TEST_PYTHON_3_7_VENV_BUILD := $(BUILD)/venv/test-python-3.7.build
 
 $(TEST_PYTHON_3_7_VENV_BUILD):
-ifeq '' ''
+ifeq '$(NO_DOCKER)' ''
 \tdocker pull -q python:3.7
 endif
 \t$(TEST_PYTHON_3_7_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_7_VENV_DIR)
@@ -160,12 +160,12 @@ test-python-3-7: $(TEST_PYTHON_3_7_VENV_BUILD)
 test: test-python-3-7
 
 COVER_PYTHON_3_9_VENV_DIR := build/venv/cover-python-3.9
-COVER_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9
+COVER_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9)
 COVER_PYTHON_3_9_VENV_CMD := $(COVER_PYTHON_3_9_VENV_RUN) $(COVER_PYTHON_3_9_VENV_DIR)/bin
 COVER_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/cover-python-3.9.build
 
 $(COVER_PYTHON_3_9_VENV_BUILD):
-ifeq '' ''
+ifeq '$(NO_DOCKER)' ''
 \tdocker pull -q python:3.9
 endif
 \t$(COVER_PYTHON_3_9_VENV_RUN) python3 -m venv $(COVER_PYTHON_3_9_VENV_DIR)
@@ -183,12 +183,12 @@ cover-python-3-9: $(COVER_PYTHON_3_9_VENV_BUILD)
 cover: cover-python-3-9
 
 LINT_PYTHON_3_9_VENV_DIR := build/venv/lint-python-3.9
-LINT_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9
+LINT_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9)
 LINT_PYTHON_3_9_VENV_CMD := $(LINT_PYTHON_3_9_VENV_RUN) $(LINT_PYTHON_3_9_VENV_DIR)/bin
 LINT_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/lint-python-3.9.build
 
 $(LINT_PYTHON_3_9_VENV_BUILD):
-ifeq '' ''
+ifeq '$(NO_DOCKER)' ''
 \tdocker pull -q python:3.9
 endif
 \t$(LINT_PYTHON_3_9_VENV_RUN) python3 -m venv $(LINT_PYTHON_3_9_VENV_DIR)
@@ -204,12 +204,12 @@ lint-python-3-9: $(LINT_PYTHON_3_9_VENV_BUILD)
 lint: lint-python-3-9
 
 DOC_PYTHON_3_9_VENV_DIR := build/venv/doc-python-3.9
-DOC_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9
+DOC_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9)
 DOC_PYTHON_3_9_VENV_CMD := $(DOC_PYTHON_3_9_VENV_RUN) $(DOC_PYTHON_3_9_VENV_DIR)/bin
 DOC_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/doc-python-3.9.build
 
 $(DOC_PYTHON_3_9_VENV_BUILD):
-ifeq '' ''
+ifeq '$(NO_DOCKER)' ''
 \tdocker pull -q python:3.9
 endif
 \t$(DOC_PYTHON_3_9_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_9_VENV_DIR)
@@ -226,12 +226,12 @@ doc-python-3-9: $(DOC_PYTHON_3_9_VENV_BUILD)
 doc: doc-python-3-9
 
 TWINE_PYTHON_3_9_VENV_DIR := build/venv/twine-python-3.9
-TWINE_PYTHON_3_9_VENV_RUN := docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  -i python:3.9
+TWINE_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  -i python:3.9)
 TWINE_PYTHON_3_9_VENV_CMD := $(TWINE_PYTHON_3_9_VENV_RUN) $(TWINE_PYTHON_3_9_VENV_DIR)/bin
 TWINE_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/twine-python-3.9.build
 
 $(TWINE_PYTHON_3_9_VENV_BUILD):
-ifeq '' ''
+ifeq '$(NO_DOCKER)' ''
 \tdocker pull -q python:3.9
 endif
 \t$(TWINE_PYTHON_3_9_VENV_RUN) python3 -m venv $(TWINE_PYTHON_3_9_VENV_DIR)
