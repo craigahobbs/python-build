@@ -212,24 +212,24 @@ make commit NO_DOCKER=1
 
 ## Extending Python Build
 
-The Python Build `help`, [commit](#commit), [clean](#clean), and [superclean](#superclean)
-targets may be extended either by adding target commands or adding a target dependency.
-
-Here's an example of adding commands to the `help` target:
-
-```
-help:
-	@echo '            [my-command]'
-```
-
-Here's an example of adding a target dependency to the `commit` target:
+All of the Python Build [targets](#make-targets) may be extended either by adding additional
+commands or adding a target dependency. Add additional commands to execute when a target (and all
+its dependencies) is complete:
 
 ```
-commit: other-stuff
+commit:
+	@echo 'Build succeeded!'
+```
 
+Add a target dependency when you want the new dependency to execute in parallel (for [parallel
+builds](#make-options)):
+
+```
 .PHONY: other-stuff
 other-stuff:
     # do stuff...
+
+commit: other-stuff
 ```
 
 
