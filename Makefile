@@ -13,7 +13,7 @@ commit: test lint
 
 .PHONY: clean
 clean:
-	rm -rf $(BUILD) $$(find . -name __pycache__)
+	rm -rf $(BUILD) __pycache__
 
 .PHONY: test
 test:
