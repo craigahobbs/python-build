@@ -145,6 +145,15 @@ repository to the `../<pagage-name>.gh-pages` directory, checks out the `gh-page
 rsync's from the `build/doc/html/` directory. Afterward, review the changes, commit, and push to
 publish.
 
+To create a `gh-pages` branch, enter the following shell commands:
+
+```
+git checkout --orphan gh-pages
+git reset --hard
+git commit --allow-empty -m "initializing gh-pages branch"
+git push origin gh-pages
+```
+
 ### twine
 
 Publish the package to PyPI using twine.
