@@ -38,20 +38,16 @@ PYTHON_NAME_FN = $(call UPPER_FN, Python_$(subst .,_,$(call PYTHON_VERSION_FN,$(
 PYTHON_IMAGE_FN = $(if $(ARCH),$(ARCH)/)python:$(call PYTHON_VERSION_FN,$(1))
 PIP_VERSION_FN = $(if $(findstring git+,$(2)),-e $(strip $(2))\#egg=$(strip $(1)),$(strip $(1))==$(strip $(2)))
 
-.PHONY: help
+.PHONY: _help help
 help: _help
-
-.PHONY: _help
 _help:
 	@echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
 
 .PHONY: commit
 commit: test lint doc cover
 
-.PHONY: clean
+.PHONY: _clean clean
 clean: _clean
-
-.PHONY: _clean
 _clean:
 	rm -rf \
 		$(BUILD) \
@@ -61,10 +57,8 @@ _clean:
 		src/*.egg-info \
 		*.eggs
 
-.PHONY: superclean
+.PHONY: _superclean superclean
 superclean: clean _superclean
-
-.PHONY: _superclean
 _superclean:
 ifeq '$(NO_DOCKER)' ''
 	-docker rmi -f $(foreach V, $(PYTHON_VERSIONS),$(call PYTHON_IMAGE_FN, $(V)))
