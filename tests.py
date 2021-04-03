@@ -106,7 +106,7 @@ TEST_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/test-python-3.9.build
 
 $(TEST_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
-\tdocker pull -q python:3.9
+\tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 endif
 \t$(TEST_PYTHON_3_9_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_9_VENV_DIR)
 \t$(TEST_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
@@ -127,7 +127,7 @@ TEST_PYTHON_3_8_VENV_BUILD := $(BUILD)/venv/test-python-3.8.build
 
 $(TEST_PYTHON_3_8_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
-\tdocker pull -q python:3.8
+\tif [ "$$(docker images -q python:3.8)" = "" ]; then docker pull -q python:3.8; fi
 endif
 \t$(TEST_PYTHON_3_8_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_8_VENV_DIR)
 \t$(TEST_PYTHON_3_8_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
@@ -148,7 +148,7 @@ TEST_PYTHON_3_7_VENV_BUILD := $(BUILD)/venv/test-python-3.7.build
 
 $(TEST_PYTHON_3_7_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
-\tdocker pull -q python:3.7
+\tif [ "$$(docker images -q python:3.7)" = "" ]; then docker pull -q python:3.7; fi
 endif
 \t$(TEST_PYTHON_3_7_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_7_VENV_DIR)
 \t$(TEST_PYTHON_3_7_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
@@ -169,7 +169,7 @@ COVER_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/cover-python-3.9.build
 
 $(COVER_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
-\tdocker pull -q python:3.9
+\tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 endif
 \t$(COVER_PYTHON_3_9_VENV_RUN) python3 -m venv $(COVER_PYTHON_3_9_VENV_DIR)
 \t$(COVER_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
@@ -192,7 +192,7 @@ LINT_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/lint-python-3.9.build
 
 $(LINT_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
-\tdocker pull -q python:3.9
+\tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 endif
 \t$(LINT_PYTHON_3_9_VENV_RUN) python3 -m venv $(LINT_PYTHON_3_9_VENV_DIR)
 \t$(LINT_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
@@ -213,7 +213,7 @@ DOC_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/doc-python-3.9.build
 
 $(DOC_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
-\tdocker pull -q python:3.9
+\tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 endif
 \t$(DOC_PYTHON_3_9_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_9_VENV_DIR)
 \t$(DOC_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
@@ -235,7 +235,7 @@ TWINE_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/twine-python-3.9.build
 
 $(TWINE_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
-\tdocker pull -q python:3.9
+\tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 endif
 \t$(TWINE_PYTHON_3_9_VENV_RUN) python3 -m venv $(TWINE_PYTHON_3_9_VENV_DIR)
 \t$(TWINE_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
@@ -304,19 +304,19 @@ docker rmi -f python:3.9 python:3.8 python:3.7
             self.assert_make_output(
                 self.check_output(['make', 'test', '-n'], cwd=test_dir),
                 '''\
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/test-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
-docker pull -q python:3.8
+if [ "$(docker images -q python:3.8)" = "" ]; then docker pull -q python:3.8; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 python3 -m venv build/venv/test-python-3.8
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3.8.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/python3 -m unittest discover -v -t src -s src/tests
-docker pull -q python:3.7
+if [ "$(docker images -q python:3.7)" = "" ]; then docker pull -q python:3.7; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 python3 -m venv build/venv/test-python-3.7
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
@@ -351,7 +351,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/ven
             self.assert_make_output(
                 self.check_output(['make', 'cover', '-n'], test_dir),
                 '''\
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/cover-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . coverage==X.X.X
@@ -386,7 +386,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
             self.assert_make_output(
                 self.check_output(['make', 'lint', '-n'], test_dir),
                 '''\
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/lint-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/lint-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/lint-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . pylint==X.X.X
@@ -417,7 +417,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
             self.assert_make_output(
                 self.check_output(['make', 'doc', '-n'], test_dir),
                 '''\
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/doc-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . sphinx==X.X.X sphinx_rtd_theme==X.X.X docutils==X.X.X
@@ -623,38 +623,38 @@ include Makefile.base
                     }
                 ),
                 '''\
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/test-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . "foobar >= 1.0"
 touch build/venv/test-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/test-python-3.9/bin/python3 -m unittest discover -v -t src -s src/tests
-docker pull -q python:3.8
+if [ "$(docker images -q python:3.8)" = "" ]; then docker pull -q python:3.8; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 python3 -m venv build/venv/test-python-3.8
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . "foobar >= 1.0"
 touch build/venv/test-python-3.8.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.8 build/venv/test-python-3.8/bin/python3 -m unittest discover -v -t src -s src/tests
-docker pull -q python:3.7
+if [ "$(docker images -q python:3.7)" = "" ]; then docker pull -q python:3.7; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 python3 -m venv build/venv/test-python-3.7
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . "foobar >= 1.0"
 touch build/venv/test-python-3.7.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.7 build/venv/test-python-3.7/bin/python3 -m unittest discover -v -t src -s src/tests
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/lint-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/lint-python-3.9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/lint-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . pylint==bogus-pylint-version
 touch build/venv/lint-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/lint-python-3.9/bin/python3 -m pylint --bogus-pylint-args setup.py src
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/doc-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . sphinx==bogus-sphinx-version sphinx_rtd_theme==bogus-sphinx-rtd-theme-version docutils==X.X.X
 touch build/venv/doc-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build --bogus-sphinx-args -b doctest -d build/doc/doctrees doc build/doc/doctest
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build --bogus-sphinx-args -b html -d build/doc/doctrees doc build/doc/html
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/cover-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . coverage==bogus-coverage-version "foobar >= 1.0"
@@ -693,7 +693,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/python3 -m coverage html -d build/coverage
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/cover-python-3.9/bin/python3 -m coverage report --fail-under 100
-docker pull -q python:3.9
+if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  -i python:3.9 python3 -m venv build/venv/twine-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  -i python:3.9 build/venv/twine-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  -i python:3.9 build/venv/twine-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . twine

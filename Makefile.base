@@ -74,7 +74,7 @@ $(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_BUILD := $$(BUILD)/venv
 
 $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_BUILD):
 ifeq '$$(NO_DOCKER)' ''
-	docker pull -q $(call PYTHON_IMAGE_FN,$(4))
+	if [ "$$$$(docker images -q $(call PYTHON_IMAGE_FN,$(4)))" = "" ]; then docker pull -q $(call PYTHON_IMAGE_FN,$(4)); fi
 endif
 	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN) python3 -m venv $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_DIR)
 	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip -q $$(PIP_ARGS) install $(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
