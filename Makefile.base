@@ -21,6 +21,7 @@ PYLINT_ARGS ?= -j 0
 # sphinx
 SPHINX_VERSION ?= 3.5.3
 SPHINX_RTD_THEME_VERSION ?= 0.5.1
+DOCUTILS_VERSION ?= 0.16
 SPHINX_ARGS ?= -W -a
 
 # Build directory
@@ -134,7 +135,11 @@ define DOC_COMMANDS_FN
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d $$(BUILD)/doc/doctrees $$(SPHINX_DOC) $$(BUILD)/doc/doctest
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d $$(BUILD)/doc/doctrees $$(SPHINX_DOC) $$(BUILD)/doc/html
 endef
-DOC_RULES := $(call VENV_RULE_FN, doc, -e . $(call PIP_VERSION_FN, sphinx, $(SPHINX_VERSION)) $(call PIP_VERSION_FN, sphinx_rtd_theme, $(SPHINX_RTD_THEME_VERSION)), DOC_COMMANDS_FN)
+DOC_RULES := $(call VENV_RULE_FN, doc, -e . \
+    $(call PIP_VERSION_FN, sphinx, $(SPHINX_VERSION)) \
+    $(call PIP_VERSION_FN, sphinx_rtd_theme, $(SPHINX_RTD_THEME_VERSION)) \
+    $(call PIP_VERSION_FN, docutils, $(DOCUTILS_VERSION)), \
+    DOC_COMMANDS_FN)
 $(eval $(DOC_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(DOC_RULES))
