@@ -13,8 +13,8 @@
 
 ## Introduction
 
-**Python Build** is a lightweight GNU Make-based build system for Python focused on best-practices
-for package development.
+**Python Build** is a lightweight GNU Make-based build system for best-practice Python package
+development. Python Build performs the following functions:
 
 - Run unit tests with multiple Python versions using the [official Docker Python images](https://hub.docker.com/_/python)
 - Run unit tests with [coverage](https://pypi.org/project/coverage/)

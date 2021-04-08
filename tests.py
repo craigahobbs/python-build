@@ -217,7 +217,7 @@ ifeq '$(NO_DOCKER)' ''
 endif
 \t$(DOC_PYTHON_3_9_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_9_VENV_DIR)
 \t$(DOC_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
-\t$(DOC_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . sphinx==X.X.X sphinx_rtd_theme==X.X.X docutils==X.X.X)
+\t$(DOC_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  -e . sphinx==X.X.X sphinx_rtd_theme==X.X.X)
 \ttouch $@
 
 .PHONY: doc-python-3-9
@@ -420,7 +420,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/doc-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . sphinx==X.X.X sphinx_rtd_theme==X.X.X docutils==X.X.X
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . sphinx==X.X.X sphinx_rtd_theme==X.X.X
 touch build/venv/doc-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
@@ -570,7 +570,7 @@ touch build/venv/lint-python-3.9.build
 build/venv/lint-python-3.9/bin/python3 -m pylint -j 0 setup.py src
 python3 -m venv build/venv/doc-python-3.9
 build/venv/doc-python-3.9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-build/venv/doc-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . sphinx==X.X.X sphinx_rtd_theme==X.X.X docutils==X.X.X
+build/venv/doc-python-3.9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . sphinx==X.X.X sphinx_rtd_theme==X.X.X
 touch build/venv/doc-python-3.9.build
 build/venv/doc-python-3.9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
 build/venv/doc-python-3.9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
@@ -650,7 +650,7 @@ docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/ven
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 python3 -m venv build/venv/doc-python-3.9
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . sphinx==bogus-sphinx-version sphinx_rtd_theme==bogus-sphinx-rtd-theme-version docutils==X.X.X
+docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . sphinx==bogus-sphinx-version sphinx_rtd_theme==bogus-sphinx-rtd-theme-version
 touch build/venv/doc-python-3.9.build
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build --bogus-sphinx-args -b doctest -d build/doc/doctrees doc build/doc/doctest
 docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd`  python:3.9 build/venv/doc-python-3.9/bin/sphinx-build --bogus-sphinx-args -b html -d build/doc/doctrees doc build/doc/html
