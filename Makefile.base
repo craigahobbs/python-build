@@ -41,7 +41,7 @@ PIP_VERSION_FN = $(if $(findstring git+,$(2)),-e $(strip $(2))\#egg=$(strip $(1)
 .PHONY: _help help
 help: _help
 _help:
-	@echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|test|twine]'
+	@echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
 
 .PHONY: commit
 commit: test lint doc cover
@@ -64,10 +64,10 @@ ifeq '$(NO_DOCKER)' ''
 	-docker rmi -f $(foreach V, $(PYTHON_VERSIONS),$(call PYTHON_IMAGE_FN, $(V)))
 endif
 
-# Function to generate venv rules - venv_name, pip_args, commands, *python_version, *docker_run_args
+# Function to generate venv rules - venv_name, pip_args, commands, *python_version
 define VENV_RULE_FN
 $(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_DIR := build/venv/$(strip $(1))-python-$(call PYTHON_VERSION_FN,$(4))
-$(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN := $$(if $$(NO_DOCKER),,docker run --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(5) $(call PYTHON_IMAGE_FN,$(4)))
+$(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN := $$(if $$(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(call PYTHON_IMAGE_FN,$(4)))
 $(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD := $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN) $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_DIR)/bin
 $(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_BUILD := $$(BUILD)/venv/$(strip $(1))-python-$(call PYTHON_VERSION_FN,$(4)).build
 
@@ -151,18 +151,18 @@ gh-pages: clean doc
 	rsync -rv --delete --exclude=.git/ $(BUILD)/doc/html/ ../$(notdir $(CURDIR)).gh-pages
 endif
 
-# Generate twine rule
-.PHONY: twine
-twine: commit
+# Generate publish rule
+.PHONY: publish
+publish: commit
 
-define TWINE_COMMANDS_FN
+define PUBLISH_COMMANDS_FN
 	$(1)/python3 setup.py sdist
 	$(1)/twine check dist/*.tar.gz
 	$(1)/twine upload dist/*.tar.gz
 endef
-TWINE_RULES := $(call VENV_RULE_FN, twine, -e . twine, TWINE_COMMANDS_FN,, -i)
-$(eval $(TWINE_RULES))
+PUBLISH_RULES := $(call VENV_RULE_FN, publish, -e . twine, PUBLISH_COMMANDS_FN)
+$(eval $(PUBLISH_RULES))
 ifneq '$(DUMP_RULES)' ''
-$(info $(TWINE_RULES))
+$(info $(PUBLISH_RULES))
 $(info )
 endif

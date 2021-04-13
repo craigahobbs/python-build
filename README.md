@@ -152,7 +152,7 @@ git commit --allow-empty -m "initializing gh-pages branch"
 git push origin gh-pages
 ```
 
-### twine
+### publish
 
 Publish the package to PyPI using twine.
 
