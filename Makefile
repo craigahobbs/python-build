@@ -1,5 +1,5 @@
 # Licensed under the MIT License
-# https://github.com/craigahobbs/python-build/blob/master/LICENSE
+# https://github.com/craigahobbs/python-build/blob/main/LICENSE
 
 BUILD := build
 PYLINT_VERSION ?= 2.7.4

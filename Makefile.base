@@ -1,6 +1,6 @@
 # -*- makefile-gmake -*-
 # Licensed under the MIT License
-# https://github.com/craigahobbs/python-build/blob/master/LICENSE
+# https://github.com/craigahobbs/python-build/blob/main/LICENSE
 
 ifeq '$(PYTHON_VERSIONS)' ''
     $(error PYTHON_VERSIONS is not defined!)

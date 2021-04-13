@@ -1,5 +1,5 @@
 # Licensed under the MIT License
-# https://github.com/craigahobbs/python-build/blob/master/LICENSE
+# https://github.com/craigahobbs/python-build/blob/main/LICENSE
 
 """
 Python Build makefile unit tests
