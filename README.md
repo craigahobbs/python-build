@@ -28,7 +28,7 @@ development. Python Build performs the following functions:
 
 The basic structure of a Python Build project is as follows:
 
-``` make
+```
 |-- Makefile
 |-- README.rst
 |-- setup.py
