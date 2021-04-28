@@ -35,7 +35,7 @@ include Makefile.base
 
 # Helper function to create a list of files in a temporary directory
 def create_test_files(file_defs):
-    tempdir = TemporaryDirectory()
+    tempdir = TemporaryDirectory() # pylint: disable=consider-using-with
     for path_parts, content in file_defs:
         if isinstance(path_parts, str):
             path_parts = [path_parts]

@@ -2,7 +2,7 @@
 # https://github.com/craigahobbs/python-build/blob/main/LICENSE
 
 BUILD := build
-PYLINT_VERSION ?= 2.7.4
+PYLINT_VERSION ?= 2.8.2
 
 .PHONY: help
 help:
