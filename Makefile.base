@@ -2,9 +2,8 @@
 # Licensed under the MIT License
 # https://github.com/craigahobbs/python-build/blob/main/LICENSE
 
-ifeq '$(PYTHON_VERSIONS)' ''
-    $(error PYTHON_VERSIONS is not defined!)
-endif
+# Python versions
+PYTHON_VERSIONS ?= 3.9 3.10-rc 3.8 3.7 3.6
 
 # Python pip option
 PIP_ARGS ?= --no-cache-dir --disable-pip-version-check
