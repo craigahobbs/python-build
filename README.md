@@ -21,6 +21,7 @@ development. Python Build performs the following functions:
 - Perform static code analysis using [pylint](https://pypi.org/project/pylint/)
 - Generate documentation using [Sphinx](https://pypi.org/project/Sphinx/)
 - Publish documentation to [GitHub Pages](https://pages.github.com/)
+- Create and update a project changelog file using [simple-git-changelog](https://pypi.org/project/simple-git-changelog/)
 - Publish the package to PyPI using [twine](https://pypi.org/project/twine/)
 
 
@@ -29,6 +30,7 @@ development. Python Build performs the following functions:
 The basic structure of a Python Build project is as follows:
 
 ```
+|-- .gitignore
 |-- Makefile
 |-- README.rst
 |-- setup.py
@@ -45,10 +47,8 @@ The basic structure of a Python Build project is as follows:
 The basic Python Build `Makefile` is as follows:
 
 ``` make
-PYTHON_VERSIONS := \
-    3.9 \
-    3.8 \
-    3.7
+# Python versions (optional)
+# PYTHON_VERSIONS := 3.9 3.8 3.7
 
 # Sphinx documentation directory (optional)
 # SPHINX_DOC := doc
@@ -135,6 +135,14 @@ Delete all development artifacts.
 
 Delete all development artifacts and downloaded docker images.
 
+### changelog
+
+Create and update the project's changelog file.
+
+### publish
+
+Publish the package to PyPI using twine.
+
 ### gh-pages
 
 Publish the Sphinx HTML documentation to GitHub Pages. It first executes the `clean` and `doc`
@@ -151,10 +159,6 @@ git reset --hard
 git commit --allow-empty -m "initializing gh-pages branch"
 git push origin gh-pages
 ```
-
-### publish
-
-Publish the package to PyPI using twine.
 
 
 ## Make Options

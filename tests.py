@@ -85,13 +85,13 @@ class PythonBuildTest(unittest.TestCase):
             self.assert_make_output(
                 self.check_output(['make', '-n'], test_dir),
                 '''\
-echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
+echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
 '''
             )
             self.assert_make_output(
                 self.check_output(['make', 'help', '-n'], test_dir),
                 '''\
-echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
+echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
 '''
             )
 
@@ -107,7 +107,7 @@ echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]
 TEST_PYTHON_3_9_VENV_DIR := build/venv/test-python-3.9
 TEST_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
 TEST_PYTHON_3_9_VENV_CMD := $(TEST_PYTHON_3_9_VENV_RUN) $(TEST_PYTHON_3_9_VENV_DIR)/bin
-TEST_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/test-python-3.9.build
+TEST_PYTHON_3_9_VENV_BUILD := build/venv/test-python-3.9.build
 
 $(TEST_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -128,7 +128,7 @@ test: test-python-3-9
 TEST_PYTHON_3_8_VENV_DIR := build/venv/test-python-3.8
 TEST_PYTHON_3_8_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8)
 TEST_PYTHON_3_8_VENV_CMD := $(TEST_PYTHON_3_8_VENV_RUN) $(TEST_PYTHON_3_8_VENV_DIR)/bin
-TEST_PYTHON_3_8_VENV_BUILD := $(BUILD)/venv/test-python-3.8.build
+TEST_PYTHON_3_8_VENV_BUILD := build/venv/test-python-3.8.build
 
 $(TEST_PYTHON_3_8_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -149,7 +149,7 @@ test: test-python-3-8
 TEST_PYTHON_3_7_VENV_DIR := build/venv/test-python-3.7
 TEST_PYTHON_3_7_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7)
 TEST_PYTHON_3_7_VENV_CMD := $(TEST_PYTHON_3_7_VENV_RUN) $(TEST_PYTHON_3_7_VENV_DIR)/bin
-TEST_PYTHON_3_7_VENV_BUILD := $(BUILD)/venv/test-python-3.7.build
+TEST_PYTHON_3_7_VENV_BUILD := build/venv/test-python-3.7.build
 
 $(TEST_PYTHON_3_7_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -170,7 +170,7 @@ test: test-python-3-7
 COVER_PYTHON_3_9_VENV_DIR := build/venv/cover-python-3.9
 COVER_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
 COVER_PYTHON_3_9_VENV_CMD := $(COVER_PYTHON_3_9_VENV_RUN) $(COVER_PYTHON_3_9_VENV_DIR)/bin
-COVER_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/cover-python-3.9.build
+COVER_PYTHON_3_9_VENV_BUILD := build/venv/cover-python-3.9.build
 
 $(COVER_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -184,7 +184,7 @@ endif
 .PHONY: cover-python-3-9
 cover-python-3-9: $(COVER_PYTHON_3_9_VENV_BUILD)
 \t $(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage run --branch --source src -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
-\t $(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage html -d $(BUILD)/coverage
+\t $(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage html -d build/coverage
 \t $(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage report $(COVERAGE_REPORT_ARGS)
 
 .PHONY: cover
@@ -193,7 +193,7 @@ cover: cover-python-3-9
 LINT_PYTHON_3_9_VENV_DIR := build/venv/lint-python-3.9
 LINT_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
 LINT_PYTHON_3_9_VENV_CMD := $(LINT_PYTHON_3_9_VENV_RUN) $(LINT_PYTHON_3_9_VENV_DIR)/bin
-LINT_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/lint-python-3.9.build
+LINT_PYTHON_3_9_VENV_BUILD := build/venv/lint-python-3.9.build
 
 $(LINT_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -214,7 +214,7 @@ lint: lint-python-3-9
 DOC_PYTHON_3_9_VENV_DIR := build/venv/doc-python-3.9
 DOC_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
 DOC_PYTHON_3_9_VENV_CMD := $(DOC_PYTHON_3_9_VENV_RUN) $(DOC_PYTHON_3_9_VENV_DIR)/bin
-DOC_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/doc-python-3.9.build
+DOC_PYTHON_3_9_VENV_BUILD := build/venv/doc-python-3.9.build
 
 $(DOC_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -227,8 +227,8 @@ endif
 
 .PHONY: doc-python-3-9
 doc-python-3-9: $(DOC_PYTHON_3_9_VENV_BUILD)
-\t $(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b doctest -d $(BUILD)/doc/doctrees $(SPHINX_DOC) $(BUILD)/doc/doctest
-\t $(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b html -d $(BUILD)/doc/doctrees $(SPHINX_DOC) $(BUILD)/doc/html
+\t $(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b doctest -d build/doc/doctrees $(SPHINX_DOC) build/doc/doctest
+\t $(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b html -d build/doc/doctrees $(SPHINX_DOC) build/doc/html
 
 .PHONY: doc
 doc: doc-python-3-9
@@ -236,7 +236,7 @@ doc: doc-python-3-9
 PUBLISH_PYTHON_3_9_VENV_DIR := build/venv/publish-python-3.9
 PUBLISH_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
 PUBLISH_PYTHON_3_9_VENV_CMD := $(PUBLISH_PYTHON_3_9_VENV_RUN) $(PUBLISH_PYTHON_3_9_VENV_DIR)/bin
-PUBLISH_PYTHON_3_9_VENV_BUILD := $(BUILD)/venv/publish-python-3.9.build
+PUBLISH_PYTHON_3_9_VENV_BUILD := build/venv/publish-python-3.9.build
 
 $(PUBLISH_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -256,7 +256,28 @@ publish-python-3-9: $(PUBLISH_PYTHON_3_9_VENV_BUILD)
 .PHONY: publish
 publish: publish-python-3-9
 
-echo 'usage: make [clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
+CHANGELOG_PYTHON_3_9_VENV_DIR := build/venv/changelog-python-3.9
+CHANGELOG_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
+CHANGELOG_PYTHON_3_9_VENV_CMD := $(CHANGELOG_PYTHON_3_9_VENV_RUN) $(CHANGELOG_PYTHON_3_9_VENV_DIR)/bin
+CHANGELOG_PYTHON_3_9_VENV_BUILD := build/venv/changelog-python-3.9.build
+
+$(CHANGELOG_PYTHON_3_9_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+\tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
+endif
+\t$(CHANGELOG_PYTHON_3_9_VENV_RUN) python3 -m venv $(CHANGELOG_PYTHON_3_9_VENV_DIR)
+\t$(CHANGELOG_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install --progress-bar off --upgrade pip setuptools wheel
+\t$(CHANGELOG_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install --progress-bar off $(strip  simple-git-changelog)
+\ttouch $@
+
+.PHONY: changelog-python-3-9
+changelog-python-3-9: $(CHANGELOG_PYTHON_3_9_VENV_BUILD)
+\t $(CHANGELOG_PYTHON_3_9_VENV_CMD)/simple-git-changelog
+
+.PHONY: changelog
+changelog: changelog-python-3-9
+
+echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
 '''
             )
 
@@ -728,5 +749,23 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/publish-python-3.9/bin/python3 setup.py sdist
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/publish-python-3.9/bin/twine check dist/*.tar.gz
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/publish-python-3.9/bin/twine upload dist/*.tar.gz
+'''
+            )
+
+    def test_changelog(self):
+        test_files = create_test_files([
+            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            # Touch the environment build sentinels
+            os.makedirs(os.path.join(test_dir, 'build', 'venv'))
+            Path(os.path.join(test_dir, 'build', 'venv', 'changelog-python-3.9.build')).touch()
+
+            # Check subsequent make publish commands
+            self.assert_make_output(
+                self.check_output(['make', 'changelog', '-n'], test_dir),
+                '''\
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/changelog-python-3.9/bin/simple-git-changelog
 '''
             )
