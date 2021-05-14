@@ -1,7 +1,7 @@
 # Licensed under the MIT License
 # https://github.com/craigahobbs/python-build/blob/main/LICENSE
 
-PYLINT_VERSION ?= 2.8.2
+PYLINT_VERSION ?= 2.8.*
 
 .PHONY: help
 help:
@@ -24,7 +24,7 @@ lint: build/venv-lint.build
 
 build/venv-lint.build:
 	python3 -m venv build/venv-lint
-	build/venv-lint/bin/pip install -U pip setuptools wheel pylint==$(PYLINT_VERSION)
+	build/venv-lint/bin/pip install -U pip setuptools wheel pylint=="$(PYLINT_VERSION)"
 	touch $@
 
 .PHONY: changelog
