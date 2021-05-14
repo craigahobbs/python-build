@@ -1,5 +1,7 @@
 ## 2021-05-14
 
+- [f4c0297](https://github.com/craigahobbs/python-build/commit/f4c0297) - eliminate PYTHON_VERSIONS in favor of PYTHON_IMAGES
+
 - [ceb0537](https://github.com/craigahobbs/python-build/commit/ceb0537) - use "\*" for development dependency version patch levels (e.g. "2.8.\*")
 
 ## 2021-05-09
