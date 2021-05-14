@@ -179,11 +179,13 @@ make -j commit
 
 ## Make Variables
 
-Python Build exposes several make variables that can be modified in your makefile following the base
-makefile include. For example, to change minimum coverage level failure setting:
+Python Build exposes several make variables that can be modified in your makefile. For example, to
+change minimum coverage level failure setting:
 
 ```
-COVERAGE_REPORT_ARGS := --fail-under 75
+include Makefile.base
+
+COVERAGE_REPORT_ARGS := $(COVERAGE_REPORT_ARGS) --fail-under 75
 ```
 
 The following variables are supported:

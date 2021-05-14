@@ -10,16 +10,16 @@ PIP_ARGS ?= --no-cache-dir --disable-pip-version-check
 PIP_INSTALL_ARGS ?= --progress-bar off
 
 # coverage
-COVERAGE_VERSION ?= 5.5
+COVERAGE_VERSION ?= 5.5.*
 COVERAGE_REPORT_ARGS ?= --fail-under 100
 
 # pylint
-PYLINT_VERSION ?= 2.8.2
+PYLINT_VERSION ?= 2.8.*
 PYLINT_ARGS ?= -j 0
 
 # sphinx
-SPHINX_VERSION ?= 4.0.0
-SPHINX_RTD_THEME_VERSION ?= 0.5.2
+SPHINX_VERSION ?= 4.0.*
+SPHINX_RTD_THEME_VERSION ?= 0.5.*
 SPHINX_ARGS ?= -W -a
 
 # Helper functions
@@ -31,8 +31,7 @@ UPPER_FN = $(strip $(subst a,A,$(subst b,B,$(subst c,C,$(subst d,D,$(subst e,E,$
     $(subst t,T,$(subst u,U,$(subst v,V,$(subst w,W,$(subst x,X,$(subst y,Y,$(subst z,Z,$(1))))))))))))))))))))))))))))
 PYTHON_VERSION_FN = $(if $(strip $(1)),$(strip $(1)),$(firstword $(PYTHON_VERSIONS)))
 PYTHON_NAME_FN = $(call UPPER_FN, Python_$(subst .,_,$(call PYTHON_VERSION_FN,$(1))))
-PYTHON_IMAGE_FN = $(if $(ARCH),$(ARCH)/)python:$(call PYTHON_VERSION_FN,$(1))
-PIP_VERSION_FN = $(if $(findstring git+,$(2)),-e $(strip $(2))\#egg=$(strip $(1)),$(strip $(1))==$(strip $(2)))
+PYTHON_IMAGE_FN = python:$(call PYTHON_VERSION_FN,$(1))
 
 .PHONY: _help help
 help: _help
@@ -72,8 +71,8 @@ ifeq '$$(NO_DOCKER)' ''
 	if [ "$$$$(docker images -q $(call PYTHON_IMAGE_FN,$(4)))" = "" ]; then docker pull -q $(call PYTHON_IMAGE_FN,$(4)); fi
 endif
 	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN) python3 -m venv $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_DIR)
-	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip -q $$(PIP_ARGS) install $(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
-	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip $$(PIP_ARGS) install $(PIP_INSTALL_ARGS) $$(strip $(2))
+	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip -q $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
+	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $$(strip $(2))
 	touch $$@
 
 .PHONY: $(strip $(1))-$(subst _,-,$(call LOWER_FN, $(call PYTHON_NAME_FN, $(4))))
@@ -100,7 +99,7 @@ define COVER_COMMANDS_FN
 	$(1)/python3 -m coverage html -d build/coverage
 	$(1)/python3 -m coverage report $$(COVERAGE_REPORT_ARGS)
 endef
-COVER_RULES := $(call VENV_RULE_FN, cover, -e . $(call PIP_VERSION_FN, coverage, $(COVERAGE_VERSION)) $$(TESTS_REQUIRE), COVER_COMMANDS_FN)
+COVER_RULES := $(call VENV_RULE_FN, cover, -e . coverage=="$$(COVERAGE_VERSION)" $$(TESTS_REQUIRE), COVER_COMMANDS_FN)
 $(eval $(COVER_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(COVER_RULES))
@@ -111,7 +110,7 @@ endif
 define LINT_COMMANDS_FN
 	$(1)/python3 -m pylint $$(PYLINT_ARGS) setup.py src
 endef
-LINT_RULES := $(call VENV_RULE_FN, lint, -e . $(call PIP_VERSION_FN, pylint, $(PYLINT_VERSION)), LINT_COMMANDS_FN)
+LINT_RULES := $(call VENV_RULE_FN, lint, -e . pylint=="$$(PYLINT_VERSION)", LINT_COMMANDS_FN)
 $(eval $(LINT_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(LINT_RULES))
@@ -130,10 +129,7 @@ define DOC_COMMANDS_FN
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d build/doc/doctrees $$(SPHINX_DOC) build/doc/doctest
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d build/doc/doctrees $$(SPHINX_DOC) build/doc/html
 endef
-DOC_RULES := $(call VENV_RULE_FN, doc, -e . \
-    $(call PIP_VERSION_FN, sphinx, $(SPHINX_VERSION)) \
-    $(call PIP_VERSION_FN, sphinx_rtd_theme, $(SPHINX_RTD_THEME_VERSION)), \
-    DOC_COMMANDS_FN)
+DOC_RULES := $(call VENV_RULE_FN, doc, -e . sphinx=="$$(SPHINX_VERSION)" sphinx_rtd_theme=="$$(SPHINX_RTD_THEME_VERSION)", DOC_COMMANDS_FN)
 $(eval $(DOC_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(DOC_RULES))
