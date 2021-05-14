@@ -47,8 +47,8 @@ The basic structure of a Python Build project is as follows:
 The basic Python Build `Makefile` is as follows:
 
 ``` make
-# Python versions (optional)
-# PYTHON_VERSIONS := 3.9 3.8 3.7
+# Python images (optional)
+# PYTHON_IMAGES := python:3.9 python:3.8 python:3.7
 
 # Sphinx documentation directory (optional)
 # SPHINX_DOC := doc
@@ -91,13 +91,13 @@ should be run prior to any commit.
 
 ### test
 
-Run the unit tests using the official Docker Python image for each Python version in
-`PYTHON_VERSIONS`. Unit tests are run using Python's built-in
+Run the unit tests using each Docker image in `PYTHON_IMAGES`. Unit tests are run using Python's
+built-in
 [unittest](https://docs.python.org/3/library/unittest.html#command-line-interface) command-line
 tool.
 
-You can run unit tests against a specific version of Python. For example, to run unit tests with
-Python "3.x", use the `test-python-3-x` target.
+You can run unit tests with a specific Docker image. For example, to run unit tests with the
+"python:3.9" image, use the `test-python-3-9` target.
 
 To run a single unit test, use the `TEST` make variable:
 

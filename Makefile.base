@@ -2,8 +2,17 @@
 # Licensed under the MIT License
 # https://github.com/craigahobbs/python-build/blob/main/LICENSE
 
-# Python versions
-PYTHON_VERSIONS ?= 3.9 3.10-rc 3.8 3.7 3.6
+# Python docker images with which to run unit tests
+ifeq '$(NO_DOCKER)' ''
+PYTHON_IMAGES ?= \
+    python:3.9 \
+    python:3.10-rc \
+    python:3.8 \
+    python:3.7 \
+    python:3.6
+else
+PYTHON_IMAGES := no-docker
+endif
 
 # Python pip option
 PIP_ARGS ?= --no-cache-dir --disable-pip-version-check
@@ -23,15 +32,11 @@ SPHINX_RTD_THEME_VERSION ?= 0.5.*
 SPHINX_ARGS ?= -W -a
 
 # Helper functions
-LOWER_FN = $(strip $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,\
-    $(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,\
-    $(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$(1))))))))))))))))))))))))))))
+IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
+IMAGE_SYMBOL_FN = $(call UPPER_FN,$(subst -,_,$(call IMAGE_NAME_FN,$(1))))
 UPPER_FN = $(strip $(subst a,A,$(subst b,B,$(subst c,C,$(subst d,D,$(subst e,E,$(subst f,F,$(subst g,G,$(subst h,H,$(subst i,I,\
     $(subst j,J,$(subst k,K,$(subst l,L,$(subst m,M,$(subst n,N,$(subst o,O,$(subst p,P,$(subst q,Q,$(subst r,R,$(subst s,S,\
     $(subst t,T,$(subst u,U,$(subst v,V,$(subst w,W,$(subst x,X,$(subst y,Y,$(subst z,Z,$(1))))))))))))))))))))))))))))
-PYTHON_VERSION_FN = $(if $(strip $(1)),$(strip $(1)),$(firstword $(PYTHON_VERSIONS)))
-PYTHON_NAME_FN = $(call UPPER_FN, Python_$(subst .,_,$(call PYTHON_VERSION_FN,$(1))))
-PYTHON_IMAGE_FN = python:$(call PYTHON_VERSION_FN,$(1))
 
 .PHONY: _help help
 help: _help
@@ -56,41 +61,41 @@ _clean:
 superclean: clean _superclean
 _superclean:
 ifeq '$(NO_DOCKER)' ''
-	-docker rmi -f $(foreach V, $(PYTHON_VERSIONS),$(call PYTHON_IMAGE_FN, $(V)))
+	-docker rmi -f $(PYTHON_IMAGES)
 endif
 
-# Function to generate venv rules - venv_name, pip_args, commands, *python_version
+# Function to generate venv rules - venv_name, docker_image, pip_args, commands
 define VENV_RULE_FN
-$(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_DIR := build/venv/$(strip $(1))-python-$(call PYTHON_VERSION_FN,$(4))
-$(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN := $$(if $$(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(call PYTHON_IMAGE_FN,$(4)))
-$(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD := $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN) $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_DIR)/bin
-$(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_BUILD := build/venv/$(strip $(1))-python-$(call PYTHON_VERSION_FN,$(4)).build
+$(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR := build/venv/$(strip $(1))-$(call IMAGE_NAME_FN,$(2))
+$(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN := $$(if $$(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(strip $(2)))
+$(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD := $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN) $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR)/bin
+$(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_BUILD := build/venv/$(strip $(1))-$(call IMAGE_NAME_FN,$(2)).build
 
-$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_BUILD):
+$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_BUILD):
 ifeq '$$(NO_DOCKER)' ''
-	if [ "$$$$(docker images -q $(call PYTHON_IMAGE_FN,$(4)))" = "" ]; then docker pull -q $(call PYTHON_IMAGE_FN,$(4)); fi
+	if [ "$$$$(docker images -q $(strip $(2)))" = "" ]; then docker pull -q $(strip $(2)); fi
 endif
-	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_RUN) python3 -m venv $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_DIR)
-	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip -q $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
-	$$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD)/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $$(strip $(2))
+	$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN) python3 -m venv $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR)
+	$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD)/pip -q $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
+	$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD)/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $$(strip $(3))
 	touch $$@
 
-.PHONY: $(strip $(1))-$(subst _,-,$(call LOWER_FN, $(call PYTHON_NAME_FN, $(4))))
-$(strip $(1))-$(subst _,-,$(call LOWER_FN, $(call PYTHON_NAME_FN, $(4)))): $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_BUILD)
-$(call $(3), $$($(call UPPER_FN, $(1))_$(call PYTHON_NAME_FN, $(4))_VENV_CMD))
+.PHONY: $(strip $(1))-$(call IMAGE_NAME_FN,$(2))
+$(strip $(1))-$(call IMAGE_NAME_FN,$(2)): $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_BUILD)
+$(call $(4),$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD))
 
 .PHONY: $(strip $(1))
-$(strip $(1)): $(strip $(1))-$(subst _,-,$(call LOWER_FN, $(call PYTHON_NAME_FN, $(4))))
+$(strip $(1)): $(strip $(1))-$(call IMAGE_NAME_FN,$(2))
 endef
 
 # Generate test rules
 define TEST_COMMANDS_FN
 	$(1)/python3 -m unittest $$(if $$(TEST),-v $$(TEST),discover -v -t src -s src/tests)$$(if $$(TEST_ARGS), $$(TEST_ARGS))
 endef
-TEST_RULES_FN = $(call VENV_RULE_FN, test, -e . $$(TESTS_REQUIRE), TEST_COMMANDS_FN, $(1))
-$(foreach X, $(PYTHON_VERSIONS), $(eval $(call TEST_RULES_FN, $(X))))
+TEST_RULES_FN = $(call VENV_RULE_FN, test, $(IMAGE), -e . $$(TESTS_REQUIRE), TEST_COMMANDS_FN)
+$(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call TEST_RULES_FN, $(IMAGE))))
 ifneq '$(DUMP_RULES)' ''
-$(foreach X, $(PYTHON_VERSIONS), $(info $(call TEST_RULES_FN, $(X))) $(info ))
+$(foreach IMAGE, $(PYTHON_IMAGES), $(info $(call TEST_RULES_FN, $(IMAGE))) $(info ))
 endif
 
 # Generate coverage rule
@@ -99,7 +104,7 @@ define COVER_COMMANDS_FN
 	$(1)/python3 -m coverage html -d build/coverage
 	$(1)/python3 -m coverage report $$(COVERAGE_REPORT_ARGS)
 endef
-COVER_RULES := $(call VENV_RULE_FN, cover, -e . coverage=="$$(COVERAGE_VERSION)" $$(TESTS_REQUIRE), COVER_COMMANDS_FN)
+COVER_RULES := $(call VENV_RULE_FN, cover, $(firstword $(PYTHON_IMAGES)), -e . coverage=="$$(COVERAGE_VERSION)" $$(TESTS_REQUIRE), COVER_COMMANDS_FN)
 $(eval $(COVER_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(COVER_RULES))
@@ -110,7 +115,7 @@ endif
 define LINT_COMMANDS_FN
 	$(1)/python3 -m pylint $$(PYLINT_ARGS) setup.py src
 endef
-LINT_RULES := $(call VENV_RULE_FN, lint, -e . pylint=="$$(PYLINT_VERSION)", LINT_COMMANDS_FN)
+LINT_RULES := $(call VENV_RULE_FN, lint, $(firstword $(PYTHON_IMAGES)), -e . pylint=="$$(PYLINT_VERSION)", LINT_COMMANDS_FN)
 $(eval $(LINT_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(LINT_RULES))
@@ -129,7 +134,7 @@ define DOC_COMMANDS_FN
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d build/doc/doctrees $$(SPHINX_DOC) build/doc/doctest
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d build/doc/doctrees $$(SPHINX_DOC) build/doc/html
 endef
-DOC_RULES := $(call VENV_RULE_FN, doc, -e . sphinx=="$$(SPHINX_VERSION)" sphinx_rtd_theme=="$$(SPHINX_RTD_THEME_VERSION)", DOC_COMMANDS_FN)
+DOC_RULES := $(call VENV_RULE_FN, doc, $(firstword $(PYTHON_IMAGES)), -e . sphinx=="$$(SPHINX_VERSION)" sphinx_rtd_theme=="$$(SPHINX_RTD_THEME_VERSION)", DOC_COMMANDS_FN)
 $(eval $(DOC_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(DOC_RULES))
@@ -152,7 +157,7 @@ define PUBLISH_COMMANDS_FN
 	$(1)/twine check dist/*.tar.gz
 	$(1)/twine upload dist/*.tar.gz
 endef
-PUBLISH_RULES := $(call VENV_RULE_FN, publish, -e . twine, PUBLISH_COMMANDS_FN)
+PUBLISH_RULES := $(call VENV_RULE_FN, publish, $(firstword $(PYTHON_IMAGES)), twine, PUBLISH_COMMANDS_FN)
 $(eval $(PUBLISH_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(PUBLISH_RULES))
@@ -163,7 +168,7 @@ endif
 define CHANGELOG_COMMANDS_FN
 	$(1)/simple-git-changelog
 endef
-CHANGELOG_RULES := $(call VENV_RULE_FN, changelog, simple-git-changelog, CHANGELOG_COMMANDS_FN)
+CHANGELOG_RULES := $(call VENV_RULE_FN, changelog, $(firstword $(PYTHON_IMAGES)), simple-git-changelog, CHANGELOG_COMMANDS_FN)
 $(eval $(CHANGELOG_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(CHANGELOG_RULES))
