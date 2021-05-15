@@ -100,7 +100,7 @@ ifneq '$(DUMP_RULES)' ''
 $(foreach IMAGE, $(PYTHON_IMAGES), $(info $(call TEST_RULES_FN, $(IMAGE))) $(info ))
 endif
 
-# Generate coverage rule
+# Generate cover rule
 define COVER_COMMANDS_FN
 	$(1)/python3 -m coverage run --branch --source src -m unittest $$(if $$(TEST),-v $$(TEST),discover -v -t src -s src/tests)$$(if $$(TEST_ARGS), $$(TEST_ARGS))
 	$(1)/python3 -m coverage html -d build/coverage
@@ -124,7 +124,7 @@ $(info $(LINT_RULES))
 $(info )
 endif
 
-# Generate sphinx rule
+# Generate doc and gh-pages rules
 ifeq '$(SPHINX_DOC)' ''
 .PHONY: doc
 doc:
