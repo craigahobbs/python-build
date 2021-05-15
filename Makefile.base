@@ -67,8 +67,10 @@ endif
 # Function to generate venv rules - venv_name, docker_image, pip_args, commands
 define VENV_RULE_FN
 $(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR := build/venv/$(strip $(1))-$(call IMAGE_NAME_FN,$(2))
-$(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN := $$(if $$(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(strip $(2)))
-$(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD := $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN) $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR)/bin
+$(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN := \
+    $$(if $$(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(strip $(2)))
+$(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD := \
+    $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN) $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR)/bin
 $(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_BUILD := build/venv/$(strip $(1))-$(call IMAGE_NAME_FN,$(2)).build
 
 $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_BUILD):
