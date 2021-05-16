@@ -1,3 +1,7 @@
+## 2021-05-16
+
+- [2aa1db7](https://github.com/craigahobbs/python-build/commit/2aa1db7) - add PYTHON_IMAGES_EXCLUDE
+
 ## 2021-05-14
 
 - [f4c0297](https://github.com/craigahobbs/python-build/commit/f4c0297) - eliminate PYTHON_VERSIONS in favor of PYTHON_IMAGES
