@@ -1,18 +1,5 @@
 # Python Build
 
-## Contents
-
-- [Introduction](#introduction)
-- [Project Setup](#project-setup)
-- [Make Targets](#make-targets)
-- [Make Options](#make-options)
-- [Make Variables](#make-variables)
-- [Extending Python Build](#extending-python-build)
-- [Make Tips & Tricks](#make-tips--tricks)
-
-
-## Introduction
-
 **Python Build** is a lightweight GNU Make-based build system for best-practice Python package
 development. Python Build performs the following functions:
 
@@ -23,6 +10,16 @@ development. Python Build performs the following functions:
 - Publish documentation to [GitHub Pages](https://pages.github.com/)
 - Create and update a project changelog file using [simple-git-changelog](https://pypi.org/project/simple-git-changelog/)
 - Publish the package to PyPI using [twine](https://pypi.org/project/twine/)
+
+
+## Contents
+
+- [Project Setup](#project-setup)
+- [Make Targets](#make-targets)
+- [Make Options](#make-options)
+- [Make Variables](#make-variables)
+- [Extending Python Build](#extending-python-build)
+- [Make Tips & Tricks](#make-tips--tricks)
 
 
 ## Project Setup

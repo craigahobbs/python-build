@@ -2,6 +2,8 @@
 # Licensed under the MIT License
 # https://github.com/craigahobbs/python-build/blob/main/LICENSE
 
+# Python Build - https://github.com/craigahobbs/python-build#readme
+
 # Python docker images with which to run unit tests
 ifeq '$(NO_DOCKER)' ''
 PYTHON_IMAGES ?= \
