@@ -12,6 +12,9 @@ PYTHON_IMAGES ?= \
     python:3.8 \
     python:3.7 \
     python:3.6
+
+# Exclude Python docker images
+PYTHON_IMAGES := $(foreach IMAGE,$(PYTHON_IMAGES),$(if $(findstring $(IMAGE),$(PYTHON_IMAGES_EXCLUDE)),,$(IMAGE)))
 else
 PYTHON_IMAGES := no-docker
 endif
@@ -45,9 +48,6 @@ help: _help
 _help:
 	@echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
 
-.PHONY: commit
-commit: test lint doc cover
-
 .PHONY: _clean clean
 clean: _clean
 _clean:
@@ -65,6 +65,9 @@ _superclean:
 ifeq '$(NO_DOCKER)' ''
 	-docker rmi -f $(PYTHON_IMAGES)
 endif
+
+.PHONY: commit
+commit: test lint doc cover
 
 # Function to generate venv rules - venv_name, docker_image, pip_args, commands
 define VENV_RULE_FN

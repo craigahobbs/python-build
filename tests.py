@@ -21,16 +21,6 @@ with open('Makefile.base', 'r') as file_makefile_base:
     MAKEFILE_BASE = file_makefile_base.read()
 
 
-# The default Python Build makefile
-DEFAULT_MAKEFILE = '''\
-PYTHON_IMAGES := python:3.9 python:3.8 python:3.7
-
-SPHINX_DOC := doc
-
-include Makefile.base
-'''
-
-
 # Helper context manager to create a list of files in a temporary directory
 @contextmanager
 def create_test_files(file_defs):
@@ -53,12 +43,6 @@ class PythonBuildTest(unittest.TestCase):
     Python Build makefile unit tests
     """
 
-    @staticmethod
-    def check_output(args, cwd, env=None):
-        if env is None:
-            env = {'NO_DOCKER': ''}
-        return subprocess.check_output(args, env=env, cwd=cwd, stderr=subprocess.STDOUT, encoding='utf-8')
-
     def assert_make_output(self, actual, expected):
         actual_clean = actual
 
@@ -75,18 +59,18 @@ class PythonBuildTest(unittest.TestCase):
 
     def test_help(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
             self.assert_make_output(
-                self.check_output(['make', '-n'], test_dir),
+                subprocess.check_output(['make', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
 '''
             )
             self.assert_make_output(
-                self.check_output(['make', 'help', '-n'], test_dir),
+                subprocess.check_output(['make', 'help', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
 '''
@@ -94,12 +78,12 @@ echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superc
 
     def test_help_dump_rules(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
             self.assert_make_output(
-                self.check_output(['make', 'DUMP_RULES=1', '-n'], test_dir),
+                subprocess.check_output(['make', 'DUMP_RULES=1', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 TEST_PYTHON_3_9_VENV_DIR := build/venv/test-python-3-9
 TEST_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
@@ -121,6 +105,27 @@ test-python-3-9: $(TEST_PYTHON_3_9_VENV_BUILD)
 
 .PHONY: test
 test: test-python-3-9
+
+TEST_PYTHON_3_10_RC_VENV_DIR := build/venv/test-python-3-10-rc
+TEST_PYTHON_3_10_RC_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc)
+TEST_PYTHON_3_10_RC_VENV_CMD := $(TEST_PYTHON_3_10_RC_VENV_RUN) $(TEST_PYTHON_3_10_RC_VENV_DIR)/bin
+TEST_PYTHON_3_10_RC_VENV_BUILD := build/venv/test-python-3-10-rc.build
+
+$(TEST_PYTHON_3_10_RC_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+\tif [ "$$(docker images -q python:3.10-rc)" = "" ]; then docker pull -q python:3.10-rc; fi
+endif
+\t$(TEST_PYTHON_3_10_RC_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_10_RC_VENV_DIR)
+\t$(TEST_PYTHON_3_10_RC_VENV_CMD)/pip -q $(PIP_ARGS) install $(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
+\t$(TEST_PYTHON_3_10_RC_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . $(TESTS_REQUIRE))
+\ttouch $@
+
+.PHONY: test-python-3-10-rc
+test-python-3-10-rc: $(TEST_PYTHON_3_10_RC_VENV_BUILD)
+\t$(TEST_PYTHON_3_10_RC_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+
+.PHONY: test
+test: test-python-3-10-rc
 
 TEST_PYTHON_3_8_VENV_DIR := build/venv/test-python-3-8
 TEST_PYTHON_3_8_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8)
@@ -163,6 +168,27 @@ test-python-3-7: $(TEST_PYTHON_3_7_VENV_BUILD)
 
 .PHONY: test
 test: test-python-3-7
+
+TEST_PYTHON_3_6_VENV_DIR := build/venv/test-python-3-6
+TEST_PYTHON_3_6_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6)
+TEST_PYTHON_3_6_VENV_CMD := $(TEST_PYTHON_3_6_VENV_RUN) $(TEST_PYTHON_3_6_VENV_DIR)/bin
+TEST_PYTHON_3_6_VENV_BUILD := build/venv/test-python-3-6.build
+
+$(TEST_PYTHON_3_6_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+\tif [ "$$(docker images -q python:3.6)" = "" ]; then docker pull -q python:3.6; fi
+endif
+\t$(TEST_PYTHON_3_6_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_6_VENV_DIR)
+\t$(TEST_PYTHON_3_6_VENV_CMD)/pip -q $(PIP_ARGS) install $(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
+\t$(TEST_PYTHON_3_6_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . $(TESTS_REQUIRE))
+\ttouch $@
+
+.PHONY: test-python-3-6
+test-python-3-6: $(TEST_PYTHON_3_6_VENV_BUILD)
+\t$(TEST_PYTHON_3_6_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+
+.PHONY: test
+test: test-python-3-6
 
 COVER_PYTHON_3_9_VENV_DIR := build/venv/cover-python-3-9
 COVER_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
@@ -207,28 +233,6 @@ lint-python-3-9: $(LINT_PYTHON_3_9_VENV_BUILD)
 
 .PHONY: lint
 lint: lint-python-3-9
-
-DOC_PYTHON_3_9_VENV_DIR := build/venv/doc-python-3-9
-DOC_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
-DOC_PYTHON_3_9_VENV_CMD := $(DOC_PYTHON_3_9_VENV_RUN) $(DOC_PYTHON_3_9_VENV_DIR)/bin
-DOC_PYTHON_3_9_VENV_BUILD := build/venv/doc-python-3-9.build
-
-$(DOC_PYTHON_3_9_VENV_BUILD):
-ifeq '$(NO_DOCKER)' ''
-\tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
-endif
-\t$(DOC_PYTHON_3_9_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_9_VENV_DIR)
-\t$(DOC_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install $(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
-\t$(DOC_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . sphinx=="$(SPHINX_VERSION)" sphinx_rtd_theme=="$(SPHINX_RTD_THEME_VERSION)")
-\ttouch $@
-
-.PHONY: doc-python-3-9
-doc-python-3-9: $(DOC_PYTHON_3_9_VENV_BUILD)
-\t$(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b doctest -d build/doc/doctrees $(SPHINX_DOC) build/doc/doctest
-\t$(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b html -d build/doc/doctrees $(SPHINX_DOC) build/doc/html
-
-.PHONY: doc
-doc: doc-python-3-9
 
 PUBLISH_PYTHON_3_9_VENV_DIR := build/venv/publish-python-3-9
 PUBLISH_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
@@ -280,12 +284,12 @@ echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superc
 
     def test_clean(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
             self.assert_make_output(
-                self.check_output(['make', 'clean', '-n'], test_dir),
+                subprocess.check_output(['make', 'clean', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 rm -rf \\
 \tbuild \\
@@ -299,12 +303,12 @@ rm -rf \\
 
     def test_superclean(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
             self.assert_make_output(
-                self.check_output(['make', 'superclean', '-n'], test_dir),
+                subprocess.check_output(['make', 'superclean', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 rm -rf \\
 \tbuild \\
@@ -313,19 +317,19 @@ rm -rf \\
 \tdist/ \\
 \tsrc/*.egg-info \\
 \t*.eggs
-docker rmi -f python:3.9 python:3.8 python:3.7
+docker rmi -f python:3.9 python:3.10-rc python:3.8 python:3.7 python:3.6
 '''
             )
 
     def test_test(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
             # Check initial make test commands
             self.assert_make_output(
-                self.check_output(['make', 'test', '-n'], cwd=test_dir),
+                subprocess.check_output(['make', 'test', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/test-python-3-9
@@ -333,6 +337,12 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3-9.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
+if [ "$(docker images -q python:3.10-rc)" = "" ]; then docker pull -q python:3.10-rc; fi
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc python3 -m venv build/venv/test-python-3-10-rc
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
+touch build/venv/test-python-3-10-rc.build
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
 if [ "$(docker images -q python:3.8)" = "" ]; then docker pull -q python:3.8; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 python3 -m venv build/venv/test-python-3-8
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
@@ -345,20 +355,61 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3-7.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
+if [ "$(docker images -q python:3.6)" = "" ]; then docker pull -q python:3.6; fi
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 python3 -m venv build/venv/test-python-3-6
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
+touch build/venv/test-python-3-6.build
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
 '''
             )
 
             # Touch the environment build sentinels
             os.makedirs(os.path.join(test_dir, 'build', 'venv'))
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-9.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-10-rc.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-8.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-7.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-6.build')).touch()
 
             # Check subsequent make test commands
             self.assert_make_output(
-                self.check_output(['make', 'test', '-n'], test_dir),
+                subprocess.check_output(['make', 'test', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
+'''
+            )
+
+    def test_test_exclude(self):
+        test_files = create_test_files([
+            (
+                'Makefile',
+                '''\
+PYTHON_IMAGES_EXCLUDE := python:3.6
+include Makefile.base
+'''
+            ),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            # Touch the environment build sentinels
+            os.makedirs(os.path.join(test_dir, 'build', 'venv'))
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-9.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-10-rc.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-8.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-7.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-6.build')).touch()
+
+            # Check subsequent make test commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'test', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
 '''
@@ -366,13 +417,13 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/v
 
     def test_cover(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
             # Check initial make cover commands
             self.assert_make_output(
-                self.check_output(['make', 'cover', '-n'], test_dir),
+                subprocess.check_output(['make', 'cover', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/cover-python-3-9
@@ -391,7 +442,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
             # Check subsequent make cover commands
             self.assert_make_output(
-                self.check_output(['make', 'cover', '-n'], test_dir),
+                subprocess.check_output(['make', 'cover', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
@@ -401,13 +452,13 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
     def test_lint(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
             # Check initial make lint commands
             self.assert_make_output(
-                self.check_output(['make', 'lint', '-n'], test_dir),
+                subprocess.check_output(['make', 'lint', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/lint-python-3-9
@@ -424,7 +475,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
             # Check subsequent make lint commands
             self.assert_make_output(
-                self.check_output(['make', 'lint', '-n'], test_dir),
+                subprocess.check_output(['make', 'lint', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint -j 0 setup.py src
 '''
@@ -432,13 +483,19 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
     def test_doc(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            (
+                'Makefile',
+                '''\
+SPHINX_DOC := doc
+include Makefile.base
+'''
+            ),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
             # Check initial make doc commands
             self.assert_make_output(
-                self.check_output(['make', 'doc', '-n'], test_dir),
+                subprocess.check_output(['make', 'doc', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/doc-python-3-9
@@ -456,7 +513,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
             # Check subsequent make doc commands
             self.assert_make_output(
-                self.check_output(['make', 'doc', '-n'], test_dir),
+                subprocess.check_output(['make', 'doc', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
@@ -465,14 +522,36 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
     def test_doc_none(self):
         test_files = create_test_files([
+            ('Makefile', 'include Makefile.base'),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            # Touch the environment build sentinels
+            os.makedirs(os.path.join(test_dir, 'build', 'venv'))
+            Path(os.path.join(test_dir, 'build', 'venv', 'doc-python-3-9.build')).touch()
+
+            # Check subsequent make doc commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'doc', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+make: Nothing to be done for 'doc'.
+'''
+            )
+
+            # Check subsequent make doc commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'gh-pages', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+make: Nothing to be done for 'gh-pages'.
+'''
+            )
+
+    def test_gh_pages(self):
+        test_files = create_test_files([
             (
                 'Makefile',
                 '''\
-PYTHON_IMAGES := \
-    python:3.9 \
-    python:3.8 \
-    python:3.7
-
+SPHINX_DOC := doc
 include Makefile.base
 '''
             ),
@@ -483,34 +562,8 @@ include Makefile.base
             os.makedirs(os.path.join(test_dir, 'build', 'venv'))
             Path(os.path.join(test_dir, 'build', 'venv', 'doc-python-3-9.build')).touch()
 
-            # Check subsequent make doc commands
-            self.assert_make_output(
-                self.check_output(['make', 'doc', '-n'], test_dir),
-                '''\
-make: Nothing to be done for 'doc'.
-'''
-            )
-
-            # Check subsequent make doc commands
-            self.assert_make_output(
-                self.check_output(['make', 'gh-pages', '-n'], cwd=test_dir),
-                '''\
-make: Nothing to be done for 'gh-pages'.
-'''
-            )
-
-    def test_gh_pages(self):
-        test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
-            ('Makefile.base', MAKEFILE_BASE)
-        ])
-        with test_files as test_dir:
-            # Touch the environment build sentinels
-            os.makedirs(os.path.join(test_dir, 'build', 'venv'))
-            Path(os.path.join(test_dir, 'build', 'venv', 'doc-python-3-9.build')).touch()
-
             # Check make gh-pages commands
-            output = self.check_output(['make', 'gh-pages', '-n'], test_dir)
+            output = subprocess.check_output(['make', 'gh-pages', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8')
             output = re.sub(r'../tmp.*?\.gh-pages\b', '../tmp.gh-pages', output)
             self.assert_make_output(
                 output,
@@ -532,7 +585,7 @@ rsync -rv --delete --exclude=.git/ build/doc/html/ ../tmp.gh-pages
 
     def test_commit(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
@@ -542,19 +595,21 @@ rsync -rv --delete --exclude=.git/ build/doc/html/ ../tmp.gh-pages
             Path(os.path.join(test_dir, 'build', 'venv', 'doc-python-3-9.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'lint-python-3-9.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-9.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-10-rc.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-8.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-7.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-6.build')).touch()
 
             # Check make commit commands
             self.assert_make_output(
-                self.check_output(['make', 'commit', '-n'], test_dir),
+                subprocess.check_output(['make', 'commit', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint -j 0 setup.py src
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
@@ -563,13 +618,12 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
     def test_commit_no_docker(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
-            # Check make commit commands
             self.assert_make_output(
-                self.check_output(['make', 'commit', '-n'], test_dir, env={'NO_DOCKER': '1'}),
+                subprocess.check_output(['make', 'commit', '-n'], env={'NO_DOCKER': '1'}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 python3 -m venv build/venv/test-no-docker
 build/venv/test-no-docker/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
@@ -581,12 +635,6 @@ build/venv/lint-no-docker/bin/pip -q --no-cache-dir --disable-pip-version-check 
 build/venv/lint-no-docker/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . pylint=="X.X.X"
 touch build/venv/lint-no-docker.build
 build/venv/lint-no-docker/bin/python3 -m pylint -j 0 setup.py src
-python3 -m venv build/venv/doc-no-docker
-build/venv/doc-no-docker/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
-build/venv/doc-no-docker/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . sphinx=="X.X.X" sphinx_rtd_theme=="X.X.X"
-touch build/venv/doc-no-docker.build
-build/venv/doc-no-docker/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
-build/venv/doc-no-docker/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
 python3 -m venv build/venv/cover-no-docker
 build/venv/cover-no-docker/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 build/venv/cover-no-docker/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . coverage=="X.X.X"
@@ -615,11 +663,9 @@ include Makefile.base
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
-            # Check make commit commands
             self.assert_make_output(
-                self.check_output(
+                subprocess.check_output(
                     ['make', 'commit', '-n'],
-                    test_dir,
                     env = {
                         'PIP_ARGS': '--bogus-pip-pargs',
                         'PIP_INSTALL_ARGS': '--bogus-pip-install-args',
@@ -633,7 +679,8 @@ include Makefile.base
                         'SPHINX_DOC': 'bogus-sphinx-doc',
                         'TESTS_REQUIRE': '"foobar >= 1.0"',
                         'NO_DOCKER': ''
-                    }
+                    },
+                    cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'
                 ),
                 '''\
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
@@ -680,7 +727,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
     def test_publish(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
@@ -690,19 +737,21 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
             Path(os.path.join(test_dir, 'build', 'venv', 'doc-python-3-9.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'lint-python-3-9.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-9.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-10-rc.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-8.build')).touch()
             Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-7.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-6.build')).touch()
 
             # Check make publish commands
             self.assert_make_output(
-                self.check_output(['make', 'publish', '-n'], test_dir),
+                subprocess.check_output(['make', 'publish', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint -j 0 setup.py src
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
@@ -722,14 +771,14 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
             # Check subsequent make publish commands
             self.assert_make_output(
-                self.check_output(['make', 'publish', '-n'], test_dir),
+                subprocess.check_output(['make', 'publish', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint -j 0 setup.py src
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
@@ -741,7 +790,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
     def test_changelog(self):
         test_files = create_test_files([
-            ('Makefile', DEFAULT_MAKEFILE),
+            ('Makefile', 'include Makefile.base'),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
@@ -751,7 +800,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 
             # Check subsequent make publish commands
             self.assert_make_output(
-                self.check_output(['make', 'changelog', '-n'], test_dir),
+                subprocess.check_output(['make', 'changelog', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/changelog-python-3-9/bin/simple-git-changelog
 '''

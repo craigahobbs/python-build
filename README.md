@@ -47,6 +47,9 @@ The basic Python Build `Makefile` is as follows:
 # Python images (optional)
 # PYTHON_IMAGES := python:3.9 python:3.8 python:3.7
 
+# Exclude Python images (optional)
+# PYTHON_IMAGES_EXCLUDE := python:3.6
+
 # Sphinx documentation directory (optional)
 # SPHINX_DOC := doc
 
