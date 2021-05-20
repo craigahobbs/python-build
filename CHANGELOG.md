@@ -1,5 +1,7 @@
 ## 2021-05-20
 
+- [a71e270](https://github.com/craigahobbs/python-build/commit/a71e270) - add optional unittest-parallel support
+
 - [6c5175a](https://github.com/craigahobbs/python-build/commit/6c5175a) - clean before publish
 
 ## 2021-05-16
