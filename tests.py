@@ -101,7 +101,13 @@ endif
 
 .PHONY: test-python-3-9
 test-python-3-9: $(TEST_PYTHON_3_9_VENV_BUILD)
-\t$(TEST_PYTHON_3_9_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+ifneq '$(TEST)' ''
+\t$(TEST_PYTHON_3_9_VENV_CMD)/python3 -m unittest $(UNITTEST_ARGS) $(TEST)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+\t$(TEST_PYTHON_3_9_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS)
+else
+\t$(TEST_PYTHON_3_9_VENV_CMD)/python3 -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+endif
 
 .PHONY: test
 test: test-python-3-9
@@ -122,7 +128,13 @@ endif
 
 .PHONY: test-python-3-10-rc
 test-python-3-10-rc: $(TEST_PYTHON_3_10_RC_VENV_BUILD)
-\t$(TEST_PYTHON_3_10_RC_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+ifneq '$(TEST)' ''
+\t$(TEST_PYTHON_3_10_RC_VENV_CMD)/python3 -m unittest $(UNITTEST_ARGS) $(TEST)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+\t$(TEST_PYTHON_3_10_RC_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS)
+else
+\t$(TEST_PYTHON_3_10_RC_VENV_CMD)/python3 -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+endif
 
 .PHONY: test
 test: test-python-3-10-rc
@@ -143,7 +155,13 @@ endif
 
 .PHONY: test-python-3-8
 test-python-3-8: $(TEST_PYTHON_3_8_VENV_BUILD)
-\t$(TEST_PYTHON_3_8_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+ifneq '$(TEST)' ''
+\t$(TEST_PYTHON_3_8_VENV_CMD)/python3 -m unittest $(UNITTEST_ARGS) $(TEST)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+\t$(TEST_PYTHON_3_8_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS)
+else
+\t$(TEST_PYTHON_3_8_VENV_CMD)/python3 -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+endif
 
 .PHONY: test
 test: test-python-3-8
@@ -164,7 +182,13 @@ endif
 
 .PHONY: test-python-3-7
 test-python-3-7: $(TEST_PYTHON_3_7_VENV_BUILD)
-\t$(TEST_PYTHON_3_7_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+ifneq '$(TEST)' ''
+\t$(TEST_PYTHON_3_7_VENV_CMD)/python3 -m unittest $(UNITTEST_ARGS) $(TEST)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+\t$(TEST_PYTHON_3_7_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS)
+else
+\t$(TEST_PYTHON_3_7_VENV_CMD)/python3 -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+endif
 
 .PHONY: test
 test: test-python-3-7
@@ -185,7 +209,13 @@ endif
 
 .PHONY: test-python-3-6
 test-python-3-6: $(TEST_PYTHON_3_6_VENV_BUILD)
-\t$(TEST_PYTHON_3_6_VENV_CMD)/python3 -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+ifneq '$(TEST)' ''
+\t$(TEST_PYTHON_3_6_VENV_CMD)/python3 -m unittest $(UNITTEST_ARGS) $(TEST)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+\t$(TEST_PYTHON_3_6_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS)
+else
+\t$(TEST_PYTHON_3_6_VENV_CMD)/python3 -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+endif
 
 .PHONY: test
 test: test-python-3-6
@@ -206,9 +236,17 @@ endif
 
 .PHONY: cover-python-3-9
 cover-python-3-9: $(COVER_PYTHON_3_9_VENV_BUILD)
-\t$(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage run --branch --source src -m unittest $(if $(TEST),-v $(TEST),discover -v -t src -s src/tests)$(if $(TEST_ARGS), $(TEST_ARGS))
+ifneq '$(TEST)' ''
+\t$(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage run --source src/ $(COVERAGE_ARGS) -m unittest $(UNITTEST_ARGS) $(TEST)
 \t$(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage html -d build/coverage
 \t$(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage report $(COVERAGE_REPORT_ARGS)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+\t$(COVER_PYTHON_3_9_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS) --coverage-html=build/coverage $(UNITTEST_PARALLEL_COVERAGE_ARGS)
+else
+\t$(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage run --source src/ $(COVERAGE_ARGS) -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+\t$(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage html -d build/coverage
+\t$(COVER_PYTHON_3_9_VENV_CMD)/python3 -m coverage report $(COVERAGE_REPORT_ARGS)
+endif
 
 .PHONY: cover
 cover: cover-python-3-9
@@ -324,31 +362,31 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3-9.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 if [ "$(docker images -q python:3.10-rc)" = "" ]; then docker pull -q python:3.10-rc; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc python3 -m venv build/venv/test-python-3-10-rc
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3-10-rc.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 if [ "$(docker images -q python:3.8)" = "" ]; then docker pull -q python:3.8; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 python3 -m venv build/venv/test-python-3-8
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3-8.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 if [ "$(docker images -q python:3.7)" = "" ]; then docker pull -q python:3.7; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 python3 -m venv build/venv/test-python-3-7
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3-7.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 if [ "$(docker images -q python:3.6)" = "" ]; then docker pull -q python:3.6; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 python3 -m venv build/venv/test-python-3-6
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-python-3-6.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 '''
             )
 
@@ -364,11 +402,49 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/v
             self.assert_make_output(
                 subprocess.check_output(['make', 'test', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+'''
+            )
+
+    def test_test_unittest_parallel(self):
+        test_files = create_test_files([
+            (
+                'Makefile',
+                '''\
+PYTHON_IMAGES := python:3
+UNITTEST_PARALLEL := 1
+include Makefile.base
+'''
+            ),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            # Check initial make test commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'test', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+if [ "$(docker images -q python:3)" = "" ]; then docker pull -q python:3; fi
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 python3 -m venv build/venv/test-python-3
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/test-python-3/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/test-python-3/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . unittest-parallel=="X.X.X"
+touch build/venv/test-python-3.build
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/test-python-3/bin/unittest-parallel -t src/ -s src/tests/ -v
+'''
+            )
+
+            # Touch the environment build sentinels
+            os.makedirs(os.path.join(test_dir, 'build', 'venv'))
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3.build')).touch()
+
+            # Check subsequent make test commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'test', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/test-python-3/bin/unittest-parallel -t src/ -s src/tests/ -v
 '''
             )
 
@@ -396,10 +472,36 @@ include Makefile.base
             self.assert_make_output(
                 subprocess.check_output(['make', 'test', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+'''
+            )
+
+    def test_test_test(self):
+        test_files = create_test_files([
+            ('Makefile', 'include Makefile.base'),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            # Touch the environment build sentinels
+            os.makedirs(os.path.join(test_dir, 'build', 'venv'))
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-9.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-10-rc.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-8.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-7.build')).touch()
+            Path(os.path.join(test_dir, 'build', 'venv', 'test-python-3-6.build')).touch()
+
+            # Check subsequent make test commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'test', 'TEST=tests.test_package', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest -v tests.test_package
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest -v tests.test_package
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest -v tests.test_package
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest -v tests.test_package
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest -v tests.test_package
 '''
             )
 
@@ -418,7 +520,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . coverage=="X.X.X"
 touch build/venv/cover-python-3-9.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
 '''
@@ -432,7 +534,65 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
             self.assert_make_output(
                 subprocess.check_output(['make', 'cover', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
+'''
+            )
+
+    def test_cover_unittest_parallel(self):
+        test_files = create_test_files([
+            (
+                'Makefile',
+                '''\
+PYTHON_IMAGES := python:3
+UNITTEST_PARALLEL := 1
+include Makefile.base
+'''
+            ),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            # Check initial make cover commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'cover', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+if [ "$(docker images -q python:3)" = "" ]; then docker pull -q python:3; fi
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 python3 -m venv build/venv/cover-python-3
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/cover-python-3/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/cover-python-3/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . coverage=="X.X.X" unittest-parallel=="X.X.X"
+touch build/venv/cover-python-3.build
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/cover-python-3/bin/unittest-parallel -t src/ -s src/tests/ -v --coverage-html=build/coverage --coverage-branch --coverage-fail-under 100
+'''
+            )
+
+            # Touch the environment build sentinels
+            os.makedirs(os.path.join(test_dir, 'build', 'venv'))
+            Path(os.path.join(test_dir, 'build', 'venv', 'cover-python-3.build')).touch()
+
+            # Check subsequent make cover commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'cover', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/cover-python-3/bin/unittest-parallel -t src/ -s src/tests/ -v --coverage-html=build/coverage --coverage-branch --coverage-fail-under 100
+'''
+            )
+
+    def test_cover_test(self):
+        test_files = create_test_files([
+            ('Makefile', 'include Makefile.base'),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            # Touch the environment build sentinels
+            os.makedirs(os.path.join(test_dir, 'build', 'venv'))
+            Path(os.path.join(test_dir, 'build', 'venv', 'cover-python-3-9.build')).touch()
+
+            # Check subsequent make test commands
+            self.assert_make_output(
+                subprocess.check_output(['make', 'cover', 'TEST=tests.test_package', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
+                '''\
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --source src/ --branch -m unittest -v tests.test_package
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
 '''
@@ -586,13 +746,13 @@ rsync -rv --delete --exclude=.git/ build/doc/html/ ../tmp.gh-pages
             self.assert_make_output(
                 subprocess.check_output(['make', 'commit', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint -j 0 setup.py src
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
 '''
@@ -611,7 +771,7 @@ python3 -m venv build/venv/test-no-docker
 build/venv/test-no-docker/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 build/venv/test-no-docker/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e .
 touch build/venv/test-no-docker.build
-build/venv/test-no-docker/bin/python3 -m unittest discover -v -t src -s src/tests
+build/venv/test-no-docker/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 python3 -m venv build/venv/lint-no-docker
 build/venv/lint-no-docker/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 build/venv/lint-no-docker/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . pylint=="X.X.X"
@@ -621,7 +781,7 @@ python3 -m venv build/venv/cover-no-docker
 build/venv/cover-no-docker/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
 build/venv/cover-no-docker/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . coverage=="X.X.X"
 touch build/venv/cover-no-docker.build
-build/venv/cover-no-docker/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
+build/venv/cover-no-docker/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
 build/venv/cover-no-docker/bin/python3 -m coverage html -d build/coverage
 build/venv/cover-no-docker/bin/python3 -m coverage report --fail-under 100
 '''
@@ -632,13 +792,8 @@ build/venv/cover-no-docker/bin/python3 -m coverage report --fail-under 100
             (
                 'Makefile',
                 '''\
-PYTHON_IMAGES := \
-    python:3.9 \
-    python:3.8 \
-    python:3.7
-
+PYTHON_IMAGES := python:3.9
 SPHINX_DOC := doc
-
 include Makefile.base
 '''
             ),
@@ -649,15 +804,17 @@ include Makefile.base
                 subprocess.check_output(
                     ['make', 'commit', '-n'],
                     env = {
-                        'PIP_ARGS': '--bogus-pip-pargs',
-                        'PIP_INSTALL_ARGS': '--bogus-pip-install-args',
+                        'PIP_ARGS': '--bogus-pip-arg',
+                        'PIP_INSTALL_ARGS': '--bogus-pip-install-arg',
+                        'UNITTEST_ARGS': '--bogus-unittest-args',
                         'COVERAGE_VERSION': 'bogus-coverage-version',
-                        'COVERAGE_REPORT_ARGS': '--bogus-coverage-report-args',
+                        'COVERAGE_ARGS': '--bogus-coverage-arg',
+                        'COVERAGE_REPORT_ARGS': '--bogus-coverage-report-arg',
                         'PYLINT_VERSION': 'bogus-pylint-version',
-                        'PYLINT_ARGS': '--bogus-pylint-args',
+                        'PYLINT_ARGS': '--bogus-pylint-arg',
                         'SPHINX_VERSION': 'bogus-sphinx-version',
                         'SPHINX_RTD_THEME_VERSION': 'bogus-sphinx-rtd-theme-version',
-                        'SPHINX_ARGS': '--bogus-sphinx-args',
+                        'SPHINX_ARGS': '--bogus-sphinx-arg',
                         'SPHINX_DOC': 'bogus-sphinx-doc',
                         'TESTS_REQUIRE': '"foobar >= 1.0"',
                         'NO_DOCKER': ''
@@ -667,43 +824,76 @@ include Makefile.base
                 '''\
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/test-python-3-9
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . "foobar >= 1.0"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/pip -q --bogus-pip-arg install --bogus-pip-install-arg --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/pip --bogus-pip-arg install --bogus-pip-install-arg -e . "foobar >= 1.0"
 touch build/venv/test-python-3-9.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
-if [ "$(docker images -q python:3.8)" = "" ]; then docker pull -q python:3.8; fi
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 python3 -m venv build/venv/test-python-3-8
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . "foobar >= 1.0"
-touch build/venv/test-python-3-8.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
-if [ "$(docker images -q python:3.7)" = "" ]; then docker pull -q python:3.7; fi
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 python3 -m venv build/venv/test-python-3-7
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . "foobar >= 1.0"
-touch build/venv/test-python-3-7.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/lint-python-3-9
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . pylint=="bogus-pylint-version"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/pip -q --bogus-pip-arg install --bogus-pip-install-arg --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/pip --bogus-pip-arg install --bogus-pip-install-arg -e . pylint=="bogus-pylint-version"
 touch build/venv/lint-python-3-9.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint --bogus-pylint-args setup.py src
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint --bogus-pylint-arg setup.py src
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/doc-python-3-9
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . sphinx=="bogus-sphinx-version" sphinx_rtd_theme=="bogus-sphinx-rtd-theme-version"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/pip -q --bogus-pip-arg install --bogus-pip-install-arg --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/pip --bogus-pip-arg install --bogus-pip-install-arg -e . sphinx=="bogus-sphinx-version" sphinx_rtd_theme=="bogus-sphinx-rtd-theme-version"
 touch build/venv/doc-python-3-9.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build --bogus-sphinx-args -b doctest -d build/doc/doctrees doc build/doc/doctest
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build --bogus-sphinx-args -b html -d build/doc/doctrees doc build/doc/html
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build --bogus-sphinx-arg -b doctest -d build/doc/doctrees doc build/doc/doctest
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build --bogus-sphinx-arg -b html -d build/doc/doctrees doc build/doc/html
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/cover-python-3-9
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/pip -q --bogus-pip-pargs install --bogus-pip-install-args --upgrade pip setuptools wheel
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/pip --bogus-pip-pargs install --bogus-pip-install-args -e . coverage=="bogus-coverage-version" "foobar >= 1.0"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/pip -q --bogus-pip-arg install --bogus-pip-install-arg --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/pip --bogus-pip-arg install --bogus-pip-install-arg -e . coverage=="bogus-coverage-version" "foobar >= 1.0"
 touch build/venv/cover-python-3-9.build
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --source src/ --bogus-coverage-arg -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --bogus-coverage-report-args
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --bogus-coverage-report-arg
+'''
+            )
+
+    def test_commit_overrides_unittest_parallel(self):
+        test_files = create_test_files([
+            (
+                'Makefile',
+                '''\
+PYTHON_IMAGES := python:3
+UNITTEST_PARALLEL := 1
+include Makefile.base
+'''
+            ),
+            ('Makefile.base', MAKEFILE_BASE)
+        ])
+        with test_files as test_dir:
+            self.assert_make_output(
+                subprocess.check_output(
+                    ['make', 'commit', '-n'],
+                    env = {
+                        'UNITTEST_PARALLEL_VERSION': 'bogus-unittest-parallel-version',
+                        'UNITTEST_PARALLEL_ARGS': '--bogus-unittest-parallel-arg',
+                        'UNITTEST_PARALLEL_COVERAGE_ARGS': '--bogus-unittest-parallel-coverage-arg'
+                    },
+                    cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'
+                ),
+                '''\
+if [ "$(docker images -q python:3)" = "" ]; then docker pull -q python:3; fi
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 python3 -m venv build/venv/test-python-3
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/test-python-3/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/test-python-3/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . unittest-parallel=="bogus-unittest-parallel-version"
+touch build/venv/test-python-3.build
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/test-python-3/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
+if [ "$(docker images -q python:3)" = "" ]; then docker pull -q python:3; fi
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 python3 -m venv build/venv/lint-python-3
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/lint-python-3/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/lint-python-3/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . pylint=="X.X.X"
+touch build/venv/lint-python-3.build
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/lint-python-3/bin/python3 -m pylint -j 0 setup.py src
+if [ "$(docker images -q python:3)" = "" ]; then docker pull -q python:3; fi
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 python3 -m venv build/venv/cover-python-3
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/cover-python-3/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/cover-python-3/bin/pip --no-cache-dir --disable-pip-version-check install --progress-bar off -e . coverage=="X.X.X" unittest-parallel=="bogus-unittest-parallel-version"
+touch build/venv/cover-python-3.build
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/venv/cover-python-3/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg --coverage-html=build/coverage --bogus-unittest-parallel-coverage-arg
 '''
             )
 
@@ -729,13 +919,13 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
                 subprocess.check_output(['make', 'publish', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint -j 0 setup.py src
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
@@ -757,13 +947,13 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
                 subprocess.check_output(['make', 'publish', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
 rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -v -t src -s src/tests
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7 build/venv/test-python-3-7/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.6 build/venv/test-python-3-6/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint -j 0 setup.py src
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --branch --source src -m unittest discover -v -t src -s src/tests
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage html -d build/coverage
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/cover-python-3-9/bin/python3 -m coverage report --fail-under 100
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/publish-python-3-9/bin/python3 setup.py sdist

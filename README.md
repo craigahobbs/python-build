@@ -53,6 +53,9 @@ The basic Python Build `Makefile` is as follows:
 # Sphinx documentation directory (optional)
 # SPHINX_DOC := doc
 
+# Use unittest-parallel for running unit tests (optional)
+# UNITTEST_PARALLEL := 1
+
 # Download Python Build base makefile and pylintrc
 define WGET
 ifeq '$$(wildcard $(notdir $(1)))' ''
@@ -196,7 +199,9 @@ The following variables are supported:
 
 - `COVERAGE_VERSION` - The [coverage](https://pypi.org/project/coverage) package version.
 
-- `COVERAGE_REPORT_ARGS` - The coverage tool's command line arguments. Default is "--fail-under 100".
+- `COVERAGE_ARGS` - The coverage tool's command line arguments. Default is "--branch".
+
+- `COVERAGE_REPORT_ARGS` - The coverage report tool's command line arguments. Default is "--fail-under 100".
 
 - `PYLINT_VERSION` - The [pylint](https://pypi.org/project/pylint) package version.
 
@@ -209,6 +214,15 @@ The following variables are supported:
 - `SPHINX_ARGS` - The sphinx-build global command line arguments. Default is "-W -a".
 
 - `TESTS_REQUIRE` - Additional Python packages to install for unit tests.
+
+- `UNITTEST_ARGS` - The Python unittest discovery tool's command line arguments. Default is "-v".
+
+- `UNITTEST_PARALLEL_VERSION` - The [unittest-parallel](https://pypi.org/project/unittest-parallel) package version.
+
+- `UNITTEST_PARALLEL_ARGS` - The unittest-parallel tool's command line arguments. Default is "-v".
+
+- `UNITTEST_PARALLEL_COVERAGE_ARGS` - The unittest-parallel tool's coverage-related command line arguments.
+   Default is "--coverage-branch --coverage-fail-under 100".
 
 - `DUMP_RULES` - Dump generated make rules. This is intended to be used from the command line:
 

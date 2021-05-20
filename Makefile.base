@@ -23,8 +23,18 @@ endif
 PIP_ARGS ?= --no-cache-dir --disable-pip-version-check
 PIP_INSTALL_ARGS ?= --progress-bar off
 
+# Python unittest
+UNITTEST_ARGS ?= -v
+
+# unittest-parallel
+UNITTEST_PARALLEL ?=
+UNITTEST_PARALLEL_VERSION ?= 1.2.*
+UNITTEST_PARALLEL_ARGS ?= -v
+UNITTEST_PARALLEL_COVERAGE_ARGS ?= --coverage-branch --coverage-fail-under 100
+
 # coverage
 COVERAGE_VERSION ?= 5.5.*
+COVERAGE_ARGS ?= --branch
 COVERAGE_REPORT_ARGS ?= --fail-under 100
 
 # pylint
@@ -91,9 +101,17 @@ endef
 
 # Generate test rules
 define TEST_COMMANDS_FN
-	$(1)/python3 -m unittest $$(if $$(TEST),-v $$(TEST),discover -v -t src -s src/tests)$$(if $$(TEST_ARGS), $$(TEST_ARGS))
+ifneq '$$(TEST)' ''
+	$(1)/python3 -m unittest $$(UNITTEST_ARGS) $$(TEST)
+else ifneq '$$(UNITTEST_PARALLEL)' ''
+	$(1)/unittest-parallel -t src/ -s src/tests/ $$(UNITTEST_PARALLEL_ARGS)
+else
+	$(1)/python3 -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
+endif
 endef
-TEST_RULES_FN = $(call VENV_RULE_FN, test, $(IMAGE), -e . $$(TESTS_REQUIRE), TEST_COMMANDS_FN)
+TEST_RULES_FN = $(call VENV_RULE_FN, test, $(1), \
+    -e .$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") $$(TESTS_REQUIRE), \
+    TEST_COMMANDS_FN)
 $(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call TEST_RULES_FN, $(IMAGE))))
 ifneq '$(DUMP_RULES)' ''
 $(foreach IMAGE, $(PYTHON_IMAGES), $(info $(call TEST_RULES_FN, $(IMAGE))) $(info ))
@@ -101,11 +119,21 @@ endif
 
 # Generate cover rule
 define COVER_COMMANDS_FN
-	$(1)/python3 -m coverage run --branch --source src -m unittest $$(if $$(TEST),-v $$(TEST),discover -v -t src -s src/tests)$$(if $$(TEST_ARGS), $$(TEST_ARGS))
+ifneq '$$(TEST)' ''
+	$(1)/python3 -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest $$(UNITTEST_ARGS) $$(TEST)
 	$(1)/python3 -m coverage html -d build/coverage
 	$(1)/python3 -m coverage report $$(COVERAGE_REPORT_ARGS)
+else ifneq '$$(UNITTEST_PARALLEL)' ''
+	$(1)/unittest-parallel -t src/ -s src/tests/ $$(UNITTEST_PARALLEL_ARGS) --coverage-html=build/coverage $$(UNITTEST_PARALLEL_COVERAGE_ARGS)
+else
+	$(1)/python3 -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
+	$(1)/python3 -m coverage html -d build/coverage
+	$(1)/python3 -m coverage report $$(COVERAGE_REPORT_ARGS)
+endif
 endef
-COVER_RULES := $(call VENV_RULE_FN, cover, $(firstword $(PYTHON_IMAGES)), -e . coverage=="$$(COVERAGE_VERSION)" $$(TESTS_REQUIRE), COVER_COMMANDS_FN)
+COVER_RULES := $(call VENV_RULE_FN, cover, $(firstword $(PYTHON_IMAGES)), \
+    -e . coverage=="$$(COVERAGE_VERSION)"$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") $$(TESTS_REQUIRE), \
+    COVER_COMMANDS_FN)
 $(eval $(COVER_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(COVER_RULES))
