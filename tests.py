@@ -291,13 +291,7 @@ echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superc
             self.assert_make_output(
                 subprocess.check_output(['make', 'clean', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
-rm -rf \\
-\tbuild \\
-\t.coverage \\
-\t$(find src -name __pycache__) \\
-\tdist/ \\
-\tsrc/*.egg-info \\
-\t*.eggs
+rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
 '''
             )
 
@@ -310,13 +304,7 @@ rm -rf \\
             self.assert_make_output(
                 subprocess.check_output(['make', 'superclean', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
-rm -rf \\
-\tbuild \\
-\t.coverage \\
-\t$(find src -name __pycache__) \\
-\tdist/ \\
-\tsrc/*.egg-info \\
-\t*.eggs
+rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
 docker rmi -f python:3.9 python:3.10-rc python:3.8 python:3.7 python:3.6
 '''
             )
@@ -568,13 +556,7 @@ include Makefile.base
             self.assert_make_output(
                 output,
                 '''\
-rm -rf \\
-\tbuild \\
-\t.coverage \\
-\t$(find src -name __pycache__) \\
-\tdist/ \\
-\tsrc/*.egg-info \\
-\t*.eggs
+rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees doc build/doc/doctest
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build -W -a -b html -d build/doc/doctrees doc build/doc/html
 if [ ! -d ../tmp.gh-pages ]; then git clone -b gh-pages `git config --get remote.origin.url` ../tmp.gh-pages; fi
@@ -746,6 +728,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
             self.assert_make_output(
                 subprocess.check_output(['make', 'publish', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
+rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
@@ -773,6 +756,7 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
             self.assert_make_output(
                 subprocess.check_output(['make', 'publish', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
+rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -v -t src -s src/tests
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -v -t src -s src/tests
