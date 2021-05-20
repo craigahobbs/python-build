@@ -1,3 +1,7 @@
+## 2021-05-20
+
+- [6c5175a](https://github.com/craigahobbs/python-build/commit/6c5175a) - clean before publish
+
 ## 2021-05-16
 
 - [2aa1db7](https://github.com/craigahobbs/python-build/commit/2aa1db7) - add PYTHON_IMAGES_EXCLUDE
