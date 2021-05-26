@@ -1,3 +1,7 @@
+## 2021-05-26
+
+- [4cc4960](https://github.com/craigahobbs/python-build/commit/4cc4960) - add TESTS_REQUIRE to lint and doc environments
+
 ## 2021-05-20
 
 - [a71e270](https://github.com/craigahobbs/python-build/commit/a71e270) - add optional unittest-parallel support
