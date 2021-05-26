@@ -78,7 +78,13 @@ echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superc
 
     def test_help_dump_rules(self):
         test_files = create_test_files([
-            ('Makefile', 'include Makefile.base'),
+            (
+                'Makefile',
+                '''\
+SPHINX_DOC := doc
+include Makefile.base
+'''
+            ),
             ('Makefile.base', MAKEFILE_BASE)
         ])
         with test_files as test_dir:
@@ -262,7 +268,7 @@ ifeq '$(NO_DOCKER)' ''
 endif
 \t$(LINT_PYTHON_3_9_VENV_RUN) python3 -m venv $(LINT_PYTHON_3_9_VENV_DIR)
 \t$(LINT_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install $(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
-\t$(LINT_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . pylint=="$(PYLINT_VERSION)")
+\t$(LINT_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . pylint=="$(PYLINT_VERSION)" $(TESTS_REQUIRE))
 \ttouch $@
 
 .PHONY: lint-python-3-9
@@ -271,6 +277,28 @@ lint-python-3-9: $(LINT_PYTHON_3_9_VENV_BUILD)
 
 .PHONY: lint
 lint: lint-python-3-9
+
+DOC_PYTHON_3_9_VENV_DIR := build/venv/doc-python-3-9
+DOC_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
+DOC_PYTHON_3_9_VENV_CMD := $(DOC_PYTHON_3_9_VENV_RUN) $(DOC_PYTHON_3_9_VENV_DIR)/bin
+DOC_PYTHON_3_9_VENV_BUILD := build/venv/doc-python-3-9.build
+
+$(DOC_PYTHON_3_9_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+\tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
+endif
+\t$(DOC_PYTHON_3_9_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_9_VENV_DIR)
+\t$(DOC_PYTHON_3_9_VENV_CMD)/pip -q $(PIP_ARGS) install $(PIP_INSTALL_ARGS) --upgrade pip setuptools wheel
+\t$(DOC_PYTHON_3_9_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . sphinx=="$(SPHINX_VERSION)" sphinx_rtd_theme=="$(SPHINX_RTD_THEME_VERSION)" $(TESTS_REQUIRE))
+\ttouch $@
+
+.PHONY: doc-python-3-9
+doc-python-3-9: $(DOC_PYTHON_3_9_VENV_BUILD)
+\t$(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b doctest -d build/doc/doctrees $(SPHINX_DOC) build/doc/doctest
+\t$(DOC_PYTHON_3_9_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b html -d build/doc/doctrees $(SPHINX_DOC) build/doc/html
+
+.PHONY: doc
+doc: doc-python-3-9
 
 PUBLISH_PYTHON_3_9_VENV_DIR := build/venv/publish-python-3-9
 PUBLISH_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
@@ -831,13 +859,13 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/lint-python-3-9
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/pip -q --bogus-pip-arg install --bogus-pip-install-arg --upgrade pip setuptools wheel
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/pip --bogus-pip-arg install --bogus-pip-install-arg -e . pylint=="bogus-pylint-version"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/pip --bogus-pip-arg install --bogus-pip-install-arg -e . pylint=="bogus-pylint-version" "foobar >= 1.0"
 touch build/venv/lint-python-3-9.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/lint-python-3-9/bin/python3 -m pylint --bogus-pylint-arg setup.py src
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/doc-python-3-9
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/pip -q --bogus-pip-arg install --bogus-pip-install-arg --upgrade pip setuptools wheel
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/pip --bogus-pip-arg install --bogus-pip-install-arg -e . sphinx=="bogus-sphinx-version" sphinx_rtd_theme=="bogus-sphinx-rtd-theme-version"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/pip --bogus-pip-arg install --bogus-pip-install-arg -e . sphinx=="bogus-sphinx-version" sphinx_rtd_theme=="bogus-sphinx-rtd-theme-version" "foobar >= 1.0"
 touch build/venv/doc-python-3-9.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build --bogus-sphinx-arg -b doctest -d build/doc/doctrees doc build/doc/doctest
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/doc-python-3-9/bin/sphinx-build --bogus-sphinx-arg -b html -d build/doc/doctrees doc build/doc/html

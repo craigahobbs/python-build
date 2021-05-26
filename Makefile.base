@@ -144,7 +144,9 @@ endif
 define LINT_COMMANDS_FN
 	$(1)/python3 -m pylint $$(PYLINT_ARGS) setup.py src
 endef
-LINT_RULES := $(call VENV_RULE_FN, lint, $(firstword $(PYTHON_IMAGES)), -e . pylint=="$$(PYLINT_VERSION)", LINT_COMMANDS_FN)
+LINT_RULES := $(call VENV_RULE_FN, lint, $(firstword $(PYTHON_IMAGES)), \
+    -e . pylint=="$$(PYLINT_VERSION)" $$(TESTS_REQUIRE), \
+    LINT_COMMANDS_FN)
 $(eval $(LINT_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(LINT_RULES))
@@ -163,7 +165,9 @@ define DOC_COMMANDS_FN
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d build/doc/doctrees $$(SPHINX_DOC) build/doc/doctest
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d build/doc/doctrees $$(SPHINX_DOC) build/doc/html
 endef
-DOC_RULES := $(call VENV_RULE_FN, doc, $(firstword $(PYTHON_IMAGES)), -e . sphinx=="$$(SPHINX_VERSION)" sphinx_rtd_theme=="$$(SPHINX_RTD_THEME_VERSION)", DOC_COMMANDS_FN)
+DOC_RULES := $(call VENV_RULE_FN, doc, $(firstword $(PYTHON_IMAGES)), \
+    -e . sphinx=="$$(SPHINX_VERSION)" sphinx_rtd_theme=="$$(SPHINX_RTD_THEME_VERSION)" $$(TESTS_REQUIRE), \
+    DOC_COMMANDS_FN)
 $(eval $(DOC_RULES))
 ifneq '$(DUMP_RULES)' ''
 $(info $(DOC_RULES))
