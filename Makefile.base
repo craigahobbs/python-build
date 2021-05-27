@@ -42,9 +42,13 @@ PYLINT_VERSION ?= 2.8.*
 PYLINT_ARGS ?= -j 0
 
 # sphinx
+SPHINX_DOC ?=
 SPHINX_VERSION ?= 4.0.*
 SPHINX_RTD_THEME_VERSION ?= 0.5.*
 SPHINX_ARGS ?= -W -a
+
+# gh-pages source paths
+GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc)
 
 # Helper functions
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
@@ -154,13 +158,8 @@ $(info )
 endif
 
 # Generate doc and gh-pages rules
-ifeq '$(SPHINX_DOC)' ''
 .PHONY: doc
-doc:
-
-.PHONY: gh-pages
-gh-pages:
-else
+ifneq '$(SPHINX_DOC)' ''
 define DOC_COMMANDS_FN
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d build/doc/doctrees $$(SPHINX_DOC) build/doc/doctest
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d build/doc/doctrees $$(SPHINX_DOC) build/doc/html
@@ -173,18 +172,21 @@ ifneq '$(DUMP_RULES)' ''
 $(info $(DOC_RULES))
 $(info )
 endif
+endif
 
-.PHONY: gh-pages
-gh-pages: _clean doc
+.PHONY: _gh-pages gh-pages
+ifneq '$(GHPAGES_SRC)' ''
+gh-pages: _clean commit _gh-pages
+_gh-pages:
 	if [ ! -d ../$(notdir $(CURDIR)).gh-pages ]; then git clone -b gh-pages `git config --get remote.origin.url` ../$(notdir $(CURDIR)).gh-pages; fi
 	cd ../$(notdir $(CURDIR)).gh-pages && git pull
 	rsync -rv --delete --exclude=.git/ build/doc/html/ ../$(notdir $(CURDIR)).gh-pages
+	touch ../$(notdir $(CURDIR)).gh-pages/.nojekyll
 endif
 
 # Generate publish rule
 .PHONY: publish
 publish: _clean commit
-
 define PUBLISH_COMMANDS_FN
 	$(1)/python3 setup.py sdist
 	$(1)/twine check dist/*.tar.gz

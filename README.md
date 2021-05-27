@@ -148,11 +148,12 @@ Publish the package to PyPI using twine.
 
 ### gh-pages
 
-Publish the Sphinx HTML documentation to GitHub Pages. It first executes the `clean` and `doc`
-targets to produce a clean documentation build. It then does a git clone (or pull) of your
-repository to the `../<pagage-name>.gh-pages` directory, checks out the `gh-pages` branch, and
-rsync's from the `build/doc/html/` directory. Afterward, review the changes, commit, and push to
-publish.
+Publish the project documentation (if any) to GitHub Pages. It first executes the `clean` and
+`commit` targets to produce a clean build.
+
+The repository is then git-cloned (or pulled) to the "../\<repository-name>.gh-pages" directory, the
+"gh-pages" branch is checked-out, and the directories and files defined by the "GHPAGES_SRC" make
+variable are rsync-ed there. Afterward, review the changes, commit, and push to publish.
 
 To create a `gh-pages` branch, enter the following shell commands:
 
@@ -223,6 +224,9 @@ The following variables are supported:
 
 - `UNITTEST_PARALLEL_COVERAGE_ARGS` - The unittest-parallel tool's coverage-related command line arguments.
    Default is "--coverage-branch --coverage-fail-under 100".
+
+- `GHPAGES_SRC` - The gh-pages target's source directories and files. Directories must end with a
+  slash ("/"). If SPHINX_DOC is defined, the default is "build/doc", otherwise "".
 
 - `DUMP_RULES` - Dump generated make rules. This is intended to be used from the command line:
 
