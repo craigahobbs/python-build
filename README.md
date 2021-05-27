@@ -44,7 +44,7 @@ The basic structure of a Python Build project is as follows:
 The basic Python Build "Makefile" is as follows:
 
 ``` make
-# Download Python Build base makefile and pylintrc
+# Download Python Build
 define WGET
 ifeq '$$(wildcard $(notdir $(1)))' ''
 $$(info Downloading $(notdir $(1)))
@@ -64,8 +64,7 @@ clean:
 Note that the makefile automatically downloads "Makefile.base" and "pylintrc" files from Python
 Build. Python Build continually updates its development dependencies to the latest stable versions.
 
-Here is a typical Python Build ".gitignore" file. Notice that "Makefile.base" and "pylintrc" are
-ignored because they are downloaded by the Makefile.
+Here is a typical Python Build project ".gitignore" file:
 
 ```
 /.coverage
@@ -77,9 +76,12 @@ ignored because they are downloaded by the Makefile.
 __pycache__/
 ```
 
+Notice that "Makefile.base" and "pylintrc" are ignored because they are downloaded by the Makefile.
+
 Python package "setup.py" files can vary widely. Here's an
 [example of a real-world setup.py](https://github.com/craigahobbs/schema-markdown/blob/main/setup.py)
 that can serve as a starting place for your project's "setup.py".
+
 
 ## Make Targets
 
@@ -230,6 +232,7 @@ The following variables are supported:
 - `UNITTEST_PARALLEL_COVERAGE_ARGS` - The unittest-parallel tool's coverage-related command line arguments.
    Default is "--coverage-branch --coverage-fail-under 100".
 
+
 ### Pre-Include Make Variables
 
 The following make variables must be defined prior to the inclusion of the base makefile. This is
@@ -255,6 +258,7 @@ The following pre-include make variables are exposed:
   slash ("/"). If SPHINX_DOC is defined, the default is "build/doc/html/", otherwise "".
 
 - `UNITTEST_PARALLEL` - If set, use unittest-parallel for running unit tests. Default is "".
+
 
 ### Other Make Variables
 
