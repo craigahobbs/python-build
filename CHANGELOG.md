@@ -1,3 +1,7 @@
+## 2021-05-27
+
+- [592d281](https://github.com/craigahobbs/python-build/commit/592d281) - add GHPAGES_SRC make variable
+
 ## 2021-05-26
 
 - [4cc4960](https://github.com/craigahobbs/python-build/commit/4cc4960) - add TESTS_REQUIRE to lint and doc environments
