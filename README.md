@@ -3,7 +3,7 @@
 **Python Build** is a lightweight GNU Make-based build system for best-practice Python package
 development. Python Build performs the following functions:
 
-- Run unit tests with multiple Python versions using the [official Docker Python images](https://hub.docker.com/_/python)
+- Run unit tests with all actively maintained Python versions using the [official Docker Python images](https://hub.docker.com/_/python)
 - Run unit tests with [coverage](https://pypi.org/project/coverage/)
 - Perform static code analysis using [pylint](https://pypi.org/project/pylint/)
 - Generate documentation using [Sphinx](https://pypi.org/project/Sphinx/)
@@ -41,21 +41,9 @@ The basic structure of a Python Build project is as follows:
         `-- test_module_name.py
 ```
 
-The basic Python Build `Makefile` is as follows:
+The basic Python Build "Makefile" is as follows:
 
 ``` make
-# Python images (optional)
-# PYTHON_IMAGES := python:3.9 python:3.8 python:3.7
-
-# Exclude Python images (optional)
-# PYTHON_IMAGES_EXCLUDE := python:3.6
-
-# Sphinx documentation directory (optional)
-# SPHINX_DOC := doc
-
-# Use unittest-parallel for running unit tests (optional)
-# UNITTEST_PARALLEL := 1
-
 # Download Python Build base makefile and pylintrc
 define WGET
 ifeq '$$(wildcard $(notdir $(1)))' ''
@@ -73,16 +61,33 @@ clean:
 	rm -rf Makefile.base pylintrc
 ```
 
-Note that the makefile automatically downloads `Makefile.base` and `pylintrc` files from Python
+Note that the makefile automatically downloads "Makefile.base" and "pylintrc" files from Python
 Build. Python Build continually updates its development dependencies to the latest stable versions.
 
+Here is a typical Python Build ".gitignore" file. Notice that "Makefile.base" and "pylintrc" are
+ignored because they are downloaded by the Makefile.
+
+```
+/.coverage
+/Makefile.base
+/build/
+/dist/
+/pylintrc
+/src/*.egg-info/
+__pycache__/
+```
+
+Python package "setup.py" files can vary widely. Here's an
+[example of a real-world setup.py](https://github.com/craigahobbs/schema-markdown/blob/main/setup.py)
+that can serve as a starting place for your project's "setup.py".
 
 ## Make Targets
 
-Python Build exposes build commands as "phony" make targets. Make targets are executed as follows:
+Python Build exposes build commands as "phony" make targets. For example, to run all pre-commit
+targets, use the `commit` target:
 
 ```
-make <target>
+make commit
 ```
 
 The following targets are available:
@@ -96,8 +101,8 @@ should be run prior to any commit.
 
 Run the unit tests using each Docker image in `PYTHON_IMAGES`. Unit tests are run using Python's
 built-in
-[unittest](https://docs.python.org/3/library/unittest.html#command-line-interface) command-line
-tool.
+[unittest](https://docs.python.org/3/library/unittest.html#command-line-interface)
+command-line tool.
 
 You can run unit tests with a specific Docker image. For example, to run unit tests with the
 "python:3.9" image, use the `test-python-3-9` target.
@@ -116,17 +121,17 @@ make test TEST=tests.test_module_name
 
 ### lint
 
-Run pylint on the `setup.py` file and all Python source code under the `src` directory.
+Run pylint on the "setup.py" file and all Python source code under the "src" directory.
 
 ### doc
 
 Run sphinx-build on the Sphinx documentation directory (optional, defined by the `SPHINX_DOC` make
-variable). The HTML documentation index is located at `build/doc/html/index.html`.
+variable). The HTML documentation index is located at "build/doc/html/index.html".
 
 ### cover
 
 Run unit tests with coverage. By default, "make cover" fails if coverage is less than 100%. The HTML
-coverage report index is located at `build/coverage/index.html`.
+coverage report index is located at "build/coverage/index.html".
 
 The `TEST` make variable is supported as described in the [test](#test) target above.
 
@@ -155,7 +160,7 @@ The repository is then git-cloned (or pulled) to the "../\<repository-name>.gh-p
 "gh-pages" branch is checked-out, and the directories and files defined by the "GHPAGES_SRC" make
 variable are rsync-ed there. Afterward, review the changes, commit, and push to publish.
 
-To create a `gh-pages` branch, enter the following shell commands:
+To create a "gh-pages" branch, enter the following shell commands:
 
 ```
 git checkout --orphan gh-pages
@@ -225,8 +230,33 @@ The following variables are supported:
 - `UNITTEST_PARALLEL_COVERAGE_ARGS` - The unittest-parallel tool's coverage-related command line arguments.
    Default is "--coverage-branch --coverage-fail-under 100".
 
+### Pre-Include Make Variables
+
+The following make variables must be defined prior to the inclusion of the base makefile. This is
+because they modify the make targets that Python Build generates on include. For example, to set a
+Sphinx documentation directory:
+
+```
+SPHINX_DOC := doc
+
+include Makefile.base
+```
+
+The following pre-include make variables are exposed:
+
+- `PYTHON_IMAGES` - The list of supported Python docker images. Default is all actively maintained
+  Python versions.
+
+- `PYTHON_IMAGES_EXCLUDE` - The list of Python images to exclude. Default is "".
+
+- `SPHINX_DOC` - The Sphinx documentation directory. Default is "".
+
 - `GHPAGES_SRC` - The gh-pages target's source directories and files. Directories must end with a
   slash ("/"). If SPHINX_DOC is defined, the default is "build/doc/html/", otherwise "".
+
+- `UNITTEST_PARALLEL` - If set, use unittest-parallel for running unit tests. Default is "".
+
+### Other Make Variables
 
 - `DUMP_RULES` - Dump generated make rules. This is intended to be used from the command line:
 
@@ -272,7 +302,7 @@ Python can be embedded in a makefile by first defining the Python script, export
 script, and executing the Python script with the "-c" argument. Make variables can even be
 incorporated into the Python script. Here's an example:
 
-``` make
+```
 TITLE := Hello, World!
 
 define PYTHON_SCRIPT
