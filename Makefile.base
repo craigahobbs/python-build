@@ -48,7 +48,7 @@ SPHINX_RTD_THEME_VERSION ?= 0.5.*
 SPHINX_ARGS ?= -W -a
 
 # gh-pages source paths
-GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc)
+GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 
 # Helper functions
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
@@ -161,8 +161,8 @@ endif
 .PHONY: doc
 ifneq '$(SPHINX_DOC)' ''
 define DOC_COMMANDS_FN
-	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d build/doc/doctrees $$(SPHINX_DOC) build/doc/doctest
-	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d build/doc/doctrees $$(SPHINX_DOC) build/doc/html
+	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d build/doc/doctrees/ $$(SPHINX_DOC) build/doc/doctest/
+	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d build/doc/doctrees/ $$(SPHINX_DOC) build/doc/html/
 endef
 DOC_RULES := $(call VENV_RULE_FN, doc, $(firstword $(PYTHON_IMAGES)), \
     -e . sphinx=="$$(SPHINX_VERSION)" sphinx_rtd_theme=="$$(SPHINX_RTD_THEME_VERSION)" $$(TESTS_REQUIRE), \
@@ -180,7 +180,7 @@ gh-pages: _clean commit _gh-pages
 _gh-pages:
 	if [ ! -d ../$(notdir $(CURDIR)).gh-pages ]; then git clone -b gh-pages `git config --get remote.origin.url` ../$(notdir $(CURDIR)).gh-pages; fi
 	cd ../$(notdir $(CURDIR)).gh-pages && git pull
-	rsync -rv --delete --exclude=.git/ build/doc/html/ ../$(notdir $(CURDIR)).gh-pages
+	rsync -rv --delete --exclude=.git/ $(GHPAGES_SRC) ../$(notdir $(CURDIR)).gh-pages
 	touch ../$(notdir $(CURDIR)).gh-pages/.nojekyll
 endif
 

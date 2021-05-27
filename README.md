@@ -226,7 +226,7 @@ The following variables are supported:
    Default is "--coverage-branch --coverage-fail-under 100".
 
 - `GHPAGES_SRC` - The gh-pages target's source directories and files. Directories must end with a
-  slash ("/"). If SPHINX_DOC is defined, the default is "build/doc", otherwise "".
+  slash ("/"). If SPHINX_DOC is defined, the default is "build/doc/html/", otherwise "".
 
 - `DUMP_RULES` - Dump generated make rules. This is intended to be used from the command line:
 
