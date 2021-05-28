@@ -1,3 +1,7 @@
+## 2021-05-28
+
+- [954da90](https://github.com/craigahobbs/python-build/commit/954da90) - unittest-parallel 1.3.*
+
 ## 2021-05-27
 
 - [592d281](https://github.com/craigahobbs/python-build/commit/592d281) - add GHPAGES_SRC make variable
