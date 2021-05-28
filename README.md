@@ -255,7 +255,7 @@ The following pre-include make variables are exposed:
 - `SPHINX_DOC` - The Sphinx documentation directory. Default is "".
 
 - `GHPAGES_SRC` - The gh-pages target's source directories and files. Directories must end with a
-  slash ("/"). If SPHINX_DOC is defined, the default is "build/doc/html/", otherwise "".
+  slash ("/"). Default is "build/doc/html/" if SPHINX_DOC is defined, otherwise "".
 
 - `UNITTEST_PARALLEL` - If set, use unittest-parallel for running unit tests. Default is "".
 
