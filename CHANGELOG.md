@@ -1,3 +1,7 @@
+## 2021-06-06
+
+- [786991f](https://github.com/craigahobbs/python-build/commit/786991f) - unittest-parallel 1.4.*
+
 ## 2021-05-28
 
 - [954da90](https://github.com/craigahobbs/python-build/commit/954da90) - unittest-parallel 1.3.*
