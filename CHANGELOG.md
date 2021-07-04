@@ -1,3 +1,7 @@
+## 2021-07-04
+
+- [827a18f](https://github.com/craigahobbs/python-build/commit/827a18f) - pylint 2.9.*
+
 ## 2021-06-06
 
 - [786991f](https://github.com/craigahobbs/python-build/commit/786991f) - unittest-parallel 1.4.*
