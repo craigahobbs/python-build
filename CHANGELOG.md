@@ -1,3 +1,7 @@
+## 2021-07-06
+
+- [6c46e6c](https://github.com/craigahobbs/python-build/commit/6c46e6c) - Revert "pylint 2.9.*"
+
 ## 2021-07-04
 
 - [827a18f](https://github.com/craigahobbs/python-build/commit/827a18f) - pylint 2.9.*
