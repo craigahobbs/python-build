@@ -96,6 +96,13 @@ TEST_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id
 TEST_PYTHON_3_9_VENV_CMD := $(TEST_PYTHON_3_9_VENV_RUN) $(TEST_PYTHON_3_9_VENV_DIR)/bin
 TEST_PYTHON_3_9_VENV_BUILD := build/venv/test-python-3-9.build
 
+ifeq 'python:3.9' 'python:3.9'
+TEST_DEFAULT_VENV_DIR := $(TEST_PYTHON_3_9_VENV_DIR)
+TEST_DEFAULT_VENV_RUN := $(TEST_PYTHON_3_9_VENV_RUN)
+TEST_DEFAULT_VENV_CMD := $(TEST_PYTHON_3_9_VENV_CMD)
+TEST_DEFAULT_VENV_BUILD := $(TEST_PYTHON_3_9_VENV_BUILD)
+endif
+
 $(TEST_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
 \tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
@@ -122,6 +129,13 @@ TEST_PYTHON_3_10_RC_VENV_DIR := build/venv/test-python-3-10-rc
 TEST_PYTHON_3_10_RC_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc)
 TEST_PYTHON_3_10_RC_VENV_CMD := $(TEST_PYTHON_3_10_RC_VENV_RUN) $(TEST_PYTHON_3_10_RC_VENV_DIR)/bin
 TEST_PYTHON_3_10_RC_VENV_BUILD := build/venv/test-python-3-10-rc.build
+
+ifeq 'python:3.9' 'python:3.10-rc'
+TEST_DEFAULT_VENV_DIR := $(TEST_PYTHON_3_10_RC_VENV_DIR)
+TEST_DEFAULT_VENV_RUN := $(TEST_PYTHON_3_10_RC_VENV_RUN)
+TEST_DEFAULT_VENV_CMD := $(TEST_PYTHON_3_10_RC_VENV_CMD)
+TEST_DEFAULT_VENV_BUILD := $(TEST_PYTHON_3_10_RC_VENV_BUILD)
+endif
 
 $(TEST_PYTHON_3_10_RC_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -150,6 +164,13 @@ TEST_PYTHON_3_8_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id
 TEST_PYTHON_3_8_VENV_CMD := $(TEST_PYTHON_3_8_VENV_RUN) $(TEST_PYTHON_3_8_VENV_DIR)/bin
 TEST_PYTHON_3_8_VENV_BUILD := build/venv/test-python-3-8.build
 
+ifeq 'python:3.9' 'python:3.8'
+TEST_DEFAULT_VENV_DIR := $(TEST_PYTHON_3_8_VENV_DIR)
+TEST_DEFAULT_VENV_RUN := $(TEST_PYTHON_3_8_VENV_RUN)
+TEST_DEFAULT_VENV_CMD := $(TEST_PYTHON_3_8_VENV_CMD)
+TEST_DEFAULT_VENV_BUILD := $(TEST_PYTHON_3_8_VENV_BUILD)
+endif
+
 $(TEST_PYTHON_3_8_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
 \tif [ "$$(docker images -q python:3.8)" = "" ]; then docker pull -q python:3.8; fi
@@ -176,6 +197,13 @@ TEST_PYTHON_3_7_VENV_DIR := build/venv/test-python-3-7
 TEST_PYTHON_3_7_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.7)
 TEST_PYTHON_3_7_VENV_CMD := $(TEST_PYTHON_3_7_VENV_RUN) $(TEST_PYTHON_3_7_VENV_DIR)/bin
 TEST_PYTHON_3_7_VENV_BUILD := build/venv/test-python-3-7.build
+
+ifeq 'python:3.9' 'python:3.7'
+TEST_DEFAULT_VENV_DIR := $(TEST_PYTHON_3_7_VENV_DIR)
+TEST_DEFAULT_VENV_RUN := $(TEST_PYTHON_3_7_VENV_RUN)
+TEST_DEFAULT_VENV_CMD := $(TEST_PYTHON_3_7_VENV_CMD)
+TEST_DEFAULT_VENV_BUILD := $(TEST_PYTHON_3_7_VENV_BUILD)
+endif
 
 $(TEST_PYTHON_3_7_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -204,6 +232,13 @@ TEST_PYTHON_3_6_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id
 TEST_PYTHON_3_6_VENV_CMD := $(TEST_PYTHON_3_6_VENV_RUN) $(TEST_PYTHON_3_6_VENV_DIR)/bin
 TEST_PYTHON_3_6_VENV_BUILD := build/venv/test-python-3-6.build
 
+ifeq 'python:3.9' 'python:3.6'
+TEST_DEFAULT_VENV_DIR := $(TEST_PYTHON_3_6_VENV_DIR)
+TEST_DEFAULT_VENV_RUN := $(TEST_PYTHON_3_6_VENV_RUN)
+TEST_DEFAULT_VENV_CMD := $(TEST_PYTHON_3_6_VENV_CMD)
+TEST_DEFAULT_VENV_BUILD := $(TEST_PYTHON_3_6_VENV_BUILD)
+endif
+
 $(TEST_PYTHON_3_6_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
 \tif [ "$$(docker images -q python:3.6)" = "" ]; then docker pull -q python:3.6; fi
@@ -230,6 +265,13 @@ COVER_PYTHON_3_9_VENV_DIR := build/venv/cover-python-3-9
 COVER_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
 COVER_PYTHON_3_9_VENV_CMD := $(COVER_PYTHON_3_9_VENV_RUN) $(COVER_PYTHON_3_9_VENV_DIR)/bin
 COVER_PYTHON_3_9_VENV_BUILD := build/venv/cover-python-3-9.build
+
+ifeq 'python:3.9' 'python:3.9'
+COVER_DEFAULT_VENV_DIR := $(COVER_PYTHON_3_9_VENV_DIR)
+COVER_DEFAULT_VENV_RUN := $(COVER_PYTHON_3_9_VENV_RUN)
+COVER_DEFAULT_VENV_CMD := $(COVER_PYTHON_3_9_VENV_CMD)
+COVER_DEFAULT_VENV_BUILD := $(COVER_PYTHON_3_9_VENV_BUILD)
+endif
 
 $(COVER_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -262,6 +304,13 @@ LINT_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id
 LINT_PYTHON_3_9_VENV_CMD := $(LINT_PYTHON_3_9_VENV_RUN) $(LINT_PYTHON_3_9_VENV_DIR)/bin
 LINT_PYTHON_3_9_VENV_BUILD := build/venv/lint-python-3-9.build
 
+ifeq 'python:3.9' 'python:3.9'
+LINT_DEFAULT_VENV_DIR := $(LINT_PYTHON_3_9_VENV_DIR)
+LINT_DEFAULT_VENV_RUN := $(LINT_PYTHON_3_9_VENV_RUN)
+LINT_DEFAULT_VENV_CMD := $(LINT_PYTHON_3_9_VENV_CMD)
+LINT_DEFAULT_VENV_BUILD := $(LINT_PYTHON_3_9_VENV_BUILD)
+endif
+
 $(LINT_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
 \tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
@@ -282,6 +331,13 @@ DOC_PYTHON_3_9_VENV_DIR := build/venv/doc-python-3-9
 DOC_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
 DOC_PYTHON_3_9_VENV_CMD := $(DOC_PYTHON_3_9_VENV_RUN) $(DOC_PYTHON_3_9_VENV_DIR)/bin
 DOC_PYTHON_3_9_VENV_BUILD := build/venv/doc-python-3-9.build
+
+ifeq 'python:3.9' 'python:3.9'
+DOC_DEFAULT_VENV_DIR := $(DOC_PYTHON_3_9_VENV_DIR)
+DOC_DEFAULT_VENV_RUN := $(DOC_PYTHON_3_9_VENV_RUN)
+DOC_DEFAULT_VENV_CMD := $(DOC_PYTHON_3_9_VENV_CMD)
+DOC_DEFAULT_VENV_BUILD := $(DOC_PYTHON_3_9_VENV_BUILD)
+endif
 
 $(DOC_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
@@ -305,6 +361,13 @@ PUBLISH_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:
 PUBLISH_PYTHON_3_9_VENV_CMD := $(PUBLISH_PYTHON_3_9_VENV_RUN) $(PUBLISH_PYTHON_3_9_VENV_DIR)/bin
 PUBLISH_PYTHON_3_9_VENV_BUILD := build/venv/publish-python-3-9.build
 
+ifeq 'python:3.9' 'python:3.9'
+PUBLISH_DEFAULT_VENV_DIR := $(PUBLISH_PYTHON_3_9_VENV_DIR)
+PUBLISH_DEFAULT_VENV_RUN := $(PUBLISH_PYTHON_3_9_VENV_RUN)
+PUBLISH_DEFAULT_VENV_CMD := $(PUBLISH_PYTHON_3_9_VENV_CMD)
+PUBLISH_DEFAULT_VENV_BUILD := $(PUBLISH_PYTHON_3_9_VENV_BUILD)
+endif
+
 $(PUBLISH_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''
 \tif [ "$$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
@@ -327,6 +390,13 @@ CHANGELOG_PYTHON_3_9_VENV_DIR := build/venv/changelog-python-3-9
 CHANGELOG_PYTHON_3_9_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9)
 CHANGELOG_PYTHON_3_9_VENV_CMD := $(CHANGELOG_PYTHON_3_9_VENV_RUN) $(CHANGELOG_PYTHON_3_9_VENV_DIR)/bin
 CHANGELOG_PYTHON_3_9_VENV_BUILD := build/venv/changelog-python-3-9.build
+
+ifeq 'python:3.9' 'python:3.9'
+CHANGELOG_DEFAULT_VENV_DIR := $(CHANGELOG_PYTHON_3_9_VENV_DIR)
+CHANGELOG_DEFAULT_VENV_RUN := $(CHANGELOG_PYTHON_3_9_VENV_RUN)
+CHANGELOG_DEFAULT_VENV_CMD := $(CHANGELOG_PYTHON_3_9_VENV_CMD)
+CHANGELOG_DEFAULT_VENV_BUILD := $(CHANGELOG_PYTHON_3_9_VENV_BUILD)
+endif
 
 $(CHANGELOG_PYTHON_3_9_VENV_BUILD):
 ifeq '$(NO_DOCKER)' ''

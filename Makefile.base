@@ -86,6 +86,13 @@ $(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD := \
     $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN) $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR)/bin
 $(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_BUILD := build/venv/$(strip $(1))-$(call IMAGE_NAME_FN,$(2)).build
 
+ifeq '$(firstword $(PYTHON_IMAGES))' '$(strip $(2))'
+$(call UPPER_FN,$(1))_DEFAULT_VENV_DIR := $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR)
+$(call UPPER_FN,$(1))_DEFAULT_VENV_RUN := $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN)
+$(call UPPER_FN,$(1))_DEFAULT_VENV_CMD := $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD)
+$(call UPPER_FN,$(1))_DEFAULT_VENV_BUILD := $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_BUILD)
+endif
+
 $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_BUILD):
 ifeq '$$(NO_DOCKER)' ''
 	if [ "$$$$(docker images -q $(strip $(2)))" = "" ]; then docker pull -q $(strip $(2)); fi
