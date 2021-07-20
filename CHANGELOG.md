@@ -1,3 +1,7 @@
+## 2021-07-20
+
+- [0157c8b](https://github.com/craigahobbs/python-build/commit/0157c8b) - add default rule variables and expose wget command function
+
 ## 2021-07-06
 
 - [6c46e6c](https://github.com/craigahobbs/python-build/commit/6c46e6c) - Revert "pylint 2.9.*"
