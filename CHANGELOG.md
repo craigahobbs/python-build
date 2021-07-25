@@ -1,3 +1,7 @@
+## 2021-07-25
+
+- [bb79fc9](https://github.com/craigahobbs/python-build/commit/bb79fc9) - pylint 2.9, sphinx 4.1
+
 ## 2021-07-20
 
 - [0157c8b](https://github.com/craigahobbs/python-build/commit/0157c8b) - add default rule variables and expose wget command function
