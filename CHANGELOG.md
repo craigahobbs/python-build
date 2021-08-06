@@ -1,5 +1,7 @@
 ## 2021-08-06
 
+- [a0eee07](https://github.com/craigahobbs/python-build/commit/a0eee07) - ensure wget overwrites downloaded file
+
 - [d85e21a](https://github.com/craigahobbs/python-build/commit/d85e21a) - don't clean prior to gh-pages or publish
 
 ## 2021-07-25
