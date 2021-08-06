@@ -814,7 +814,6 @@ include Makefile.base
             self.assert_make_output(
                 output,
                 '''\
-rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
 if [ "$(docker images -q python:3.9)" = "" ]; then docker pull -q python:3.9; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 python3 -m venv build/venv/test-python-3-9
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/pip -q --no-cache-dir --disable-pip-version-check install --progress-bar off --upgrade pip setuptools wheel
@@ -1061,7 +1060,6 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3 build/ven
             self.assert_make_output(
                 subprocess.check_output(['make', 'publish', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
-rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
@@ -1089,7 +1087,6 @@ docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/v
             self.assert_make_output(
                 subprocess.check_output(['make', 'publish', '-n'], env={}, cwd=test_dir, stderr=subprocess.STDOUT, encoding='utf-8'),
                 '''\
-rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.9 build/venv/test-python-3-9/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.10-rc build/venv/test-python-3-10-rc/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.8 build/venv/test-python-3-8/bin/python3 -m unittest discover -t src/ -s src/tests/ -v

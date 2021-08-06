@@ -4,6 +4,9 @@
 
 # Python Build - https://github.com/craigahobbs/python-build#readme
 
+.DEFAULT_GOAL := help
+
+
 # Python docker images with which to run unit tests
 ifeq '$(NO_DOCKER)' ''
 PYTHON_IMAGES ?= \
@@ -57,15 +60,18 @@ UPPER_FN = $(strip $(subst a,A,$(subst b,B,$(subst c,C,$(subst d,D,$(subst e,E,$
     $(subst j,J,$(subst k,K,$(subst l,L,$(subst m,M,$(subst n,N,$(subst o,O,$(subst p,P,$(subst q,Q,$(subst r,R,$(subst s,S,\
     $(subst t,T,$(subst u,U,$(subst v,V,$(subst w,W,$(subst x,X,$(subst y,Y,$(subst z,Z,$(1))))))))))))))))))))))))))))
 
+
 .PHONY: _help help
 help: _help
 _help:
 	@echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'
 
+
 .PHONY: _clean clean
 clean: _clean
 _clean:
 	rm -rf build/ dist/ .coverage src/*.egg-info $$(find src -name __pycache__)
+
 
 .PHONY: _superclean superclean
 superclean: clean _superclean
@@ -74,8 +80,10 @@ ifeq '$(NO_DOCKER)' ''
 	-docker rmi -f $(PYTHON_IMAGES)
 endif
 
+
 .PHONY: commit
 commit: test lint doc cover
+
 
 # Function to generate venv rules - venv_name, docker_image, pip_args, commands
 define VENV_RULE_FN
@@ -110,7 +118,7 @@ $(call $(4),$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD))
 $(strip $(1)): $(strip $(1))-$(call IMAGE_NAME_FN,$(2))
 endef
 
-# Generate test rules
+
 define TEST_COMMANDS_FN
 ifneq '$$(TEST)' ''
 	$(1)/python3 -m unittest $$(UNITTEST_ARGS) $$(TEST)
@@ -128,7 +136,7 @@ ifneq '$(DUMP_RULES)' ''
 $(foreach IMAGE, $(PYTHON_IMAGES), $(info $(call TEST_RULES_FN, $(IMAGE))) $(info ))
 endif
 
-# Generate cover rule
+
 define COVER_COMMANDS_FN
 ifneq '$$(TEST)' ''
 	$(1)/python3 -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest $$(UNITTEST_ARGS) $$(TEST)
@@ -151,7 +159,7 @@ $(info $(COVER_RULES))
 $(info )
 endif
 
-# Generate lint rule
+
 define LINT_COMMANDS_FN
 	$(1)/python3 -m pylint $$(PYLINT_ARGS) setup.py src
 endef
@@ -164,7 +172,7 @@ $(info $(LINT_RULES))
 $(info )
 endif
 
-# Generate doc and gh-pages rules
+
 .PHONY: doc
 ifneq '$(SPHINX_DOC)' ''
 define DOC_COMMANDS_FN
@@ -181,19 +189,21 @@ $(info )
 endif
 endif
 
+
 .PHONY: _gh-pages gh-pages
 ifneq '$(GHPAGES_SRC)' ''
-gh-pages: _clean commit _gh-pages
-_gh-pages:
+gh-pages: _gh-pages
+_gh-pages: commit
 	if [ ! -d ../$(notdir $(CURDIR)).gh-pages ]; then git clone -b gh-pages `git config --get remote.origin.url` ../$(notdir $(CURDIR)).gh-pages; fi
 	cd ../$(notdir $(CURDIR)).gh-pages && git pull
 	rsync -rv --delete --exclude=.git/ $(GHPAGES_SRC) ../$(notdir $(CURDIR)).gh-pages
 	touch ../$(notdir $(CURDIR)).gh-pages/.nojekyll
 endif
 
-# Generate publish rule
-.PHONY: publish
-publish: _clean commit
+
+.PHONY: _publish publish
+publish: _publish
+_publish: commit
 define PUBLISH_COMMANDS_FN
 	$(1)/python3 setup.py sdist
 	$(1)/twine check dist/*.tar.gz
@@ -206,7 +216,7 @@ $(info $(PUBLISH_RULES))
 $(info )
 endif
 
-# Generate changelog rule
+
 define CHANGELOG_COMMANDS_FN
 	$(1)/simple-git-changelog
 endef
