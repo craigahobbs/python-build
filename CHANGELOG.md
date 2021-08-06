@@ -1,3 +1,7 @@
+## 2021-08-06
+
+- [d85e21a](https://github.com/craigahobbs/python-build/commit/d85e21a) - don't clean prior to gh-pages or publish
+
 ## 2021-07-25
 
 - [bb79fc9](https://github.com/craigahobbs/python-build/commit/bb79fc9) - pylint 2.9, sphinx 4.1
