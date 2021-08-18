@@ -34,7 +34,7 @@ lint: build/venv.build
 
 
 .PHONY: changelog
-changelog:
+changelog: build/venv.build
 	build/venv/bin/simple-git-changelog
 
 
