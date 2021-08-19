@@ -16,7 +16,7 @@ commit: test lint
 
 .PHONY: clean
 clean:
-	rm -rf build __pycache__
+	rm -rf __pycache__/ build/
 
 
 .PHONY: superclean
