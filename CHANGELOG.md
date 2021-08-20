@@ -1,5 +1,7 @@
 ## 2021-08-20
 
+- [d2f8850](https://github.com/craigahobbs/python-build/commit/d2f8850) - restore --no-cache-dir pip arg to avoid warning with docker
+
 - [d7b44f8](https://github.com/craigahobbs/python-build/commit/d7b44f8) - update default pip args
 
 ## 2021-08-06
