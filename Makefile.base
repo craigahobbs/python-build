@@ -23,7 +23,7 @@ PYTHON_IMAGES := no-docker
 endif
 
 # Python pip option
-PIP_ARGS ?= -q
+PIP_ARGS ?= -q --no-cache-dir
 PIP_INSTALL_ARGS ?= --progress-bar off
 
 # Python unittest
