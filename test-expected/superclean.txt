@@ -1,0 +1,2 @@
+rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)
+docker rmi -f python:3.X python:3.Y

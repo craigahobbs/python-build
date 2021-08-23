@@ -1,0 +1,1 @@
+rm -rf build/ dist/ .coverage src/*.egg-info $(find src -name __pycache__)

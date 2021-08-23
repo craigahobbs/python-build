@@ -1,0 +1,222 @@
+TEST_PYTHON_3_X_VENV_DIR := build/venv/test-python-3-X
+TEST_PYTHON_3_X_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X)
+TEST_PYTHON_3_X_VENV_CMD := $(TEST_PYTHON_3_X_VENV_RUN) $(TEST_PYTHON_3_X_VENV_DIR)/bin
+TEST_PYTHON_3_X_VENV_BUILD := build/venv/test-python-3-X.build
+
+ifeq 'python:3.X' 'python:3.X'
+TEST_DEFAULT_VENV_DIR := $(TEST_PYTHON_3_X_VENV_DIR)
+TEST_DEFAULT_VENV_RUN := $(TEST_PYTHON_3_X_VENV_RUN)
+TEST_DEFAULT_VENV_CMD := $(TEST_PYTHON_3_X_VENV_CMD)
+TEST_DEFAULT_VENV_BUILD := $(TEST_PYTHON_3_X_VENV_BUILD)
+endif
+
+$(TEST_PYTHON_3_X_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
+endif
+	$(TEST_PYTHON_3_X_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_X_VENV_DIR)
+	$(TEST_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools wheel
+	$(TEST_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . $(TESTS_REQUIRE))
+	touch $@
+
+.PHONY: test-python-3-X
+test-python-3-X: $(TEST_PYTHON_3_X_VENV_BUILD)
+ifneq '$(TEST)' ''
+	$(TEST_PYTHON_3_X_VENV_CMD)/python3 -m unittest $(UNITTEST_ARGS) $(TEST)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+	$(TEST_PYTHON_3_X_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS)
+else
+	$(TEST_PYTHON_3_X_VENV_CMD)/python3 -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+endif
+
+.PHONY: test
+test: test-python-3-X
+
+TEST_PYTHON_3_Y_VENV_DIR := build/venv/test-python-3-Y
+TEST_PYTHON_3_Y_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y)
+TEST_PYTHON_3_Y_VENV_CMD := $(TEST_PYTHON_3_Y_VENV_RUN) $(TEST_PYTHON_3_Y_VENV_DIR)/bin
+TEST_PYTHON_3_Y_VENV_BUILD := build/venv/test-python-3-Y.build
+
+ifeq 'python:3.X' 'python:3.Y'
+TEST_DEFAULT_VENV_DIR := $(TEST_PYTHON_3_Y_VENV_DIR)
+TEST_DEFAULT_VENV_RUN := $(TEST_PYTHON_3_Y_VENV_RUN)
+TEST_DEFAULT_VENV_CMD := $(TEST_PYTHON_3_Y_VENV_CMD)
+TEST_DEFAULT_VENV_BUILD := $(TEST_PYTHON_3_Y_VENV_BUILD)
+endif
+
+$(TEST_PYTHON_3_Y_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+	if [ "$$(docker images -q python:3.Y)" = "" ]; then docker pull -q python:3.Y; fi
+endif
+	$(TEST_PYTHON_3_Y_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_Y_VENV_DIR)
+	$(TEST_PYTHON_3_Y_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools wheel
+	$(TEST_PYTHON_3_Y_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . $(TESTS_REQUIRE))
+	touch $@
+
+.PHONY: test-python-3-Y
+test-python-3-Y: $(TEST_PYTHON_3_Y_VENV_BUILD)
+ifneq '$(TEST)' ''
+	$(TEST_PYTHON_3_Y_VENV_CMD)/python3 -m unittest $(UNITTEST_ARGS) $(TEST)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+	$(TEST_PYTHON_3_Y_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS)
+else
+	$(TEST_PYTHON_3_Y_VENV_CMD)/python3 -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+endif
+
+.PHONY: test
+test: test-python-3-Y
+
+COVER_PYTHON_3_X_VENV_DIR := build/venv/cover-python-3-X
+COVER_PYTHON_3_X_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X)
+COVER_PYTHON_3_X_VENV_CMD := $(COVER_PYTHON_3_X_VENV_RUN) $(COVER_PYTHON_3_X_VENV_DIR)/bin
+COVER_PYTHON_3_X_VENV_BUILD := build/venv/cover-python-3-X.build
+
+ifeq 'python:3.X' 'python:3.X'
+COVER_DEFAULT_VENV_DIR := $(COVER_PYTHON_3_X_VENV_DIR)
+COVER_DEFAULT_VENV_RUN := $(COVER_PYTHON_3_X_VENV_RUN)
+COVER_DEFAULT_VENV_CMD := $(COVER_PYTHON_3_X_VENV_CMD)
+COVER_DEFAULT_VENV_BUILD := $(COVER_PYTHON_3_X_VENV_BUILD)
+endif
+
+$(COVER_PYTHON_3_X_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
+endif
+	$(COVER_PYTHON_3_X_VENV_RUN) python3 -m venv $(COVER_PYTHON_3_X_VENV_DIR)
+	$(COVER_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools wheel
+	$(COVER_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . coverage=="$(COVERAGE_VERSION)" $(TESTS_REQUIRE))
+	touch $@
+
+.PHONY: cover-python-3-X
+cover-python-3-X: $(COVER_PYTHON_3_X_VENV_BUILD)
+ifneq '$(TEST)' ''
+	$(COVER_PYTHON_3_X_VENV_CMD)/python3 -m coverage run --source src/ $(COVERAGE_ARGS) -m unittest $(UNITTEST_ARGS) $(TEST)
+	$(COVER_PYTHON_3_X_VENV_CMD)/python3 -m coverage html -d build/coverage
+	$(COVER_PYTHON_3_X_VENV_CMD)/python3 -m coverage report $(COVERAGE_REPORT_ARGS)
+else ifneq '$(UNITTEST_PARALLEL)' ''
+	$(COVER_PYTHON_3_X_VENV_CMD)/unittest-parallel -t src/ -s src/tests/ $(UNITTEST_PARALLEL_ARGS) --coverage-html=build/coverage $(UNITTEST_PARALLEL_COVERAGE_ARGS)
+else
+	$(COVER_PYTHON_3_X_VENV_CMD)/python3 -m coverage run --source src/ $(COVERAGE_ARGS) -m unittest discover -t src/ -s src/tests/ $(UNITTEST_ARGS)
+	$(COVER_PYTHON_3_X_VENV_CMD)/python3 -m coverage html -d build/coverage
+	$(COVER_PYTHON_3_X_VENV_CMD)/python3 -m coverage report $(COVERAGE_REPORT_ARGS)
+endif
+
+.PHONY: cover
+cover: cover-python-3-X
+
+LINT_PYTHON_3_X_VENV_DIR := build/venv/lint-python-3-X
+LINT_PYTHON_3_X_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X)
+LINT_PYTHON_3_X_VENV_CMD := $(LINT_PYTHON_3_X_VENV_RUN) $(LINT_PYTHON_3_X_VENV_DIR)/bin
+LINT_PYTHON_3_X_VENV_BUILD := build/venv/lint-python-3-X.build
+
+ifeq 'python:3.X' 'python:3.X'
+LINT_DEFAULT_VENV_DIR := $(LINT_PYTHON_3_X_VENV_DIR)
+LINT_DEFAULT_VENV_RUN := $(LINT_PYTHON_3_X_VENV_RUN)
+LINT_DEFAULT_VENV_CMD := $(LINT_PYTHON_3_X_VENV_CMD)
+LINT_DEFAULT_VENV_BUILD := $(LINT_PYTHON_3_X_VENV_BUILD)
+endif
+
+$(LINT_PYTHON_3_X_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
+endif
+	$(LINT_PYTHON_3_X_VENV_RUN) python3 -m venv $(LINT_PYTHON_3_X_VENV_DIR)
+	$(LINT_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools wheel
+	$(LINT_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . pylint=="$(PYLINT_VERSION)" $(TESTS_REQUIRE))
+	touch $@
+
+.PHONY: lint-python-3-X
+lint-python-3-X: $(LINT_PYTHON_3_X_VENV_BUILD)
+	$(LINT_PYTHON_3_X_VENV_CMD)/python3 -m pylint $(PYLINT_ARGS) setup.py src
+
+.PHONY: lint
+lint: lint-python-3-X
+
+DOC_PYTHON_3_X_VENV_DIR := build/venv/doc-python-3-X
+DOC_PYTHON_3_X_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X)
+DOC_PYTHON_3_X_VENV_CMD := $(DOC_PYTHON_3_X_VENV_RUN) $(DOC_PYTHON_3_X_VENV_DIR)/bin
+DOC_PYTHON_3_X_VENV_BUILD := build/venv/doc-python-3-X.build
+
+ifeq 'python:3.X' 'python:3.X'
+DOC_DEFAULT_VENV_DIR := $(DOC_PYTHON_3_X_VENV_DIR)
+DOC_DEFAULT_VENV_RUN := $(DOC_PYTHON_3_X_VENV_RUN)
+DOC_DEFAULT_VENV_CMD := $(DOC_PYTHON_3_X_VENV_CMD)
+DOC_DEFAULT_VENV_BUILD := $(DOC_PYTHON_3_X_VENV_BUILD)
+endif
+
+$(DOC_PYTHON_3_X_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
+endif
+	$(DOC_PYTHON_3_X_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_X_VENV_DIR)
+	$(DOC_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools wheel
+	$(DOC_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . sphinx=="$(SPHINX_VERSION)" sphinx_rtd_theme=="$(SPHINX_RTD_THEME_VERSION)" $(TESTS_REQUIRE))
+	touch $@
+
+.PHONY: doc-python-3-X
+doc-python-3-X: $(DOC_PYTHON_3_X_VENV_BUILD)
+	$(DOC_PYTHON_3_X_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b doctest -d build/doc/doctrees/ $(SPHINX_DOC) build/doc/doctest/
+	$(DOC_PYTHON_3_X_VENV_CMD)/sphinx-build $(SPHINX_ARGS) -b html -d build/doc/doctrees/ $(SPHINX_DOC) build/doc/html/
+
+.PHONY: doc
+doc: doc-python-3-X
+
+PUBLISH_PYTHON_3_X_VENV_DIR := build/venv/publish-python-3-X
+PUBLISH_PYTHON_3_X_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X)
+PUBLISH_PYTHON_3_X_VENV_CMD := $(PUBLISH_PYTHON_3_X_VENV_RUN) $(PUBLISH_PYTHON_3_X_VENV_DIR)/bin
+PUBLISH_PYTHON_3_X_VENV_BUILD := build/venv/publish-python-3-X.build
+
+ifeq 'python:3.X' 'python:3.X'
+PUBLISH_DEFAULT_VENV_DIR := $(PUBLISH_PYTHON_3_X_VENV_DIR)
+PUBLISH_DEFAULT_VENV_RUN := $(PUBLISH_PYTHON_3_X_VENV_RUN)
+PUBLISH_DEFAULT_VENV_CMD := $(PUBLISH_PYTHON_3_X_VENV_CMD)
+PUBLISH_DEFAULT_VENV_BUILD := $(PUBLISH_PYTHON_3_X_VENV_BUILD)
+endif
+
+$(PUBLISH_PYTHON_3_X_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
+endif
+	$(PUBLISH_PYTHON_3_X_VENV_RUN) python3 -m venv $(PUBLISH_PYTHON_3_X_VENV_DIR)
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools wheel
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  twine)
+	touch $@
+
+.PHONY: publish-python-3-X
+publish-python-3-X: $(PUBLISH_PYTHON_3_X_VENV_BUILD)
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/python3 setup.py sdist
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/twine check dist/*.tar.gz
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/twine upload dist/*.tar.gz
+
+.PHONY: publish
+publish: publish-python-3-X
+
+CHANGELOG_PYTHON_3_X_VENV_DIR := build/venv/changelog-python-3-X
+CHANGELOG_PYTHON_3_X_VENV_RUN := $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X)
+CHANGELOG_PYTHON_3_X_VENV_CMD := $(CHANGELOG_PYTHON_3_X_VENV_RUN) $(CHANGELOG_PYTHON_3_X_VENV_DIR)/bin
+CHANGELOG_PYTHON_3_X_VENV_BUILD := build/venv/changelog-python-3-X.build
+
+ifeq 'python:3.X' 'python:3.X'
+CHANGELOG_DEFAULT_VENV_DIR := $(CHANGELOG_PYTHON_3_X_VENV_DIR)
+CHANGELOG_DEFAULT_VENV_RUN := $(CHANGELOG_PYTHON_3_X_VENV_RUN)
+CHANGELOG_DEFAULT_VENV_CMD := $(CHANGELOG_PYTHON_3_X_VENV_CMD)
+CHANGELOG_DEFAULT_VENV_BUILD := $(CHANGELOG_PYTHON_3_X_VENV_BUILD)
+endif
+
+$(CHANGELOG_PYTHON_3_X_VENV_BUILD):
+ifeq '$(NO_DOCKER)' ''
+	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
+endif
+	$(CHANGELOG_PYTHON_3_X_VENV_RUN) python3 -m venv $(CHANGELOG_PYTHON_3_X_VENV_DIR)
+	$(CHANGELOG_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools wheel
+	$(CHANGELOG_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  simple-git-changelog)
+	touch $@
+
+.PHONY: changelog-python-3-X
+changelog-python-3-X: $(CHANGELOG_PYTHON_3_X_VENV_BUILD)
+	$(CHANGELOG_PYTHON_3_X_VENV_CMD)/simple-git-changelog
+
+.PHONY: changelog
+changelog: changelog-python-3-X
+
+echo 'usage: make [changelog|clean|commit|cover|doc|gh-pages|lint|publish|superclean|test]'

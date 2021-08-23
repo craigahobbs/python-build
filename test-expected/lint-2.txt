@@ -1,0 +1,1 @@
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/python3 -m pylint -j 0 setup.py src
