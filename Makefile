@@ -20,14 +20,14 @@ clean:
 superclean: clean
 
 
-.phony: test
+.PHONY: test
 test:
 	rm -rf test-actual/
 
 
 # Test rule function - name, make args
 define TEST_RULE
-.phony: test-$(strip $(1))
+.PHONY: test-$(strip $(1))
 test-$(strip $(1)):
 	mkdir -p test-actual/
 	($(MAKE) -C tests/$(strip $(1))/ -n --no-print-directory$(if $(strip $(2)), $(strip $(2)))) \
