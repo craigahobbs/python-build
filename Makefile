@@ -30,7 +30,9 @@ define TEST_RULE
 .phony: test-$(strip $(1))
 test-$(strip $(1)):
 	mkdir -p test-actual/
-	($(MAKE) -C tests/$(strip $(1))/ -n --no-print-directory$(if $(strip $(2)), $(strip $(2)))) 2>&1 > test-actual/$(strip $(1)).txt
+	($(MAKE) -C tests/$(strip $(1))/ -n --no-print-directory$(if $(strip $(2)), $(strip $(2)))) \
+		| sed -E "s/^(make\[.*: Nothing to be done for )\`/\1'/" \
+		> test-actual/$(strip $(1)).txt
 	diff test-actual/$(strip $(1)).txt test-expected/$(strip $(1)).txt
 	rm test-actual/$(strip $(1)).txt
 
