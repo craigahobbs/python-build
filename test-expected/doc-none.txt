@@ -1,1 +1,1 @@
-make[1]: Nothing to be done for 'doc'.
+make[X]: Nothing to be done for 'doc'.
