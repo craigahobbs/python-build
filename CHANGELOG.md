@@ -1,3 +1,7 @@
+## 2021-08-25
+
+- [6f10409](https://github.com/craigahobbs/python-build/commit/6f10409) - remove venv wheel install
+
 ## 2021-08-20
 
 - [d2f8850](https://github.com/craigahobbs/python-build/commit/d2f8850) - restore --no-cache-dir pip arg to avoid warning with docker
