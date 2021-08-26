@@ -1,5 +1,7 @@
 ## 2021-08-26
 
+- [31aa02e](https://github.com/craigahobbs/python-build/commit/31aa02e) - Revert "don't update pip and setuptools in venv's"
+
 - [4be9817](https://github.com/craigahobbs/python-build/commit/4be9817) - don't update pip and setuptools in venv's
 
 ## 2021-08-25
