@@ -1,5 +1,9 @@
 ## 2021-08-26
 
+- [623bac8](https://github.com/craigahobbs/python-build/commit/623bac8) - pylint 2.10.\*
+
+- [bdf27d5](https://github.com/craigahobbs/python-build/commit/bdf27d5) - rename to python-build
+
 - [31aa02e](https://github.com/craigahobbs/python-build/commit/31aa02e) - Revert "don't update pip and setuptools in venv's"
 
 - [4be9817](https://github.com/craigahobbs/python-build/commit/4be9817) - don't update pip and setuptools in venv's
