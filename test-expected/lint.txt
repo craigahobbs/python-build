@@ -1,5 +1,6 @@
 if [ "$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X python3 -m venv build/venv/lint-python-3-X
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/pip -q --disable-pip-version-check --no-cache-dir install --progress-bar off -e . pylint=="X.Y.*"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off -U pip setuptools
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off -e . pylint=="X.Y.*"
 touch build/venv/lint-python-3-X.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/python3 -m pylint -j 0 setup.py src

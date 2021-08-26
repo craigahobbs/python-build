@@ -102,5 +102,6 @@ changelog: build/venv.build
 
 build/venv.build:
 	python3 -m venv build/venv
-	build/venv/bin/pip -q --disable-pip-version-check install --progress-bar off simple-git-changelog
+	build/venv/bin/pip -q install --progress-bar off -U pip setuptools
+	build/venv/bin/pip -q install --progress-bar off simple-git-changelog
 	touch $@
