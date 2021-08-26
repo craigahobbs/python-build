@@ -23,7 +23,7 @@ PYTHON_IMAGES := no-docker
 endif
 
 # Python pip option
-PIP_ARGS ?= -q --no-cache-dir
+PIP_ARGS ?= -q --disable-pip-version-check --no-cache-dir
 PIP_INSTALL_ARGS ?= --progress-bar off
 
 # Python unittest
@@ -106,7 +106,6 @@ ifeq '$$(NO_DOCKER)' ''
 	if [ "$$$$(docker images -q $(strip $(2)))" = "" ]; then docker pull -q $(strip $(2)); fi
 endif
 	$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_RUN) python3 -m venv $$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_DIR)
-	$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD)/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
 	$$($(call UPPER_FN,$(1))_$(call IMAGE_SYMBOL_FN,$(2))_VENV_CMD)/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $$(strip $(3))
 	touch $$@
 

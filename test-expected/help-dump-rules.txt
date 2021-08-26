@@ -15,7 +15,6 @@ ifeq '$(NO_DOCKER)' ''
 	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 endif
 	$(TEST_PYTHON_3_X_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_X_VENV_DIR)
-	$(TEST_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
 	$(TEST_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . $(TESTS_REQUIRE))
 	touch $@
 
@@ -49,7 +48,6 @@ ifeq '$(NO_DOCKER)' ''
 	if [ "$$(docker images -q python:3.Y)" = "" ]; then docker pull -q python:3.Y; fi
 endif
 	$(TEST_PYTHON_3_Y_VENV_RUN) python3 -m venv $(TEST_PYTHON_3_Y_VENV_DIR)
-	$(TEST_PYTHON_3_Y_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
 	$(TEST_PYTHON_3_Y_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . $(TESTS_REQUIRE))
 	touch $@
 
@@ -83,7 +81,6 @@ ifeq '$(NO_DOCKER)' ''
 	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 endif
 	$(COVER_PYTHON_3_X_VENV_RUN) python3 -m venv $(COVER_PYTHON_3_X_VENV_DIR)
-	$(COVER_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
 	$(COVER_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . coverage=="$(COVERAGE_VERSION)" $(TESTS_REQUIRE))
 	touch $@
 
@@ -121,7 +118,6 @@ ifeq '$(NO_DOCKER)' ''
 	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 endif
 	$(LINT_PYTHON_3_X_VENV_RUN) python3 -m venv $(LINT_PYTHON_3_X_VENV_DIR)
-	$(LINT_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
 	$(LINT_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . pylint=="$(PYLINT_VERSION)" $(TESTS_REQUIRE))
 	touch $@
 
@@ -149,7 +145,6 @@ ifeq '$(NO_DOCKER)' ''
 	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 endif
 	$(DOC_PYTHON_3_X_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_X_VENV_DIR)
-	$(DOC_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
 	$(DOC_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . sphinx=="$(SPHINX_VERSION)" sphinx_rtd_theme=="$(SPHINX_RTD_THEME_VERSION)" $(TESTS_REQUIRE))
 	touch $@
 
@@ -178,7 +173,6 @@ ifeq '$(NO_DOCKER)' ''
 	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 endif
 	$(PUBLISH_PYTHON_3_X_VENV_RUN) python3 -m venv $(PUBLISH_PYTHON_3_X_VENV_DIR)
-	$(PUBLISH_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
 	$(PUBLISH_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  twine)
 	touch $@
 
@@ -208,7 +202,6 @@ ifeq '$(NO_DOCKER)' ''
 	if [ "$$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 endif
 	$(CHANGELOG_PYTHON_3_X_VENV_RUN) python3 -m venv $(CHANGELOG_PYTHON_3_X_VENV_DIR)
-	$(CHANGELOG_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
 	$(CHANGELOG_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  simple-git-changelog)
 	touch $@
 
