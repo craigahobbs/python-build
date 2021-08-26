@@ -1,15 +1,15 @@
-# Python Build
+# python-build
 
-**Python Build** is a lightweight GNU Make-based build system for best-practice Python package
-development. Python Build performs the following functions:
+**python-build** is a lightweight GNU Make-based build system for best-practice Python package
+development. It performs the following functions:
 
-- Run unit tests with all actively maintained Python versions using the [official Docker Python images](https://hub.docker.com/_/python)
-- Run unit tests with [coverage](https://pypi.org/project/coverage/)
+- Run unit tests with all actively maintained Python versions using the official [Docker Python images](https://hub.docker.com/_/python)
+- Verify unit test coverage using [coverage](https://pypi.org/project/coverage/)
 - Perform static code analysis using [pylint](https://pypi.org/project/pylint/)
 - Generate documentation using [Sphinx](https://pypi.org/project/Sphinx/)
 - Publish documentation to [GitHub Pages](https://pages.github.com/)
-- Create and update a project changelog file using [simple-git-changelog](https://pypi.org/project/simple-git-changelog/)
-- Publish the package to PyPI using [twine](https://pypi.org/project/twine/)
+- Create and update a changelog file using [simple-git-changelog](https://pypi.org/project/simple-git-changelog/)
+- Publish the package to [PyPI](https://pypi.org/)
 
 
 ## Contents
@@ -18,13 +18,13 @@ development. Python Build performs the following functions:
 - [Make Targets](#make-targets)
 - [Make Options](#make-options)
 - [Make Variables](#make-variables)
-- [Extending Python Build](#extending-python-build)
+- [Extending python-build](#extending-python-build)
 - [Make Tips & Tricks](#make-tips--tricks)
 
 
 ## Project Setup
 
-The basic structure of a Python Build project is as follows:
+The basic structure of a python-build project is as follows:
 
 ```
 |-- .gitignore
@@ -41,10 +41,10 @@ The basic structure of a Python Build project is as follows:
         `-- test_module_name.py
 ```
 
-The basic Python Build "Makefile" is as follows:
+The basic python-build "Makefile" is as follows:
 
 ``` make
-# Download Python Build
+# Download python-build
 define WGET
 ifeq '$$(wildcard $(notdir $(1)))' ''
 $$(info Downloading $(notdir $(1)))
@@ -55,17 +55,17 @@ WGET_CMD = if which wget; then wget -q -c $(1); else curl -Os $(1); fi
 $(eval $(call WGET, https://raw.githubusercontent.com/craigahobbs/python-build/main/Makefile.base))
 $(eval $(call WGET, https://raw.githubusercontent.com/craigahobbs/python-build/main/pylintrc))
 
-# Include Python Build
+# Include python-build
 include Makefile.base
 
 clean:
 	rm -rf Makefile.base pylintrc
 ```
 
-Note that the makefile automatically downloads "Makefile.base" and "pylintrc" files from Python
-Build. Python Build continually updates its development dependencies to the latest stable versions.
+Note that the makefile automatically downloads "Makefile.base" and "pylintrc" files from python-build.
+It continually updates its development dependencies to the latest stable versions.
 
-Here is a typical Python Build project ".gitignore" file:
+Here is a typical python-build project ".gitignore" file:
 
 ```
 /.coverage
@@ -86,7 +86,7 @@ that can serve as a starting place for your project's "setup.py".
 
 ## Make Targets
 
-Python Build exposes build commands as "phony" make targets. For example, to run all pre-commit
+python-build exposes build commands as "phony" make targets. For example, to run all pre-commit
 targets, use the `commit` target:
 
 ```
@@ -191,7 +191,7 @@ make -j commit
 
 ## Make Variables
 
-Python Build exposes several make variables that can be modified in your makefile. For example, to
+python-build exposes several make variables that can be modified in your makefile. For example, to
 change minimum coverage level failure setting:
 
 ```
@@ -237,7 +237,7 @@ The following variables are supported:
 ### Pre-Include Make Variables
 
 The following make variables must be defined prior to the inclusion of the base makefile. This is
-because they modify the make targets that Python Build generates on include. For example, to set a
+because they modify the make targets that python-build generates on include. For example, to set a
 Sphinx documentation directory:
 
 ```
@@ -276,9 +276,9 @@ make commit NO_DOCKER=1
 ```
 
 
-## Extending Python Build
+## Extending python-build
 
-All of the Python Build [targets](#make-targets) may be extended either by adding additional
+All of the python-build [targets](#make-targets) may be extended either by adding additional
 commands or adding a target dependency. Add additional commands to execute when a target (and all
 its dependencies) is complete:
 
