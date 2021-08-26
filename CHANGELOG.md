@@ -1,3 +1,7 @@
+## 2021-08-26
+
+- [4be9817](https://github.com/craigahobbs/python-build/commit/4be9817) - don't update pip and setuptools in venv's
+
 ## 2021-08-25
 
 - [6f10409](https://github.com/craigahobbs/python-build/commit/6f10409) - remove venv wheel install
