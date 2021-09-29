@@ -1,3 +1,7 @@
+## 2021-09-29
+
+- [10887b7](https://github.com/craigahobbs/python-build/commit/10887b7) - pylint 2.11, sphinx 4.2, sphinx-rtd-theme 1.0
+
 ## 2021-08-26
 
 - [623bac8](https://github.com/craigahobbs/python-build/commit/623bac8) - pylint 2.10.\*
