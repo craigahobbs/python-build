@@ -1,3 +1,7 @@
+## 2021-10-01
+
+- [1d8e76d](https://github.com/craigahobbs/python-build/commit/1d8e76d) - update build stub
+
 ## 2021-09-30
 
 - [2cf0312](https://github.com/craigahobbs/python-build/commit/2cf0312) - unittest-parallel 1.5
