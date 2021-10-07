@@ -1,3 +1,7 @@
+## 2021-10-07
+
+- [c132c75](https://github.com/craigahobbs/python-build/commit/c132c75) - Python 3.10 released
+
 ## 2021-10-01
 
 - [1d8e76d](https://github.com/craigahobbs/python-build/commit/1d8e76d) - update build stub
