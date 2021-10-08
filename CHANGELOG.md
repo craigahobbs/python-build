@@ -1,6 +1,6 @@
 ## 2021-10-07
 
-- [7e1981d](https://github.com/craigahobbs/python-build/commit/7e1981d) - revert Python 3.10 as primary Python - coverage bugs
+- [d1247d6](https://github.com/craigahobbs/python-build/commit/d1247d6) - coverage 6.0, Python 3.0 primary python
 
 - [c132c75](https://github.com/craigahobbs/python-build/commit/c132c75) - Python 3.10 released
 
