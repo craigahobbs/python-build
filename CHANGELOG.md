@@ -1,3 +1,7 @@
+## 2021-10-10
+
+- [0567c35](https://github.com/craigahobbs/python-build/commit/0567c35) - add pip install retries and timeout
+
 ## 2021-10-07
 
 - [d1247d6](https://github.com/craigahobbs/python-build/commit/d1247d6) - coverage 6.0, Python 3.0 primary python
