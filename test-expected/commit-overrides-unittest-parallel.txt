@@ -1,24 +1,24 @@
 if [ "$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X python3 -m venv build/venv/test-python-3-X
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/test-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off -U pip setuptools
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/test-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off -e . unittest-parallel=="bogus-unittest-parallel-version"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/test-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/test-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e . unittest-parallel=="bogus-unittest-parallel-version"
 touch build/venv/test-python-3-X.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/test-python-3-X/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
 if [ "$(docker images -q python:3.Y)" = "" ]; then docker pull -q python:3.Y; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y python3 -m venv build/venv/test-python-3-Y
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y build/venv/test-python-3-Y/bin/pip -q --no-cache-dir install --progress-bar off -U pip setuptools
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y build/venv/test-python-3-Y/bin/pip -q --no-cache-dir install --progress-bar off -e . unittest-parallel=="bogus-unittest-parallel-version"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y build/venv/test-python-3-Y/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y build/venv/test-python-3-Y/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e . unittest-parallel=="bogus-unittest-parallel-version"
 touch build/venv/test-python-3-Y.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y build/venv/test-python-3-Y/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
 if [ "$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X python3 -m venv build/venv/lint-python-3-X
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off -U pip setuptools
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off -e . pylint=="X.Y.*"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e . pylint=="X.Y.*"
 touch build/venv/lint-python-3-X.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/lint-python-3-X/bin/python3 -m pylint -j 0 setup.py src
 if [ "$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X python3 -m venv build/venv/cover-python-3-X
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/cover-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off -U pip setuptools
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/cover-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off -e . coverage=="X.Y.*" unittest-parallel=="bogus-unittest-parallel-version"
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/cover-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/cover-python-3-X/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e . coverage=="X.Y.*" unittest-parallel=="bogus-unittest-parallel-version"
 touch build/venv/cover-python-3-X.build
 docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.X build/venv/cover-python-3-X/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg --coverage-html=build/coverage --bogus-unittest-parallel-coverage-arg
