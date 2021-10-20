@@ -19,7 +19,7 @@ development. It performs the following functions:
 - [Make Options](#make-options)
 - [Make Variables](#make-variables)
 - [Extending python-build](#extending-python-build)
-- [Make Tips & Tricks](#make-tips--tricks)
+- [Make Tips and Tricks](#make-tips-and-tricks)
 
 
 ## Project Setup
@@ -299,9 +299,9 @@ commit: other-stuff
 ```
 
 
-## Make Tips & Tricks
+## Make Tips and Tricks
 
-### Embed Python in a makefile
+### Embed Python in a Makefile
 
 Python can be embedded in a makefile by first defining the Python script, exporting the Python
 script, and executing the Python script with the "-c" argument. Make variables can even be
@@ -309,10 +309,11 @@ incorporated into the Python script. Here's an example:
 
 ```
 TITLE := Hello, World!
+COUNT := 3
 
 define PYTHON_SCRIPT
 print('$(TITLE)')
-for x in range(10):
+for x in range(1, $(COUNT) + 1):
     print(f'x = {x}')
 endef
 
@@ -327,14 +328,7 @@ Running make yields the following output:
 
 ```
 Hello, World!
-x = 0
 x = 1
 x = 2
 x = 3
-x = 4
-x = 5
-x = 6
-x = 7
-x = 8
-x = 9
 ```
