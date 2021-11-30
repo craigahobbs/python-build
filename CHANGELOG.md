@@ -1,3 +1,11 @@
+## 2021-11-30
+
+- [09189df](https://github.com/craigahobbs/python-build/commit/09189df) - sphinx 4.3
+
+## 2021-11-08
+
+- [19bde76](https://github.com/craigahobbs/python-build/commit/19bde76) - coverage 6.1
+
 ## 2021-10-10
 
 - [0567c35](https://github.com/craigahobbs/python-build/commit/0567c35) - add pip install retries and timeout
