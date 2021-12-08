@@ -1,3 +1,7 @@
+## 2021-12-08
+
+- [bb42721](https://github.com/craigahobbs/python-build/commit/bb42721) - coverage 6.2, pylint 2.12
+
 ## 2021-11-30
 
 - [09189df](https://github.com/craigahobbs/python-build/commit/09189df) - sphinx 4.3
