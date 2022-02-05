@@ -1,3 +1,7 @@
+## 2022-02-05
+
+- [bd72438](https://github.com/craigahobbs/python-build/commit/bd72438) - coverage 6.3
+
 ## 2021-12-08
 
 - [bb42721](https://github.com/craigahobbs/python-build/commit/bb42721) - coverage 6.2, pylint 2.12
