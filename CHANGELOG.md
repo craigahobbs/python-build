@@ -1,3 +1,7 @@
+## 2022-02-28
+
+- [038b55e](https://github.com/craigahobbs/python-build/commit/038b55e) - add python:3.11-rc
+
 ## 2022-02-05
 
 - [bd72438](https://github.com/craigahobbs/python-build/commit/bd72438) - coverage 6.3
