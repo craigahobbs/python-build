@@ -1,5 +1,7 @@
 ## 2022-02-28
 
+- [ff73b55](https://github.com/craigahobbs/python-build/commit/ff73b55) - remove python:3.6
+
 - [038b55e](https://github.com/craigahobbs/python-build/commit/038b55e) - add python:3.11-rc
 
 ## 2022-02-05
