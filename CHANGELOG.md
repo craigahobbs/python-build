@@ -1,3 +1,7 @@
+## 2022-03-28
+
+- [20a059a](https://github.com/craigahobbs/python-build/commit/20a059a) - pylint 2.13, sphinx 4.5
+
 ## 2022-02-28
 
 - [ff73b55](https://github.com/craigahobbs/python-build/commit/ff73b55) - remove python:3.6
