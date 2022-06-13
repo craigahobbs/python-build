@@ -1,3 +1,7 @@
+## 2022-06-13
+
+- [507fd4e](https://github.com/craigahobbs/python-build/commit/507fd4e) - coverage 6.4, pylint 2.14, sphinx 5.0
+
 ## 2022-03-28
 
 - [20a059a](https://github.com/craigahobbs/python-build/commit/20a059a) - pylint 2.13, sphinx 4.5
