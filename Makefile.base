@@ -36,17 +36,17 @@ UNITTEST_PARALLEL_ARGS ?= -v
 UNITTEST_PARALLEL_COVERAGE_ARGS ?= --coverage-branch --coverage-fail-under 100
 
 # coverage
-COVERAGE_VERSION ?= 6.3.*
+COVERAGE_VERSION ?= 6.4.*
 COVERAGE_ARGS ?= --branch
 COVERAGE_REPORT_ARGS ?= --fail-under 100
 
 # pylint
-PYLINT_VERSION ?= 2.13.*
+PYLINT_VERSION ?= 2.14.*
 PYLINT_ARGS ?= -j 0
 
 # sphinx
 SPHINX_DOC ?=
-SPHINX_VERSION ?= 4.5.*
+SPHINX_VERSION ?= 5.0.*
 SPHINX_RTD_THEME_VERSION ?= 1.0.*
 SPHINX_ARGS ?= -W -a
 
