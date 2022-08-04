@@ -1,3 +1,7 @@
+## 2022-08-04
+
+- [e50e835](https://github.com/craigahobbs/python-build/commit/e50e835) - sphinx 5.1
+
 ## 2022-06-13
 
 - [507fd4e](https://github.com/craigahobbs/python-build/commit/507fd4e) - coverage 6.4, pylint 2.14, sphinx 5.0
