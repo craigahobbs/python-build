@@ -150,7 +150,7 @@ ifeq '$(NO_DOCKER)' ''
 endif
 	$(DOC_PYTHON_3_X_VENV_RUN) python3 -m venv $(DOC_PYTHON_3_X_VENV_DIR)
 	$(DOC_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
-	$(DOC_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . sphinx=="$(SPHINX_VERSION)" sphinx_rtd_theme=="$(SPHINX_RTD_THEME_VERSION)" $(TESTS_REQUIRE))
+	$(DOC_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  -e . sphinx=="$(SPHINX_VERSION)" $(TESTS_REQUIRE))
 	touch $@
 
 .PHONY: doc-python-3-X

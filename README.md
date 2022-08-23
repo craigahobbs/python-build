@@ -218,8 +218,6 @@ The following variables are supported:
 
 - `SPHINX_VERSION` - The [Sphinx](https://pypi.org/project/Sphinx) package version.
 
-- `SPHINX_RTD_THEME_VERSION` - The [sphinx-rtd-theme](https://pypi.org/project/sphinx-rtd-theme/) package version.
-
 - `SPHINX_ARGS` - The sphinx-build global command line arguments. Default is "-W -a".
 
 - `TESTS_REQUIRE` - Additional Python packages to install for unit tests.

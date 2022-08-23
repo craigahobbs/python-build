@@ -61,7 +61,6 @@ $(eval $(call TEST_RULE, commit-overrides, commit \
   PYLINT_VERSION='bogus-pylint-version' \
   PYLINT_ARGS='--bogus-pylint-arg' \
   SPHINX_VERSION='bogus-sphinx-version' \
-  SPHINX_RTD_THEME_VERSION='bogus-sphinx-rtd-theme-version' \
   SPHINX_ARGS='--bogus-sphinx-arg' \
   SPHINX_DOC='bogus-sphinx-doc' \
   TESTS_REQUIRE='"foobar >= 1.0"' \

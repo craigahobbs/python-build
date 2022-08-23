@@ -3,5 +3,4 @@ COVERAGE_VERSION := X.Y.*
 PYLINT_VERSION := X.Y.*
 SPHINX_DOC := doc
 SPHINX_VERSION := X.Y.*
-SPHINX_RTD_THEME_VERSION := X.Y.*
 include ../../Makefile.base
