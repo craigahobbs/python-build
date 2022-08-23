@@ -1,3 +1,7 @@
+## 2022-08-22
+
+- [e075a1c](https://github.com/craigahobbs/python-build/commit/e075a1c) - remove sphinx-rtd-theme dependency
+
 ## 2022-08-04
 
 - [e50e835](https://github.com/craigahobbs/python-build/commit/e50e835) - sphinx 5.1
