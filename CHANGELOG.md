@@ -1,5 +1,9 @@
 # Changelog
 
+## 2022-08-29
+
+- [094b3fb](https://github.com/craigahobbs/python-build/commit/094b3fb) - pylint 2.15
+
 ## 2022-08-22
 
 - [e075a1c](https://github.com/craigahobbs/python-build/commit/e075a1c) - remove sphinx-rtd-theme dependency
