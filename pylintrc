@@ -9,8 +9,9 @@ analyse-fallback-blocks=no
 # all available extensions.
 #enable-all-extensions=
 
-# In error mode, checkers without error messages are disabled and for others,
-# only the ERROR messages are displayed, and no reports are done by default.
+# In error mode, messages with a category besides ERROR or FATAL are
+# suppressed, and no reports are done by default. Error mode is compatible with
+# disabling specific errors.
 #errors-only=
 
 # Always return a 0 (non-error) status code, even if lint errors are found.
@@ -33,8 +34,8 @@ extension-pkg-whitelist=
 # specified are enabled, while categories only check already-enabled messages.
 fail-on=
 
-# Specify a score threshold to be exceeded before program exits with error.
-fail-under=10.0
+# Specify a score threshold under which the program will exit with error.
+fail-under=10
 
 # Interpret the stdin as a python script, whose filename needs to be passed as
 # the module_or_package argument.
@@ -43,13 +44,15 @@ fail-under=10.0
 # Files or directories to be skipped. They should be base names, not paths.
 ignore=CVS
 
-# Add files or directories matching the regex patterns to the ignore-list. The
-# regex matches against paths and can be in Posix or Windows format.
+# Add files or directories matching the regular expressions patterns to the
+# ignore-list. The regex matches against paths and can be in Posix or Windows
+# format. Because '\' represents the directory delimiter on Windows systems, it
+# can't be used as an escape character.
 ignore-paths=
 
-# Files or directories matching the regex patterns are skipped. The regex
-# matches against base names, not paths. The default value ignores Emacs file
-# locks
+# Files or directories matching the regular expression patterns are skipped.
+# The regex matches against base names, not paths. The default value ignores
+# Emacs file locks
 ignore-patterns=^\.#
 
 # List of module names for which member attributes should not be checked
@@ -63,7 +66,8 @@ ignored-modules=
 #init-hook=
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
-# number of processors available to use.
+# number of processors available to use, and will cap the count on Windows to
+# avoid hangs.
 jobs=1
 
 # Control the amount of potential inferred values when inferring a single
@@ -80,7 +84,7 @@ persistent=no
 
 # Minimum Python version to use for version dependent checks. Will default to
 # the version used to run pylint.
-py-version=3.7
+py-version=3.8
 
 # Discover python modules and packages in the file system subtree.
 recursive=no
@@ -243,7 +247,7 @@ ignored-checks-for-mixins=no-member,
 # List of class names for which member attributes should not be checked (useful
 # for classes with dynamically set attributes). This supports the use of
 # qualified names.
-ignored-classes=optparse.Values,thread._local,_thread._local
+ignored-classes=optparse.Values,thread._local,_thread._local,argparse.Namespace
 
 # Show a hint with possible names when a member name was not found. The aspect
 # of finding the hint is based on edit distance.
@@ -311,8 +315,7 @@ callbacks=cb_,
 # not be used).
 dummy-variables-rgx=_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_
 
-# Argument names that match this expression will be ignored. Default to name
-# with leading underscore.
+# Argument names that match this expression will be ignored.
 ignored-argument-names=_.*|^ignored_|^unused_
 
 # Tells whether we should check for unused import in __init__ files.
@@ -389,6 +392,13 @@ known-third-party=enchant
 preferred-modules=
 
 
+[METHOD_ARGS]
+
+# List of qualified names (i.e., library.method) which require a timeout
+# parameter e.g. 'requests.api.get,requests.api.post'
+timeout-methods=requests.api.delete,requests.api.get,requests.api.head,requests.api.options,requests.api.patch,requests.api.post,requests.api.put,requests.api.request
+
+
 [EXCEPTIONS]
 
 # Exceptions that will emit a warning when caught.
@@ -417,10 +427,10 @@ ignore-comments=yes
 ignore-docstrings=yes
 
 # Imports are removed from the similarity computation
-ignore-imports=no
+ignore-imports=yes
 
 # Signatures are removed from the similarity computation
-ignore-signatures=no
+ignore-signatures=yes
 
 # Minimum lines number of a similarity.
 min-similarity-lines=4
