@@ -2,6 +2,8 @@
 
 ## 2022-08-29
 
+- [c76cb0f](https://github.com/craigahobbs/python-build/commit/c76cb0f) - update pylintrc
+
 - [094b3fb](https://github.com/craigahobbs/python-build/commit/094b3fb) - pylint 2.15
 
 ## 2022-08-22
