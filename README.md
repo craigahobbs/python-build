@@ -3,7 +3,7 @@
 **python-build** is a lightweight GNU Make-based build system for best-practice Python package
 development.
 
-- Uses the official [Docker Python images](https://hub.docker.com/_/python)
+- Uses the official [Docker Python images](https://hub.docker.com/_/python) (configurable)
 - Run unit tests with [unittest](https://docs.python.org/3/library/unittest.html)
   - Run unit tests with all actively maintained Python versions
   - Optionally run tests with [unittest-parallel](https://pypi.org/project/unittest-parallel/)
