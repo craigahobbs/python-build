@@ -1,5 +1,9 @@
 # Changelog
 
+## 2022-09-28
+
+- [66f5a5b](https://github.com/craigahobbs/python-build/commit/66f5a5b) - sphinx 5.2
+
 ## 2022-08-29
 
 - [c76cb0f](https://github.com/craigahobbs/python-build/commit/c76cb0f) - update pylintrc
