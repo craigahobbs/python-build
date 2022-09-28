@@ -26,7 +26,7 @@ development. It performs the following functions:
 
 The basic structure of a python-build project is as follows:
 
-```
+~~~
 |-- .gitignore
 |-- Makefile
 |-- README.rst
@@ -39,11 +39,11 @@ The basic structure of a python-build project is as follows:
     `-- tests
         |-- __init__.py
         `-- test_module_name.py
-```
+~~~
 
 The basic python-build "Makefile" is as follows:
 
-``` make
+~~~ make
 # Download python-build
 define WGET
 ifeq '$$(wildcard $(notdir $(1)))' ''
@@ -60,14 +60,14 @@ include Makefile.base
 
 clean:
 	rm -rf Makefile.base pylintrc
-```
+~~~
 
 Note that the makefile automatically downloads "Makefile.base" and "pylintrc" files from python-build.
 It continually updates its development dependencies to the latest stable versions.
 
 Here is a typical python-build project ".gitignore" file:
 
-```
+~~~
 /.coverage
 /Makefile.base
 /build/
@@ -75,7 +75,7 @@ Here is a typical python-build project ".gitignore" file:
 /pylintrc
 /src/*.egg-info/
 __pycache__/
-```
+~~~
 
 Notice that "Makefile.base" and "pylintrc" are ignored because they are downloaded by the Makefile.
 
@@ -89,9 +89,9 @@ that can serve as a starting place for your project's "setup.py".
 python-build exposes build commands as "phony" make targets. For example, to run all pre-commit
 targets, use the `commit` target:
 
-```
+~~~
 make commit
-```
+~~~
 
 The following targets are available:
 
@@ -112,15 +112,15 @@ You can run unit tests with a specific Docker image. For example, to run unit te
 
 To run a single unit test, use the `TEST` make variable:
 
-```
+~~~
 make test TEST=tests.test_module_name.TestCase.test_name
-```
+~~~
 
 To run all unit tests in a test file:
 
-```
+~~~
 make test TEST=tests.test_module_name
-```
+~~~
 
 ### lint
 
@@ -165,28 +165,28 @@ variable are rsync-ed there. Afterward, review the changes, commit, and push to 
 
 To create a "gh-pages" branch, enter the following shell commands:
 
-```
+~~~
 git checkout --orphan gh-pages
 git reset --hard
 git commit --allow-empty -m "initializing gh-pages branch"
 git push origin gh-pages
-```
+~~~
 
 
 ## Make Options
 
 To view the commands of any make target without executing, use the "-n" make argument:
 
-```
+~~~
 make -n test
-```
+~~~
 
 To run targets in parallel, use the "-j" make argument. This can significantly decrease the time of
 the [commit](#commit) target.
 
-```
+~~~
 make -j commit
-```
+~~~
 
 
 ## Make Variables
@@ -194,11 +194,11 @@ make -j commit
 python-build exposes several make variables that can be modified in your makefile. For example, to
 change minimum coverage level failure setting:
 
-```
+~~~ make
 include Makefile.base
 
 COVERAGE_REPORT_ARGS := $(COVERAGE_REPORT_ARGS) --fail-under 75
-```
+~~~
 
 The following variables are supported:
 
@@ -238,11 +238,11 @@ The following make variables must be defined prior to the inclusion of the base 
 because they modify the make targets that python-build generates on include. For example, to set a
 Sphinx documentation directory:
 
-```
+~~~ make
 SPHINX_DOC := doc
 
 include Makefile.base
-```
+~~~
 
 The following pre-include make variables are exposed:
 
@@ -263,15 +263,15 @@ The following pre-include make variables are exposed:
 
 - `DUMP_RULES` - Dump generated make rules. This is intended to be used from the command line:
 
-```
+~~~
 make DUMP_RULES=1
-```
+~~~
 
 - `NO_DOCKER` - Use the system python instead of docker. This is intended to be used from the command line:
 
-```
+~~~
 make commit NO_DOCKER=1
-```
+~~~
 
 
 ## Extending python-build
@@ -280,21 +280,21 @@ All of the python-build [targets](#make-targets) may be extended either by addin
 commands or adding a target dependency. Add additional commands to execute when a target (and all
 its dependencies) is complete:
 
-```
+~~~ make
 commit:
 	@echo 'Build succeeded!'
-```
+~~~
 
 Add a target dependency when you want the new dependency to execute in parallel (for [parallel
 builds](#make-options)):
 
-```
+~~~ make
 .PHONY: other-stuff
 other-stuff:
     # do stuff...
 
 commit: other-stuff
-```
+~~~
 
 
 ## Make Tips and Tricks
@@ -305,7 +305,7 @@ Python can be embedded in a makefile by first defining the Python script, export
 script, and executing the Python script with the "-c" argument. Make variables can even be
 incorporated into the Python script. Here's an example:
 
-```
+~~~ make
 TITLE := Hello, World!
 COUNT := 3
 
@@ -314,19 +314,18 @@ print('$(TITLE)')
 for x in range(1, $(COUNT) + 1):
     print(f'x = {x}')
 endef
-
 export PYTHON_SCRIPT
 
 .PHONY: python-script
 python-script:
 	python3 -c "$$PYTHON_SCRIPT"
-```
+~~~
 
 Running make yields the following output:
 
-```
+~~~
 Hello, World!
 x = 1
 x = 2
 x = 3
-```
+~~~
