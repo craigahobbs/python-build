@@ -1,15 +1,18 @@
 # python-build
 
 **python-build** is a lightweight GNU Make-based build system for best-practice Python package
-development. It performs the following functions:
+development.
 
-- Run unit tests with all actively maintained Python versions using the official [Docker Python images](https://hub.docker.com/_/python)
-- Verify unit test coverage using [coverage](https://pypi.org/project/coverage/)
-- Perform static code analysis using [pylint](https://pypi.org/project/pylint/)
-- Generate documentation using [Sphinx](https://pypi.org/project/Sphinx/)
-- Publish documentation to [GitHub Pages](https://pages.github.com/)
-- Create and update a changelog file using [simple-git-changelog](https://pypi.org/project/simple-git-changelog/)
+- Uses the official [Docker Python images](https://hub.docker.com/_/python)
+- Run unit tests with [unittest](https://docs.python.org/3/library/unittest.html)
+  - Run unit tests with all actively maintained Python versions
+  - Optionally run tests with [unittest-parallel](https://pypi.org/project/unittest-parallel/)
+- Code coverage using [coverage](https://pypi.org/project/coverage/)
+  - 100% code coverage enforced (configurable)
+- Static code analysis using [pylint](https://pypi.org/project/pylint/)
+- Package documentation using [Sphinx](https://pypi.org/project/Sphinx/)
 - Publish the package to [PyPI](https://pypi.org/)
+- Publish documentation to [GitHub Pages](https://pages.github.com/)
 
 
 ## Contents
