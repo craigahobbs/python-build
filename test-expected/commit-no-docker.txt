@@ -7,7 +7,7 @@ python3 -m venv build/venv/lint-no-docker
 build/venv/lint-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
 build/venv/lint-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e . pylint=="X.Y.*"
 touch build/venv/lint-no-docker.build
-build/venv/lint-no-docker/bin/python3 -m pylint -j 0 setup.py src
+build/venv/lint-no-docker/bin/python3 -m pylint -j 0 src
 python3 -m venv build/venv/cover-no-docker
 build/venv/cover-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
 build/venv/cover-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e . coverage=="X.Y.*"

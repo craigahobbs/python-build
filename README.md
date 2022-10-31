@@ -33,7 +33,8 @@ The basic structure of a python-build project is as follows:
 |-- .gitignore
 |-- Makefile
 |-- README.rst
-|-- setup.py
+|-- pyproject.toml
+|-- setup.cfg
 `-- src
     |-- __init__.py
     |-- module_name
@@ -82,10 +83,6 @@ __pycache__/
 
 Notice that "Makefile.base" and "pylintrc" are ignored because they are downloaded by the Makefile.
 
-Python package "setup.py" files can vary widely. Here's an
-[example of a real-world setup.py](https://github.com/craigahobbs/schema-markdown/blob/main/setup.py)
-that can serve as a starting place for your project's "setup.py".
-
 
 ## Make Targets
 
@@ -127,7 +124,7 @@ make test TEST=tests.test_module_name
 
 ### lint
 
-Run pylint on the "setup.py" file and all Python source code under the "src" directory.
+Run pylint on all Python source code under the "src" directory.
 
 ### doc
 

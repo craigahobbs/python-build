@@ -127,7 +127,7 @@ endif
 
 .PHONY: lint-python-3-X
 lint-python-3-X: $(LINT_PYTHON_3_X_VENV_BUILD)
-	$(LINT_PYTHON_3_X_VENV_CMD)/python3 -m pylint $(PYLINT_ARGS) setup.py src
+	$(LINT_PYTHON_3_X_VENV_CMD)/python3 -m pylint $(PYLINT_ARGS) src
 
 .PHONY: lint
 lint: lint-python-3-X
@@ -179,14 +179,15 @@ ifeq '$(NO_DOCKER)' ''
 endif
 	$(PUBLISH_PYTHON_3_X_VENV_RUN) python3 -m venv $(PUBLISH_PYTHON_3_X_VENV_DIR)
 	$(PUBLISH_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) -U pip setuptools
-	$(PUBLISH_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  twine)
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/pip $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(strip  build twine wheel)
 	touch $@
 
 .PHONY: publish-python-3-X
 publish-python-3-X: $(PUBLISH_PYTHON_3_X_VENV_BUILD)
-	$(PUBLISH_PYTHON_3_X_VENV_CMD)/python3 setup.py sdist
-	$(PUBLISH_PYTHON_3_X_VENV_CMD)/twine check dist/*.tar.gz
-	$(PUBLISH_PYTHON_3_X_VENV_CMD)/twine upload dist/*.tar.gz
+	rm -rf dist/
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/python3 -m build -n
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/twine check dist/*
+	$(PUBLISH_PYTHON_3_X_VENV_CMD)/twine upload dist/*
 
 .PHONY: publish
 publish: publish-python-3-X
