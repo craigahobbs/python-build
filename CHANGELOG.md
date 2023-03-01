@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-03-01
+
+- [de57a91](https://github.com/craigahobbs/python-build/commit/de57a91) - coverage 7.2, pylint 2.16
+
 ## 2023-01-27
 
 - [9877392](https://github.com/craigahobbs/python-build/commit/9877392) - coverage 7.1, sphinx 6.1
