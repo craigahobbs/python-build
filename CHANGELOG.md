@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-03-20
+
+- [d3ee229](https://github.com/craigahobbs/python-build/commit/d3ee229) - add python:3.12-rc
+
 ## 2023-03-01
 
 - [de57a91](https://github.com/craigahobbs/python-build/commit/de57a91) - coverage 7.2, pylint 2.16
