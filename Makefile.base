@@ -42,7 +42,7 @@ COVERAGE_ARGS ?= --branch
 COVERAGE_REPORT_ARGS ?= --fail-under 100
 
 # pylint
-PYLINT_VERSION ?= 2.16.*
+PYLINT_VERSION ?= 2.17.*
 PYLINT_ARGS ?= -j 0
 
 # sphinx
