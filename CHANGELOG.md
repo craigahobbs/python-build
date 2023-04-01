@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-04-01
+
+- [6b53a7a](https://github.com/craigahobbs/python-build/commit/6b53a7a) - pylint 2.17
+
 ## 2023-03-20
 
 - [d3ee229](https://github.com/craigahobbs/python-build/commit/d3ee229) - add python:3.12-rc
