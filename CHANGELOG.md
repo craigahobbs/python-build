@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-05-12
+
+- [8c4f209](https://github.com/craigahobbs/python-build/commit/8c4f209) - sphinx 7.0
+
 ## 2023-04-26
 
 - [a30b9f4](https://github.com/craigahobbs/python-build/commit/a30b9f4) - sphinx 6.2
