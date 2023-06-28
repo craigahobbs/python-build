@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-06-28
+
+- [3d47097](https://github.com/craigahobbs/python-build/commit/3d47097) - unittest-parallel 1.6
+
 ## 2023-05-12
 
 - [8c4f209](https://github.com/craigahobbs/python-build/commit/8c4f209) - sphinx 7.0
