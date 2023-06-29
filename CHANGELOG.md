@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-06-29
+
+- [a685a90](https://github.com/craigahobbs/python-build/commit/a685a90) - enable useless-suppression pylint warning
+
 ## 2023-06-28
 
 - [3d47097](https://github.com/craigahobbs/python-build/commit/3d47097) - unittest-parallel 1.6
