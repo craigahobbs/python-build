@@ -2,6 +2,8 @@
 
 ## 2023-06-29
 
+- [33f8a42](https://github.com/craigahobbs/python-build/commit/33f8a42) - remove python 3.7 support \(end-of-life\)
+
 - [a685a90](https://github.com/craigahobbs/python-build/commit/a685a90) - enable useless-suppression pylint warning
 
 ## 2023-06-28
