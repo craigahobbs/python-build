@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-07-28
+
+- [71d269a](https://github.com/craigahobbs/python-build/commit/71d269a) - simplify venv build rules and reduce venv creation, revert to coverage 7.1
+
 ## 2023-06-29
 
 - [33f8a42](https://github.com/craigahobbs/python-build/commit/33f8a42) - remove python 3.7 support \(end-of-life\)
