@@ -2,6 +2,8 @@
 
 ## 2023-07-28
 
+- [8e1d9c2](https://github.com/craigahobbs/python-build/commit/8e1d9c2) - restore coverage 7.2
+
 - [71d269a](https://github.com/craigahobbs/python-build/commit/71d269a) - simplify venv build rules and reduce venv creation, revert to coverage 7.1
 
 ## 2023-06-29
