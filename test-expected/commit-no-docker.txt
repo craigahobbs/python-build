@@ -1,17 +1,9 @@
-python3 -m venv build/venv/test-no-docker
-build/venv/test-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
-build/venv/test-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e .
-touch build/venv/test-no-docker.build
-build/venv/test-no-docker/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
-python3 -m venv build/venv/lint-no-docker
-build/venv/lint-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
-build/venv/lint-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e . pylint=="X.Y.*"
-touch build/venv/lint-no-docker.build
-build/venv/lint-no-docker/bin/python3 -m pylint -j 0 src
-python3 -m venv build/venv/cover-no-docker
-build/venv/cover-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
-build/venv/cover-no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e . coverage=="X.Y.*"
-touch build/venv/cover-no-docker.build
-build/venv/cover-no-docker/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
-build/venv/cover-no-docker/bin/python3 -m coverage html -d build/coverage
-build/venv/cover-no-docker/bin/python3 -m coverage report --fail-under 100
+python3 -m venv build/venv/no-docker
+build/venv/no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
+build/venv/no-docker/bin/pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e .  build simple-git-changelog twine wheel coverage=="X.Y.*" pylint=="X.Y.*" sphinx=="7.0.*"
+touch build/venv/no-docker.build
+build/venv/no-docker/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+build/venv/no-docker/bin/python3 -m pylint -j 0 src
+build/venv/no-docker/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
+build/venv/no-docker/bin/python3 -m coverage html -d build/coverage
+build/venv/no-docker/bin/python3 -m coverage report --fail-under 100

@@ -1,1 +1,1 @@
-docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y build/venv/test-python-3-Y/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` python:3.Y build/venv/python-3-Y/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
