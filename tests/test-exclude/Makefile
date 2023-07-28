@@ -1,3 +1,7 @@
 PYTHON_IMAGES := python:3.X python:3.Y
 PYTHON_IMAGES_EXCLUDE := python:3.X
+COVERAGE_VERSION := X.Y.*
+PYLINT_VERSION := X.Y.*
+SPHINX_VERSION := X.Y.*
+UNITTEST_PARALLEL_VERSION := X.Y.*
 include ../../Makefile.base
