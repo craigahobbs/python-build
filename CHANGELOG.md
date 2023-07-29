@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-07-29
+
+- [6e2d200](https://github.com/craigahobbs/python-build/commit/6e2d200) - remove DUMP_RULES
+
 ## 2023-07-28
 
 - [8e1d9c2](https://github.com/craigahobbs/python-build/commit/8e1d9c2) - restore coverage 7.2
