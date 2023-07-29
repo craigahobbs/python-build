@@ -52,6 +52,13 @@ SPHINX_ARGS ?= -W -a
 # gh-pages source paths
 GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 
+# Helper functions
+IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
+VENV_RUN_FN = $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(strip $(1)))
+
+# Default venv command prefix (e.g. "$(DEFAULT_VENV_CMD)/python3")
+DEFAULT_VENV_CMD := $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/bin
+
 
 .PHONY: _help help
 help: _help
@@ -78,9 +85,6 @@ commit: test lint doc cover
 
 
 # Function to generate venv creation rules - docker_image
-IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
-VENV_RUN_FN = $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(strip $(1)))
-DEFAULT_VENV_CMD := $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/bin
 define VENV_RULE_FN
 build/venv/$(call IMAGE_NAME_FN, $(1)).build:
 ifeq '$$(NO_DOCKER)' ''
@@ -99,9 +103,6 @@ endif
 	touch $$@
 endef
 $(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call VENV_RULE_FN, $(IMAGE))))
-ifneq '$(DUMP_RULES)' ''
-$(foreach IMAGE, $(PYTHON_IMAGES), $(info $(call VENV_RULE_FN, $(IMAGE))) $(info ))
-endif
 
 
 # Function to generate command rules - command_name, docker_image, commands
@@ -124,11 +125,7 @@ else
 	$(1)/python3 -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
 endif
 endef
-TEST_RULES_FN = $(call VENV_COMMAND_FN, test, $(1), TEST_COMMANDS_FN)
-$(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call TEST_RULES_FN, $(IMAGE))))
-ifneq '$(DUMP_RULES)' ''
-$(foreach IMAGE, $(PYTHON_IMAGES), $(info $(call TEST_RULES_FN, $(IMAGE))) $(info ))
-endif
+$(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call VENV_COMMAND_FN, test, $(IMAGE), TEST_COMMANDS_FN)))
 
 
 define COVER_COMMANDS_FN
@@ -144,23 +141,13 @@ else
 	$(1)/python3 -m coverage report $$(COVERAGE_REPORT_ARGS)
 endif
 endef
-COVER_RULES := $(call VENV_COMMAND_FN, cover, $(firstword $(PYTHON_IMAGES)), COVER_COMMANDS_FN)
-$(eval $(COVER_RULES))
-ifneq '$(DUMP_RULES)' ''
-$(info $(COVER_RULES))
-$(info )
-endif
+$(eval $(call VENV_COMMAND_FN, cover, $(firstword $(PYTHON_IMAGES)), COVER_COMMANDS_FN))
 
 
 define LINT_COMMANDS_FN
 	$(1)/python3 -m pylint $$(PYLINT_ARGS) src
 endef
-LINT_RULES := $(call VENV_COMMAND_FN, lint, $(firstword $(PYTHON_IMAGES)), LINT_COMMANDS_FN)
-$(eval $(LINT_RULES))
-ifneq '$(DUMP_RULES)' ''
-$(info $(LINT_RULES))
-$(info )
-endif
+$(eval $(call VENV_COMMAND_FN, lint, $(firstword $(PYTHON_IMAGES)), LINT_COMMANDS_FN))
 
 
 .PHONY: doc
@@ -169,12 +156,7 @@ define DOC_COMMANDS_FN
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b doctest -d build/doc/doctrees/ $$(SPHINX_DOC) build/doc/doctest/
 	$(1)/sphinx-build $$(SPHINX_ARGS) -b html -d build/doc/doctrees/ $$(SPHINX_DOC) build/doc/html/
 endef
-DOC_RULES := $(call VENV_COMMAND_FN, doc, $(firstword $(PYTHON_IMAGES)), DOC_COMMANDS_FN)
-$(eval $(DOC_RULES))
-ifneq '$(DUMP_RULES)' ''
-$(info $(DOC_RULES))
-$(info )
-endif
+$(eval $(call VENV_COMMAND_FN, doc, $(firstword $(PYTHON_IMAGES)), DOC_COMMANDS_FN))
 endif
 
 
@@ -198,20 +180,10 @@ define PUBLISH_COMMANDS_FN
 	$(1)/twine check dist/*
 	$(1)/twine upload dist/*
 endef
-PUBLISH_RULES := $(call VENV_COMMAND_FN, publish, $(firstword $(PYTHON_IMAGES)), PUBLISH_COMMANDS_FN)
-$(eval $(PUBLISH_RULES))
-ifneq '$(DUMP_RULES)' ''
-$(info $(PUBLISH_RULES))
-$(info )
-endif
+$(eval $(call VENV_COMMAND_FN, publish, $(firstword $(PYTHON_IMAGES)), PUBLISH_COMMANDS_FN))
 
 
 define CHANGELOG_COMMANDS_FN
 	$(1)/simple-git-changelog
 endef
-CHANGELOG_RULES := $(call VENV_COMMAND_FN, changelog, $(firstword $(PYTHON_IMAGES)), CHANGELOG_COMMANDS_FN)
-$(eval $(CHANGELOG_RULES))
-ifneq '$(DUMP_RULES)' ''
-$(info $(CHANGELOG_RULES))
-$(info )
-endif
+$(eval $(call VENV_COMMAND_FN, changelog, $(firstword $(PYTHON_IMAGES)), CHANGELOG_COMMANDS_FN))

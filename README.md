@@ -261,12 +261,6 @@ The following pre-include make variables are exposed:
 
 ### Other Make Variables
 
-- `DUMP_RULES` - Dump generated make rules. This is intended to be used from the command line:
-
-~~~
-make DUMP_RULES=1
-~~~
-
 - `NO_DOCKER` - Use the system python instead of docker. This is intended to be used from the command line:
 
 ~~~
