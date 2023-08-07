@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-08-07
+
+- [c351c8a](https://github.com/craigahobbs/python-build/commit/c351c8a) - sphinx 7.1
+
 ## 2023-07-29
 
 - [6e2d200](https://github.com/craigahobbs/python-build/commit/6e2d200) - remove DUMP_RULES
