@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-08-30
+
+- [92d58a7](https://github.com/craigahobbs/python-build/commit/92d58a7) - coverage 7.3, sphinx 7.2
+
 ## 2023-08-07
 
 - [c351c8a](https://github.com/craigahobbs/python-build/commit/c351c8a) - sphinx 7.1
