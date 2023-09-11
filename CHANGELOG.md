@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-09-11
+
+- [0b5bc0e](https://github.com/craigahobbs/python-build/commit/0b5bc0e) - only install sphinx if its used
+
 ## 2023-08-30
 
 - [92d58a7](https://github.com/craigahobbs/python-build/commit/92d58a7) - coverage 7.3, sphinx 7.2
