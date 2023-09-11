@@ -95,7 +95,7 @@ endif
 ifeq '$(strip $(1))' '$(firstword $(PYTHON_IMAGES))'
 	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))/bin/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) \
 		-e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") \
-		build simple-git-changelog twine wheel coverage=="$$(COVERAGE_VERSION)" pylint=="$$(PYLINT_VERSION)" sphinx=="$$(SPHINX_VERSION)"
+		build simple-git-changelog twine wheel coverage=="$$(COVERAGE_VERSION)" pylint=="$$(PYLINT_VERSION)"$(if $(SPHINX_DOC), sphinx=="$$(SPHINX_VERSION)")
 else
 	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))/bin/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) \
 		-e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)")
