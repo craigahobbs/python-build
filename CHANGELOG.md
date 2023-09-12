@@ -2,6 +2,8 @@
 
 ## 2023-09-11
 
+- [83e2e39](https://github.com/craigahobbs/python-build/commit/83e2e39) - reduce venv size
+
 - [0b5bc0e](https://github.com/craigahobbs/python-build/commit/0b5bc0e) - only install sphinx if its used
 
 ## 2023-08-30
