@@ -84,35 +84,31 @@ endif
 commit: test lint doc cover
 
 
-# Function to generate venv creation rules - docker_image
+# Function to generate venv creation rules - docker_image, packages, suffix
 define VENV_RULE_FN
-build/venv/$(call IMAGE_NAME_FN, $(1)).build:
+build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)).build:
 ifeq '$$(NO_DOCKER)' ''
 	if [ "$$$$(docker images -q $(strip $(1)))" = "" ]; then docker pull -q $(strip $(1)); fi
 endif
-	$(call VENV_RUN_FN, $(1)) python3 -m venv build/venv/$(call IMAGE_NAME_FN, $(1))
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))/bin/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
-ifeq '$(strip $(1))' '$(firstword $(PYTHON_IMAGES))'
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))/bin/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) \
-		-e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") \
-		build simple-git-changelog twine wheel coverage=="$$(COVERAGE_VERSION)" pylint=="$$(PYLINT_VERSION)"$(if $(SPHINX_DOC), sphinx=="$$(SPHINX_VERSION)")
-else
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))/bin/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) \
-		-e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)")
-endif
+	$(call VENV_RUN_FN, $(1)) python3 -m venv build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
+	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/bin/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
+	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/bin/pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
 	touch $$@
 endef
-$(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call VENV_RULE_FN, $(IMAGE))))
+$(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") \
+    coverage=="$$(COVERAGE_VERSION)" pylint=="$$(PYLINT_VERSION)"$(if $(SPHINX_DOC), sphinx=="$$(SPHINX_VERSION)")))
+$(foreach IMAGE, $(wordlist 2, $(words $(PYTHON_IMAGES)), $(PYTHON_IMAGES)), \
+    $(eval $(call VENV_RULE_FN, $(IMAGE), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)"))))
 
 
-# Function to generate command rules - command_name, docker_image, commands
+# Function to generate command rules - command_name, docker_image, commands, suffix
 define VENV_COMMAND_FN
-.PHONY: $(strip $(1))-$(call IMAGE_NAME_FN,$(2))
-$(strip $(1))-$(call IMAGE_NAME_FN,$(2)): build/venv/$(call IMAGE_NAME_FN, $(2)).build
-$(call $(3), $(call VENV_RUN_FN, $(2)) build/venv/$(call IMAGE_NAME_FN, $(2))/bin)
+.PHONY: $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4))
+$(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4)): build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4)).build
+$(call $(3), $(call VENV_RUN_FN, $(2)) build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4))/bin)
 
 .PHONY: $(strip $(1))
-$(strip $(1)): $(strip $(1))-$(call IMAGE_NAME_FN,$(2))
+$(strip $(1)): $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4))
 endef
 
 
@@ -171,6 +167,9 @@ _gh-pages: commit
 endif
 
 
+$(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), build simple-git-changelog twine wheel, -util))
+
+
 .PHONY: _publish publish
 publish: _publish
 _publish: commit
@@ -180,10 +179,10 @@ define PUBLISH_COMMANDS_FN
 	$(1)/twine check dist/*
 	$(1)/twine upload dist/*
 endef
-$(eval $(call VENV_COMMAND_FN, publish, $(firstword $(PYTHON_IMAGES)), PUBLISH_COMMANDS_FN))
+$(eval $(call VENV_COMMAND_FN, publish, $(firstword $(PYTHON_IMAGES)), PUBLISH_COMMANDS_FN, -util))
 
 
 define CHANGELOG_COMMANDS_FN
 	$(1)/simple-git-changelog
 endef
-$(eval $(call VENV_COMMAND_FN, changelog, $(firstword $(PYTHON_IMAGES)), CHANGELOG_COMMANDS_FN))
+$(eval $(call VENV_COMMAND_FN, changelog, $(firstword $(PYTHON_IMAGES)), CHANGELOG_COMMANDS_FN, -util))
