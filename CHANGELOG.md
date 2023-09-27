@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-09-27
+
+- [f055d54](https://github.com/craigahobbs/python-build/commit/f055d54) - update pylint defaults
+
 ## 2023-09-11
 
 - [83e2e39](https://github.com/craigahobbs/python-build/commit/83e2e39) - reduce venv size
