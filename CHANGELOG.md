@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-10-04
+
+- [67f8989](https://github.com/craigahobbs/python-build/commit/67f8989) - Python 3.12
+
 ## 2023-09-27
 
 - [f055d54](https://github.com/craigahobbs/python-build/commit/f055d54) - update pylint defaults
