@@ -10,8 +10,8 @@
 # Python docker images with which to run unit tests
 ifeq '$(NO_DOCKER)' ''
 PYTHON_IMAGES ?= \
-    python:3.11 \
     python:3.12 \
+    python:3.11 \
     python:3.10 \
     python:3.9 \
     python:3.8
@@ -41,7 +41,7 @@ COVERAGE_ARGS ?= --branch
 COVERAGE_REPORT_ARGS ?= --fail-under 100
 
 # pylint
-PYLINT_VERSION ?= 2.17.*
+PYLINT_VERSION ?= 3.0.*
 PYLINT_ARGS ?= -j 0
 
 # sphinx
