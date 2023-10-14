@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-10-14
+
+- [c8690df](https://github.com/craigahobbs/python-build/commit/c8690df) - Python 3.12, pylint 3.0
+
 ## 2023-10-04
 
 - [67f8989](https://github.com/craigahobbs/python-build/commit/67f8989) - Python 3.12
