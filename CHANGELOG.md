@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-11-29
+
+- [a809b61](https://github.com/craigahobbs/python-build/commit/a809b61) - pylintrc - disable too-many-return-statements
+
 ## 2023-10-14
 
 - [c8690df](https://github.com/craigahobbs/python-build/commit/c8690df) - Python 3.12, pylint 3.0
