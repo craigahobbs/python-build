@@ -251,6 +251,8 @@ The following pre-include make variables are exposed:
 
 - `PYTHON_IMAGES_EXCLUDE` - The list of Python images to exclude. Default is "".
 
+- `PYTHON_IMAGES_EXTRA` - The list of extra Python images. Default is "".
+
 - `SPHINX_DOC` - The Sphinx documentation directory. Default is "".
 
 - `GHPAGES_SRC` - The gh-pages target's source directories and files. Directories must end with a

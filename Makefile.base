@@ -14,7 +14,8 @@ PYTHON_IMAGES ?= \
     python:3.11 \
     python:3.10 \
     python:3.9 \
-    python:3.8
+    python:3.8 \
+    $(PYTHON_IMAGES_EXTRA)
 
 # Exclude Python docker images
 PYTHON_IMAGES := $(foreach IMAGE,$(PYTHON_IMAGES),$(if $(findstring $(IMAGE),$(PYTHON_IMAGES_EXCLUDE)),,$(IMAGE)))
