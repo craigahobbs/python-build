@@ -1,5 +1,9 @@
 # Changelog
 
+## 2023-12-12
+
+- [e4f486a](https://github.com/craigahobbs/python-build/commit/e4f486a) - add PYTHON_IMAGES_EXTRA
+
 ## 2023-11-30
 
 - [fe08740](https://github.com/craigahobbs/python-build/commit/fe08740) - pylintrc - disable no-else-return, no-else-raise, no-else-break, and no-else-continue
