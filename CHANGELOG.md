@@ -2,6 +2,8 @@
 
 ## 2024-01-09
 
+- [9b77543](https://github.com/craigahobbs/python-build/commit/9b77543) - disable pylint too-many-boolean-expressions warning
+
 - [7da7df7](https://github.com/craigahobbs/python-build/commit/7da7df7) - disable pylint invalid-unary-operand-type warning
 
 ## 2023-12-12
