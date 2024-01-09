@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-01-09
+
+- [7da7df7](https://github.com/craigahobbs/python-build/commit/7da7df7) - disable pylint invalid-unary-operand-type warning
+
 ## 2023-12-12
 
 - [e4f486a](https://github.com/craigahobbs/python-build/commit/e4f486a) - add PYTHON_IMAGES_EXTRA
