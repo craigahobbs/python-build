@@ -59,6 +59,7 @@ VENV_RUN_FN = $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:
 
 # Default venv command prefix (e.g. "$(DEFAULT_VENV_CMD)/python3")
 DEFAULT_VENV_CMD := $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/bin
+DEFAULT_VENV_BUILD := build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES))).build
 
 
 .PHONY: _help help
