@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-01-18
+
+- [e397f4b](https://github.com/craigahobbs/python-build/commit/e397f4b) - add DEFAULT_VENV_BUILD
+
 ## 2024-01-09
 
 - [9b77543](https://github.com/craigahobbs/python-build/commit/9b77543) - disable pylint too-many-boolean-expressions warning
