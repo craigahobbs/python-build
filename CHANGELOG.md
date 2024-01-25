@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-01-24
+
+- [7efd22e](https://github.com/craigahobbs/python-build/commit/7efd22e) - add DEFAULT_VENV_PYTHON
+
 ## 2024-01-18
 
 - [e397f4b](https://github.com/craigahobbs/python-build/commit/e397f4b) - add DEFAULT_VENV_BUILD
