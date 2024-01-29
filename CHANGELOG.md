@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024-01-29
+
+- [dd3cf27](https://github.com/craigahobbs/python-build/commit/dd3cf27) - fix pip upgrade on windows
+
+- [e00a20d](https://github.com/craigahobbs/python-build/commit/e00a20d) - add windows support
+
 ## 2024-01-24
 
 - [7efd22e](https://github.com/craigahobbs/python-build/commit/7efd22e) - add DEFAULT_VENV_PYTHON
