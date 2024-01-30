@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-01-30
+
+- [031da8c](https://github.com/craigahobbs/python-build/commit/031da8c) - msys2 mingw64 compatibility
+
 ## 2024-01-29
 
 - [dd3cf27](https://github.com/craigahobbs/python-build/commit/dd3cf27) - fix pip upgrade on windows
