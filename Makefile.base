@@ -12,8 +12,10 @@ VENV_BIN := bin
 VENV_PYTHON := python3
 ifneq '$(NO_DOCKER)' ''
 ifeq '$(OS)' 'Windows_NT'
-VENV_BIN := $(shell python3 -c "import sysconfig; print('Scripts' if sysconfig.get_preferred_scheme('user').startswith('nt') else 'bin')")
+ifeq ($(shell python3 -c "import sysconfig; print(sysconfig.get_preferred_scheme('user'))"),nt_user)
+VENV_BIN := Scripts
 VENV_PYTHON := python.exe
+endif
 endif
 endif
 
