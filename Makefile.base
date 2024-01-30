@@ -8,12 +8,13 @@
 
 
 # Windows support
+VENV_BIN := bin
+VENV_PYTHON := python3
+ifneq '$(NO_DOCKER)' ''
 ifeq '$(OS)' 'Windows_NT'
-OS_BIN := Scripts
-OS_PYTHON := python.exe
-else
-OS_BIN := bin
-OS_PYTHON := python3
+VENV_BIN := $(shell python3 -c "import sysconfig; print('Scripts' if sysconfig.get_preferred_scheme('user').startswith('nt') else 'bin')")
+VENV_PYTHON := python.exe
+endif
 endif
 
 # Python docker images with which to run unit tests
@@ -67,8 +68,8 @@ IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
 VENV_RUN_FN = $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(strip $(1)))
 
 # Default venv command prefix (e.g. "$(DEFAULT_VENV_CMD)/pip")
-DEFAULT_VENV_CMD := $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(OS_BIN)
-DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_CMD)/$(OS_PYTHON)
+DEFAULT_VENV_CMD := $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)
+DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_CMD)/$(VENV_PYTHON)
 DEFAULT_VENV_BUILD := build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES))).build
 
 
@@ -103,8 +104,8 @@ ifeq '$$(NO_DOCKER)' ''
 	if [ "$$$$(docker images -q $(strip $(1)))" = "" ]; then docker pull -q $(strip $(1)); fi
 endif
 	$(call VENV_RUN_FN, $(1)) python3 -m venv build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(OS_BIN)/$(OS_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(OS_BIN)/$(OS_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
+	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
+	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
 	touch $$@
 endef
 $(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") \
@@ -117,7 +118,7 @@ $(foreach IMAGE, $(wordlist 2, $(words $(PYTHON_IMAGES)), $(PYTHON_IMAGES)), \
 define VENV_COMMAND_FN
 .PHONY: $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4))
 $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4)): build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4)).build
-$(call $(3), $(call VENV_RUN_FN, $(2)) build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4))/$(OS_BIN))
+$(call $(3), $(call VENV_RUN_FN, $(2)) build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4))/$(VENV_BIN))
 
 .PHONY: $(strip $(1))
 $(strip $(1)): $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4))
@@ -126,11 +127,11 @@ endef
 
 define TEST_COMMANDS_FN
 ifneq '$$(TEST)' ''
-	$(1)/$(OS_PYTHON) -m unittest $$(UNITTEST_ARGS) $$(TEST)
+	$(1)/$(VENV_PYTHON) -m unittest $$(UNITTEST_ARGS) $$(TEST)
 else ifneq '$$(UNITTEST_PARALLEL)' ''
 	$(1)/unittest-parallel -t src/ -s src/tests/ $$(UNITTEST_PARALLEL_ARGS)
 else
-	$(1)/$(OS_PYTHON) -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
+	$(1)/$(VENV_PYTHON) -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
 endif
 endef
 $(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call VENV_COMMAND_FN, test, $(IMAGE), TEST_COMMANDS_FN)))
@@ -138,22 +139,22 @@ $(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call VENV_COMMAND_FN, test, $(IMAGE)
 
 define COVER_COMMANDS_FN
 ifneq '$$(TEST)' ''
-	$(1)/$(OS_PYTHON) -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest $$(UNITTEST_ARGS) $$(TEST)
-	$(1)/$(OS_PYTHON) -m coverage html -d build/coverage
-	$(1)/$(OS_PYTHON) -m coverage report $$(COVERAGE_REPORT_ARGS)
+	$(1)/$(VENV_PYTHON) -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest $$(UNITTEST_ARGS) $$(TEST)
+	$(1)/$(VENV_PYTHON) -m coverage html -d build/coverage
+	$(1)/$(VENV_PYTHON) -m coverage report $$(COVERAGE_REPORT_ARGS)
 else ifneq '$$(UNITTEST_PARALLEL)' ''
 	$(1)/unittest-parallel -t src/ -s src/tests/ $$(UNITTEST_PARALLEL_ARGS) --coverage-html=build/coverage $$(UNITTEST_PARALLEL_COVERAGE_ARGS)
 else
-	$(1)/$(OS_PYTHON) -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
-	$(1)/$(OS_PYTHON) -m coverage html -d build/coverage
-	$(1)/$(OS_PYTHON) -m coverage report $$(COVERAGE_REPORT_ARGS)
+	$(1)/$(VENV_PYTHON) -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
+	$(1)/$(VENV_PYTHON) -m coverage html -d build/coverage
+	$(1)/$(VENV_PYTHON) -m coverage report $$(COVERAGE_REPORT_ARGS)
 endif
 endef
 $(eval $(call VENV_COMMAND_FN, cover, $(firstword $(PYTHON_IMAGES)), COVER_COMMANDS_FN))
 
 
 define LINT_COMMANDS_FN
-	$(1)/$(OS_PYTHON) -m pylint $$(PYLINT_ARGS) src
+	$(1)/$(VENV_PYTHON) -m pylint $$(PYLINT_ARGS) src
 endef
 $(eval $(call VENV_COMMAND_FN, lint, $(firstword $(PYTHON_IMAGES)), LINT_COMMANDS_FN))
 
@@ -187,7 +188,7 @@ publish: _publish
 _publish: commit
 define PUBLISH_COMMANDS_FN
 	rm -rf dist/
-	$(1)/$(OS_PYTHON) -m build -n
+	$(1)/$(VENV_PYTHON) -m build -n
 	$(1)/twine check dist/*
 	$(1)/twine upload dist/*
 endef
