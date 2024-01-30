@@ -2,6 +2,8 @@
 
 ## 2024-01-30
 
+- [956aee0](https://github.com/craigahobbs/python-build/commit/956aee0) - improved windows python detection
+
 - [031da8c](https://github.com/craigahobbs/python-build/commit/031da8c) - msys2 mingw64 compatibility
 
 ## 2024-01-29
