@@ -49,7 +49,7 @@ UNITTEST_PARALLEL_ARGS ?= -v
 UNITTEST_PARALLEL_COVERAGE_ARGS ?= --coverage-branch --coverage-fail-under 100
 
 # coverage
-COVERAGE_VERSION ?= 7.3.*
+COVERAGE_VERSION ?= 7.4.*
 COVERAGE_ARGS ?= --branch
 COVERAGE_REPORT_ARGS ?= --fail-under 100
 
