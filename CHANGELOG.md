@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-02-01
+
+- [ba89f13](https://github.com/craigahobbs/python-build/commit/ba89f13) - coverage 7.4
+
 ## 2024-01-30
 
 - [956aee0](https://github.com/craigahobbs/python-build/commit/956aee0) - improved windows python detection
