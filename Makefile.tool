@@ -31,7 +31,7 @@ endif
 .PHONY: _help help
 help: _help
 _help:
-	@echo "usage: make [clean|commit|gh-pages|lint|test|superclean]"
+	@echo "usage: make [clean|commit|gh-pages|test|superclean]"
 
 
 .PHONY: _clean clean
@@ -52,19 +52,15 @@ endif
 test:
 
 
-.PHONY: lint
-lint:
-
-
 .PHONY: commit
-commit: test lint
+commit: test
 
 
 .PHONY: gh-pages
 gh-pages:
 
 
-build/env.build:
+$(DEFAULT_VENV_BUILD):
 	mkdir -p build
 	$(PYTHON_RUN) python3 -m venv --upgrade-deps build/env
 	$(DEFAULT_VENV_BIN)/pip install $(TESTS_REQUIRE)
