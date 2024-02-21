@@ -1,4 +1,5 @@
-if  python3 -m venv --help | grep -q '\--upgrade-deps'; then  python3 -m venv --upgrade-deps build/venv/no-docker; else  python3 -m venv build/venv/no-docker &&  build/venv/no-docker/bin/python3 -m pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools; fi
+python3 -m venv build/venv/no-docker
+build/venv/no-docker/bin/python3 -m pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -U pip setuptools
 build/venv/no-docker/bin/python3 -m pip -q --no-cache-dir install --progress-bar off --retries 2 --timeout 5 -e .  coverage=="X.Y.*" pylint=="X.Y.*"
 touch build/venv/no-docker.build
 build/venv/no-docker/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
