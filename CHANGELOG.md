@@ -1,5 +1,11 @@
 # Changelog
 
+## 2024-02-21
+
+- [20ed0af](https://github.com/craigahobbs/python-build/commit/20ed0af) - use pip --upgrade-deps if present, rename DEFAULT_VENV_CMD to DEFAULT_VENV_BIN
+
+- [f57c869](https://github.com/craigahobbs/python-build/commit/f57c869) - add Makefile.tool
+
 ## 2024-02-01
 
 - [ba89f13](https://github.com/craigahobbs/python-build/commit/ba89f13) - coverage 7.4
