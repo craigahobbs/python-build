@@ -69,9 +69,9 @@ GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
 VENV_RUN_FN = $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(strip $(1)))
 
-# Default venv command prefix (e.g. "$(DEFAULT_VENV_CMD)/pip")
-DEFAULT_VENV_CMD := $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)
-DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_CMD)/$(VENV_PYTHON)
+# Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pip")
+DEFAULT_VENV_BIN := $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)
+DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_BIN)/$(VENV_PYTHON)
 DEFAULT_VENV_BUILD := build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES))).build
 
 
@@ -105,8 +105,12 @@ build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)).build:
 ifeq '$$(NO_DOCKER)' ''
 	if [ "$$$$(docker images -q $(strip $(1)))" = "" ]; then docker pull -q $(strip $(1)); fi
 endif
-	$(call VENV_RUN_FN, $(1)) python3 -m venv build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
+	if $(call VENV_RUN_FN, $(1)) python3 -m venv --help | grep -q '\--upgrade-deps'; then \
+		$(call VENV_RUN_FN, $(1)) python3 -m venv --upgrade-deps build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)); \
+	else \
+		$(call VENV_RUN_FN, $(1)) python3 -m venv build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)) && \
+		$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools; \
+	fi
 	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
 	touch $$@
 endef
