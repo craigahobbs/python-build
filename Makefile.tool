@@ -12,7 +12,7 @@ NO_DOCKER ?= 1
 # Python image
 PYTHON_IMAGE ?= python:3
 ifeq '$(NO_DOCKER)' ''
-PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(PYTHON_IMAGE)
+PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` -e PIP_NO_CACHE_DIR=off $(PYTHON_IMAGE)
 endif
 
 
@@ -31,7 +31,7 @@ endif
 .PHONY: _help help
 help: _help
 _help:
-	@echo "usage: make [clean|commit|gh-pages|test|superclean]"
+	@echo "usage: make [clean|commit|gh-pages|lint|test|superclean]"
 
 
 .PHONY: _clean clean
@@ -48,12 +48,16 @@ ifeq '$(NO_DOCKER)' ''
 endif
 
 
+.PHONY: commit
+commit: test lint
+
+
 .PHONY: test
 test:
 
 
-.PHONY: commit
-commit: test
+.PHONY: lint
+lint:
 
 
 .PHONY: gh-pages
