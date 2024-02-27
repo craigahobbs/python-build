@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-02-27
+
+- [855a448](https://github.com/craigahobbs/python-build/commit/855a448) - disable pylint chained-comparison warning
+
 ## 2024-02-21
 
 - [20ed0af](https://github.com/craigahobbs/python-build/commit/20ed0af) - rename DEFAULT_VENV_CMD to DEFAULT_VENV_BIN
