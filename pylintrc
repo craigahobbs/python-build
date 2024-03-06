@@ -39,7 +39,7 @@ extension-pkg-whitelist=
 fail-on=
 
 # Specify a score threshold under which the program will exit with error.
-fail-under=10
+fail-under=10.0
 
 # Interpret the stdin as a python script, whose filename needs to be passed as
 # the module_or_package argument.
@@ -480,6 +480,11 @@ max-nested-blocks=5
 # it will be considered as an explicit return statement and no message will be
 # printed.
 never-returning-functions=sys.exit,argparse.parse_error
+
+# Let 'consider-using-join' be raised when the separator to join on would be
+# non-empty (resulting in expected fixes of the type: ``"- " + " -
+# ".join(items)``)
+suggest-join-with-non-empty-separator=yes
 
 
 [REPORTS]
