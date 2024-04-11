@@ -23,6 +23,7 @@ endif
 ifeq '$(NO_DOCKER)' ''
 PYTHON_IMAGES ?= \
     python:3.12 \
+    python:3.13-rc \
     python:3.11 \
     python:3.10 \
     python:3.9 \
