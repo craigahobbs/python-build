@@ -1,5 +1,13 @@
 # Changelog
 
+## 2024-04-11
+
+- [181bc2a](https://github.com/craigahobbs/python-build/commit/181bc2a) - add python:3.13-rc to PYTHON_IMAGES
+
+## 2024-03-06
+
+- [06f2de6](https://github.com/craigahobbs/python-build/commit/06f2de6) - pylint 3.1
+
 ## 2024-02-27
 
 - [855a448](https://github.com/craigahobbs/python-build/commit/855a448) - disable pylint chained-comparison warning
