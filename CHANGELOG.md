@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-04-12
+
+- [22b290f](https://github.com/craigahobbs/python-build/commit/22b290f) - use Python 3.11 as default
+
 ## 2024-04-11
 
 - [181bc2a](https://github.com/craigahobbs/python-build/commit/181bc2a) - add python:3.13-rc to PYTHON_IMAGES
