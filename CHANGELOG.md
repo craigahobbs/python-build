@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-04-20
+
+- [5bee8ae](https://github.com/craigahobbs/python-build/commit/5bee8ae) - sphinx 7.3
+
 ## 2024-04-12
 
 - [22b290f](https://github.com/craigahobbs/python-build/commit/22b290f) - use Python 3.11 as default
