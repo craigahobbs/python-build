@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-04-22
+
+- [1e151db](https://github.com/craigahobbs/python-build/commit/1e151db) - enable the pip cache
+
 ## 2024-04-20
 
 - [5bee8ae](https://github.com/craigahobbs/python-build/commit/5bee8ae) - sphinx 7.3
