@@ -12,7 +12,7 @@ NO_DOCKER ?= 1
 # Python image
 PYTHON_IMAGE ?= python:3
 ifeq '$(NO_DOCKER)' ''
-PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` -e PIP_NO_CACHE_DIR=off $(PYTHON_IMAGE)
+PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME $(PYTHON_IMAGE)
 endif
 
 
