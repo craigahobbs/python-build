@@ -37,7 +37,7 @@ PYTHON_IMAGES := no-docker
 endif
 
 # Python pip option
-PIP_ARGS ?= -q --no-cache-dir
+PIP_ARGS ?= -q
 PIP_INSTALL_ARGS ?= --progress-bar off --retries 2 --timeout 5
 
 # Python unittest
@@ -68,10 +68,10 @@ GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 
 # Helper functions
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
-VENV_RUN_FN = $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v `pwd`:`pwd` -w `pwd` $(strip $(1)))
+VENV_RUN_FN = $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1)))
 
 # Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pip")
-DEFAULT_VENV_BIN := $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)
+DEFAULT_VENV_BIN := $(subst $$$$,$$,$(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN))
 DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_BIN)/$(VENV_PYTHON)
 DEFAULT_VENV_BUILD := build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES))).build
 
