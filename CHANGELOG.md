@@ -1,6 +1,12 @@
 # Changelog
 
+## 2024-04-23
+
+- [4cda124](https://github.com/craigahobbs/python-build/commit/4cda124) - use Python 3.12 as default
+
 ## 2024-04-22
+
+- [51edaa7](https://github.com/craigahobbs/python-build/commit/51edaa7) - update Makefile.tool
 
 - [1e151db](https://github.com/craigahobbs/python-build/commit/1e151db) - enable the pip cache
 
