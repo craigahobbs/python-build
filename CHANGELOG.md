@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-04-25
+
+- [938c7bd](https://github.com/craigahobbs/python-build/commit/938c7bd) - coverage 7.5
+
 ## 2024-04-23
 
 - [4cda124](https://github.com/craigahobbs/python-build/commit/4cda124) - use Python 3.12 as default
