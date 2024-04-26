@@ -38,7 +38,7 @@ endif
 
 # Python pip option
 PIP_ARGS ?= -q
-PIP_INSTALL_ARGS ?= --progress-bar off --retries 2 --timeout 5
+PIP_INSTALL_ARGS ?= --progress-bar off
 
 # Python unittest
 UNITTEST_ARGS ?= -v
