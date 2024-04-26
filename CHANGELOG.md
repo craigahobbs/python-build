@@ -2,6 +2,8 @@
 
 ## 2024-04-26
 
+- [509c36c](https://github.com/craigahobbs/python-build/commit/509c36c) - install myst-parser along with sphinx
+
 - [4e17836](https://github.com/craigahobbs/python-build/commit/4e17836) - remove pip --retries and --timeout args
 
 ## 2024-04-25
