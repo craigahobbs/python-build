@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-04-26
+
+- [4e17836](https://github.com/craigahobbs/python-build/commit/4e17836) - remove pip --retries and --timeout args
+
 ## 2024-04-25
 
 - [938c7bd](https://github.com/craigahobbs/python-build/commit/938c7bd) - coverage 7.5
