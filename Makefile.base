@@ -112,7 +112,7 @@ endif
 	touch $$@
 endef
 $(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") \
-    coverage=="$$(COVERAGE_VERSION)" pylint=="$$(PYLINT_VERSION)"$(if $(SPHINX_DOC), sphinx=="$$(SPHINX_VERSION)")))
+    coverage=="$$(COVERAGE_VERSION)" pylint=="$$(PYLINT_VERSION)"$(if $(SPHINX_DOC), sphinx=="$$(SPHINX_VERSION)" myst-parser)))
 $(foreach IMAGE, $(wordlist 2, $(words $(PYTHON_IMAGES)), $(PYTHON_IMAGES)), \
     $(eval $(call VENV_RULE_FN, $(IMAGE), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)"))))
 
