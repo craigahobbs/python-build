@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-05-16
+
+- [b3db9e2](https://github.com/craigahobbs/python-build/commit/b3db9e2) - pylint 3.2
+
 ## 2024-04-26
 
 - [509c36c](https://github.com/craigahobbs/python-build/commit/509c36c) - install myst-parser along with sphinx
