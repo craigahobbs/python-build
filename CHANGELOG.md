@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-07-13
+
+- [89fda0f](https://github.com/craigahobbs/python-build/commit/89fda0f) - coverage 7.6
+
 ## 2024-05-16
 
 - [b3db9e2](https://github.com/craigahobbs/python-build/commit/b3db9e2) - pylint 3.2
