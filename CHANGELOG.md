@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-07-26
+
+- [5297215](https://github.com/craigahobbs/python-build/commit/5297215) - sphinx 7.4
+
 ## 2024-07-13
 
 - [89fda0f](https://github.com/craigahobbs/python-build/commit/89fda0f) - coverage 7.6
