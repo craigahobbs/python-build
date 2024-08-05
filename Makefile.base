@@ -60,7 +60,7 @@ PYLINT_ARGS ?= -j 0
 
 # sphinx
 SPHINX_DOC ?=
-SPHINX_VERSION ?= 7.4.*
+SPHINX_VERSION ?= 8.0.*
 SPHINX_ARGS ?= -W -a
 
 # gh-pages source paths
