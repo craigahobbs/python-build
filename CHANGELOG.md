@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-08-06
+
+- [7b70ba6](https://github.com/craigahobbs/python-build/commit/7b70ba6) - add PYTHON_IMAGES_NO_UPGRADE_DEPS
+
 ## 2024-08-05
 
 - [850e366](https://github.com/craigahobbs/python-build/commit/850e366) - sphinx 8.0
