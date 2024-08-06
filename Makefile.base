@@ -29,6 +29,7 @@ PYTHON_IMAGES ?= \
     python:3.9 \
     python:3.8 \
     $(PYTHON_IMAGES_EXTRA)
+PYTHON_IMAGES_NO_UPGRADE_DEPS ?= python:3.8
 
 # Exclude Python docker images
 PYTHON_IMAGES := $(foreach IMAGE,$(PYTHON_IMAGES),$(if $(findstring $(IMAGE),$(PYTHON_IMAGES_EXCLUDE)),,$(IMAGE)))
@@ -106,8 +107,12 @@ build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)).build:
 ifeq '$$(NO_DOCKER)' ''
 	if [ "$$$$(docker images -q $(strip $(1)))" = "" ]; then docker pull -q $(strip $(1)); fi
 endif
+ifeq '$$(findstring $$(IMAGE),$$(PYTHON_IMAGES_NO_UPGRADE_DEPS))' ''
+	$(call VENV_RUN_FN, $(1)) python3 -m venv --upgrade-deps build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
+else
 	$(call VENV_RUN_FN, $(1)) python3 -m venv build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
 	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
+endif
 	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
 	touch $$@
 endef

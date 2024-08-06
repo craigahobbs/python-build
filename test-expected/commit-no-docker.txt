@@ -1,5 +1,4 @@
-python3 -m venv build/venv/no-docker
-build/venv/no-docker/bin/python3 -m pip -q install --progress-bar off -U pip setuptools
+python3 -m venv --upgrade-deps build/venv/no-docker
 build/venv/no-docker/bin/python3 -m pip -q install --progress-bar off -e .  coverage=="X.Y.*" pylint=="X.Y.*"
 touch build/venv/no-docker.build
 build/venv/no-docker/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
