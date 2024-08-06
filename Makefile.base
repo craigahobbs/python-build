@@ -22,12 +22,11 @@ endif
 # Python docker images with which to run unit tests
 ifeq '$(NO_DOCKER)' ''
 PYTHON_IMAGES ?= \
+    python:3.13 \
     python:3.12 \
-    python:3.13-rc \
     python:3.11 \
     python:3.10 \
     python:3.9 \
-    python:3.8 \
     $(PYTHON_IMAGES_EXTRA)
 
 # Exclude Python docker images
@@ -106,8 +105,7 @@ build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)).build:
 ifeq '$$(NO_DOCKER)' ''
 	if [ "$$$$(docker images -q $(strip $(1)))" = "" ]; then docker pull -q $(strip $(1)); fi
 endif
-	$(call VENV_RUN_FN, $(1)) python3 -m venv build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
+	$(call VENV_RUN_FN, $(1)) python3 -m venv --upgrade-deps build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
 	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
 	touch $$@
 endef
