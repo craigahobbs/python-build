@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-08-07
+
+- [72b759d](https://github.com/craigahobbs/python-build/commit/72b759d) - add setuptools to util venv for build
+
 ## 2024-08-06
 
 - [7b70ba6](https://github.com/craigahobbs/python-build/commit/7b70ba6) - add PYTHON_IMAGES_NO_UPGRADE_DEPS
