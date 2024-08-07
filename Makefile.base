@@ -188,7 +188,7 @@ _gh-pages: commit
 endif
 
 
-$(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), build simple-git-changelog twine wheel, -util))
+$(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), build simple-git-changelog setuptools twine wheel, -util))
 
 
 .PHONY: _publish publish
