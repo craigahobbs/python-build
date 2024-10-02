@@ -2,6 +2,8 @@
 
 ## 2024-10-02
 
+- [df04d85](https://github.com/craigahobbs/python-build/commit/df04d85) - use Python 3.13 as default, remove Python 3.8 \(end-of-life\)
+
 - [cfcd980](https://github.com/craigahobbs/python-build/commit/cfcd980) - pylintrc - disable too-many-positional-arguments warning
 
 - [7c21ed5](https://github.com/craigahobbs/python-build/commit/7c21ed5) - pylint 3.3
