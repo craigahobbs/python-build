@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-10-02
+
+- [7c21ed5](https://github.com/craigahobbs/python-build/commit/7c21ed5) - pylint 3.3
+
 ## 2024-08-07
 
 - [72b759d](https://github.com/craigahobbs/python-build/commit/72b759d) - add setuptools to util venv for build
