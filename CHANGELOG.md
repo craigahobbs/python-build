@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-10-07
+
+- [7cc9cf9](https://github.com/craigahobbs/python-build/commit/7cc9cf9) - Python 3.13
+
 ## 2024-10-02
 
 - [df04d85](https://github.com/craigahobbs/python-build/commit/df04d85) - use Python 3.13 as default, remove Python 3.8 \(end-of-life\)
