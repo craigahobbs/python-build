@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-10-09
+
+- [81f26dd](https://github.com/craigahobbs/python-build/commit/81f26dd) - pin coverage to 7.6.1 \(7.6.2 has issues\)
+
 ## 2024-10-07
 
 - [7cc9cf9](https://github.com/craigahobbs/python-build/commit/7cc9cf9) - Python 3.13
