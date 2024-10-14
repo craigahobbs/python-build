@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-10-14
+
+- [858fd25](https://github.com/craigahobbs/python-build/commit/858fd25) - unpin coverage, sphinx 8.1
+
 ## 2024-10-09
 
 - [81f26dd](https://github.com/craigahobbs/python-build/commit/81f26dd) - pin coverage to 7.6.1 \(7.6.2 has issues\)
