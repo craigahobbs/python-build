@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-11-27
+
+- [d2ce71b](https://github.com/craigahobbs/python-build/commit/d2ce71b) - unittest-parallel 1.7
+
 ## 2024-10-14
 
 - [858fd25](https://github.com/craigahobbs/python-build/commit/858fd25) - unpin coverage, sphinx 8.1
