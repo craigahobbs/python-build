@@ -231,6 +231,8 @@ The following variables are supported:
 - `UNITTEST_PARALLEL_COVERAGE_ARGS` - The unittest-parallel tool's coverage-related command line arguments.
    Default is "--coverage-branch --coverage-fail-under 100".
 
+- `GHPAGES_RSYNC_ARGS` - Additional rsync arguments for the `gh-pages` target.
+
 
 ### Pre-Include Make Variables
 

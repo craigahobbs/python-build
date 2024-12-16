@@ -8,5 +8,5 @@ docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e 
 docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage report --fail-under 100
 if [ ! -d ../gh-pages.gh-pages ]; then git clone -b gh-pages `git config --get remote.origin.url` ../gh-pages.gh-pages; fi
 cd ../gh-pages.gh-pages && git pull
-rsync -rv --delete --exclude=.git/ build/doc/html/ ../gh-pages.gh-pages
+rsync -rv --delete --exclude=.git/ build/doc/html/  ../gh-pages.gh-pages
 touch ../gh-pages.gh-pages/.nojekyll
