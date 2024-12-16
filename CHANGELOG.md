@@ -1,5 +1,9 @@
 # Changelog
 
+## 2024-12-16
+
+- [f4db7bb](https://github.com/craigahobbs/python-build/commit/f4db7bb) - add GHPAGES_RSYNC_ARGS make variable
+
 ## 2024-11-27
 
 - [d2ce71b](https://github.com/craigahobbs/python-build/commit/d2ce71b) - unittest-parallel 1.7
