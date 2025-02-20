@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-02-20
+
+- [8d26fd1](https://github.com/craigahobbs/python-build/commit/8d26fd1) - use podman instead of docker, use system python by default
+
 ## 2024-12-16
 
 - [f4db7bb](https://github.com/craigahobbs/python-build/commit/f4db7bb) - add GHPAGES_RSYNC_ARGS make variable
