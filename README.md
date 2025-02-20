@@ -3,9 +3,8 @@
 **python-build** is a lightweight GNU Make-based build system for best-practice Python package
 development.
 
-- Uses the official [Docker Python images](https://hub.docker.com/_/python) (configurable)
+- Uses the system Python or the official Python images using [podman](https://podman.io/)
 - Run unit tests with [unittest](https://docs.python.org/3/library/unittest.html)
-  - Run unit tests with all actively maintained Python versions
   - Optionally run tests with [unittest-parallel](https://pypi.org/project/unittest-parallel/)
 - Code coverage using [coverage](https://pypi.org/project/coverage/)
   - 100% code coverage enforced (configurable)
@@ -102,13 +101,13 @@ should be run prior to any commit.
 
 ### test
 
-Run the unit tests using each Docker image in `PYTHON_IMAGES`. Unit tests are run using Python's
+Run the unit tests using each image in `PYTHON_IMAGES`. Unit tests are run using Python's
 built-in
 [unittest](https://docs.python.org/3/library/unittest.html#command-line-interface)
 command-line tool.
 
-You can run unit tests with a specific Docker image. For example, to run unit tests with the
-"python:3.9" image, use the `test-python-3-9` target.
+You can run unit tests with a specific image. For example, to run unit tests with the
+"python:3.X" image, use the `test-python-3-X` target.
 
 To run a single unit test, use the `TEST` make variable:
 
@@ -144,7 +143,7 @@ Delete all development artifacts.
 
 ### superclean
 
-Delete all development artifacts and downloaded docker images.
+Delete all development artifacts and downloaded images.
 
 ### changelog
 
@@ -248,7 +247,7 @@ include Makefile.base
 
 The following pre-include make variables are exposed:
 
-- `PYTHON_IMAGES` - The list of supported Python docker images. Default is all actively maintained
+- `PYTHON_IMAGES` - The list of supported Python images. Default is all actively maintained
   Python versions.
 
 - `PYTHON_IMAGES_EXCLUDE` - The list of Python images to exclude. Default is "".
@@ -265,10 +264,10 @@ The following pre-include make variables are exposed:
 
 ### Other Make Variables
 
-- `NO_DOCKER` - Use the system python instead of docker. This is intended to be used from the command line:
+- `USE_PODMAN` - Use [podman](https://podman.io/) and test with the official Python images.
 
 ~~~
-make commit NO_DOCKER=1
+make commit USE_PODMAN=1
 ~~~
 
 

@@ -5,14 +5,10 @@
 .DEFAULT_GOAL := help
 
 
-# Default to use system python3
-NO_DOCKER ?= 1
-
-
 # Python image
 PYTHON_IMAGE ?= python:3
-ifeq '$(NO_DOCKER)' ''
-PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME $(PYTHON_IMAGE)
+ifneq '$(USE_PODMAN)' ''
+PYTHON_RUN := podman run -i --rm -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME $(PYTHON_IMAGE)
 endif
 
 
@@ -43,8 +39,8 @@ _clean:
 .PHONY: _superclean superclean
 superclean: clean _superclean
 _superclean:
-ifeq '$(NO_DOCKER)' ''
-	-docker rmi -f $(PYTHON_IMAGE)
+ifneq '$(USE_PODMAN)' ''
+	-podman rmi -f $(PYTHON_IMAGE)
 endif
 
 

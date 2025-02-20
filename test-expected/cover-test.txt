@@ -1,3 +1,3 @@
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage run --source src/ --branch -m unittest -v tests.test_package
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage html -d build/coverage
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage report --fail-under 100
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage run --source src/ --branch -m unittest -v tests.test_package
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage html -d build/coverage
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage report --fail-under 100

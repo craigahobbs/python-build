@@ -46,8 +46,8 @@ test: test-$(strip $(1))
 endef
 
 
-# Un-export base makefile variables
-unexport NO_DOCKER
+# Use podman by default
+export USE_PODMAN=1
 
 
 # Don't test anything OS-specific
@@ -58,7 +58,7 @@ OS := Unknown
 $(eval $(call TEST_RULE, changelog, changelog))
 $(eval $(call TEST_RULE, clean, clean))
 $(eval $(call TEST_RULE, commit, commit))
-$(eval $(call TEST_RULE, commit-no-docker, commit NO_DOCKER=1))
+$(eval $(call TEST_RULE, commit-no-podman, commit USE_PODMAN=))
 $(eval $(call TEST_RULE, commit-overrides, commit \
   PIP_ARGS='--bogus-pip-arg' \
   PIP_INSTALL_ARGS='--bogus-pip-install-arg' \
@@ -72,7 +72,6 @@ $(eval $(call TEST_RULE, commit-overrides, commit \
   SPHINX_ARGS='--bogus-sphinx-arg' \
   SPHINX_DOC='bogus-sphinx-doc' \
   TESTS_REQUIRE='"foobar >= 1.0"' \
-  NO_DOCKER='' \
 ))
 $(eval $(call TEST_RULE, commit-overrides-unittest-parallel, commit \
   UNITTEST_PARALLEL_VERSION='bogus-unittest-parallel-version' \

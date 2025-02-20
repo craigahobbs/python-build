@@ -1,12 +1,12 @@
-if [ "$(docker images -q python:3.X)" = "" ]; then docker pull -q python:3.X; fi
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --upgrade-deps build/venv/python-3-X
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pip -q install --progress-bar off -e .  unittest-parallel=="bogus-unittest-parallel-version" coverage=="X.Y.*" pylint=="X.Y.*"
+if [ "$(podman images -q python:3.X)" = "" ]; then podman pull -q python:3.X; fi
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --upgrade-deps build/venv/python-3-X
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pip -q install --progress-bar off -e .  unittest-parallel=="bogus-unittest-parallel-version" coverage=="X.Y.*" pylint=="X.Y.*"
 touch build/venv/python-3-X.build
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
-if [ "$(docker images -q python:3.Y)" = "" ]; then docker pull -q python:3.Y; fi
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y python3 -m venv --upgrade-deps build/venv/python-3-Y
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/python3 -m pip -q install --progress-bar off -e .  unittest-parallel=="bogus-unittest-parallel-version"
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
+if [ "$(podman images -q python:3.Y)" = "" ]; then podman pull -q python:3.Y; fi
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y python3 -m venv --upgrade-deps build/venv/python-3-Y
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/python3 -m pip -q install --progress-bar off -e .  unittest-parallel=="bogus-unittest-parallel-version"
 touch build/venv/python-3-Y.build
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pylint -j 0 src
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg --coverage-html=build/coverage --bogus-unittest-parallel-coverage-arg
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pylint -j 0 src
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg --coverage-html=build/coverage --bogus-unittest-parallel-coverage-arg

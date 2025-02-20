@@ -10,7 +10,7 @@
 # Windows support
 VENV_BIN := bin
 VENV_PYTHON := python3
-ifneq '$(NO_DOCKER)' ''
+ifeq '$(USE_PODMAN)' ''
 ifeq '$(OS)' 'Windows_NT'
 ifeq ($(shell python3 -c "import sysconfig; print(sysconfig.get_preferred_scheme('user'))"),nt_user)
 VENV_BIN := Scripts
@@ -19,8 +19,8 @@ endif
 endif
 endif
 
-# Python docker images with which to run unit tests
-ifeq '$(NO_DOCKER)' ''
+# Python container images with which to run unit tests
+ifneq '$(USE_PODMAN)' ''
 PYTHON_IMAGES ?= \
     python:3.13 \
     python:3.12 \
@@ -29,10 +29,10 @@ PYTHON_IMAGES ?= \
     python:3.9 \
     $(PYTHON_IMAGES_EXTRA)
 
-# Exclude Python docker images
+# Exclude Python container images
 PYTHON_IMAGES := $(foreach IMAGE,$(PYTHON_IMAGES),$(if $(findstring $(IMAGE),$(PYTHON_IMAGES_EXCLUDE)),,$(IMAGE)))
 else
-PYTHON_IMAGES := no-docker
+PYTHON_IMAGES := system
 endif
 
 # Python pip option
@@ -67,7 +67,7 @@ GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 
 # Helper functions
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
-VENV_RUN_FN = $(if $(NO_DOCKER),,docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1)))
+VENV_RUN_FN = $(if $(USE_PODMAN),podman run -i --rm  -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1)))
 
 # Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pip")
 DEFAULT_VENV_BIN := $(subst $$$$,$$,$(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN))
@@ -90,8 +90,8 @@ _clean:
 .PHONY: _superclean superclean
 superclean: clean _superclean
 _superclean:
-ifeq '$(NO_DOCKER)' ''
-	-docker rmi -f $(PYTHON_IMAGES)
+ifneq '$(USE_PODMAN)' ''
+	-podman rmi -f $(PYTHON_IMAGES)
 endif
 
 
@@ -99,11 +99,11 @@ endif
 commit: test lint doc cover
 
 
-# Function to generate venv creation rules - docker_image, packages, suffix
+# Function to generate venv creation rules - container_image, packages, suffix
 define VENV_RULE_FN
 build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)).build:
-ifeq '$$(NO_DOCKER)' ''
-	if [ "$$$$(docker images -q $(strip $(1)))" = "" ]; then docker pull -q $(strip $(1)); fi
+ifneq '$$(USE_PODMAN)' ''
+	if [ "$$$$(podman images -q $(strip $(1)))" = "" ]; then podman pull -q $(strip $(1)); fi
 endif
 ifeq '$$(findstring $$(IMAGE),$$(PYTHON_IMAGES_NO_UPGRADE_DEPS))' ''
 	$(call VENV_RUN_FN, $(1)) python3 -m venv --upgrade-deps build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
@@ -120,7 +120,7 @@ $(foreach IMAGE, $(wordlist 2, $(words $(PYTHON_IMAGES)), $(PYTHON_IMAGES)), \
     $(eval $(call VENV_RULE_FN, $(IMAGE), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)"))))
 
 
-# Function to generate command rules - command_name, docker_image, commands, suffix
+# Function to generate command rules - command_name, container_image, commands, suffix
 define VENV_COMMAND_FN
 .PHONY: $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4))
 $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4)): build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4)).build
