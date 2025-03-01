@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-03-01
+
+- [1e70cc2](https://github.com/craigahobbs/python-build/commit/1e70cc2) - sphinx 8.2
+
 ## 2025-02-20
 
 - [8d26fd1](https://github.com/craigahobbs/python-build/commit/8d26fd1) - use podman instead of docker, use system python by default
