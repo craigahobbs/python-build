@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-03-03
+
+- [602d394](https://github.com/craigahobbs/python-build/commit/602d394) - attempt to copy build files from ../python-build before doing wget/curl
+
 ## 2025-03-01
 
 - [1e70cc2](https://github.com/craigahobbs/python-build/commit/1e70cc2) - sphinx 8.2
