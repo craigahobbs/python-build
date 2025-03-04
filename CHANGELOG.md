@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-03-04
+
+- [b0818e4](https://github.com/craigahobbs/python-build/commit/b0818e4) - add PYTHON_BUILD_DIR to stub
+
 ## 2025-03-03
 
 - [602d394](https://github.com/craigahobbs/python-build/commit/602d394) - attempt to copy build files from ../python-build before doing wget/curl
