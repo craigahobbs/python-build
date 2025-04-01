@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-04-01
+
+- [5582c1a](https://github.com/craigahobbs/python-build/commit/5582c1a) - coverage 7.8
+
 ## 2025-03-04
 
 - [b0818e4](https://github.com/craigahobbs/python-build/commit/b0818e4) - add PYTHON_BUILD_DIR to stub
