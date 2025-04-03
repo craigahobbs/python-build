@@ -23,6 +23,7 @@ endif
 ifneq '$(USE_PODMAN)' ''
 PYTHON_IMAGES ?= \
     python:3.13 \
+    python:3.14-rc \
     python:3.12 \
     python:3.11 \
     python:3.10 \
