@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-06-20
+
+- [15e5abf](https://github.com/craigahobbs/python-build/commit/15e5abf) - coverage 7.9
+
 ## 2025-04-03
 
 - [0fd9920](https://github.com/craigahobbs/python-build/commit/0fd9920) - add python:3.14-rc
