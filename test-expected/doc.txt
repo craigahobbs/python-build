@@ -2,5 +2,5 @@ if [ "$(podman images -q python:3.X)" = "" ]; then podman pull -q python:3.X; fi
 podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --upgrade-deps build/venv/python-3-X
 podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pip -q install --progress-bar off -e .  coverage=="X.Y.*" pylint=="X.Y.*" sphinx=="X.Y.*" myst-parser
 touch build/venv/python-3-X.build
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build -W -a -b doctest -d build/doc/doctrees/ doc build/doc/doctest/
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build -W -a -b html -d build/doc/doctrees/ doc build/doc/html/
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build -W -a -q -b doctest -d build/doc/doctrees/ doc build/doc/doctest/
+podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build -W -a -q -b html -d build/doc/doctrees/ doc build/doc/html/
