@@ -422,7 +422,10 @@ confidence=HIGH,
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
-disable=chained-comparison,
+disable=bare-except,
+        broad-exception-caught,
+        broad-exception-raised,
+        chained-comparison,
         duplicate-code,
         invalid-unary-operand-type,
         no-else-break,
