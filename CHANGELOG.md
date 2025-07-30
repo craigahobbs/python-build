@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025-07-30
+
+- [7298a05](https://github.com/craigahobbs/python-build/commit/7298a05) - disable pylint bare-except, broad-exception-caught, and chained-comparison
+
+- [0ff0457](https://github.com/craigahobbs/python-build/commit/0ff0457) - add sphinx -q argument
+
 ## 2025-06-20
 
 - [15e5abf](https://github.com/craigahobbs/python-build/commit/15e5abf) - coverage 7.9
