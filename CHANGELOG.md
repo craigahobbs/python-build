@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-10-07
+
+- [e2fdb4d](https://github.com/craigahobbs/python-build/commit/e2fdb4d) - use python 3.14 release, remove python 3.9
+
 ## 2025-08-01
 
 - [fcda632](https://github.com/craigahobbs/python-build/commit/fcda632) - coverage 7.10
