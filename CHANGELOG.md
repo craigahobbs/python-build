@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-10-19
+
+- [d96d13d](https://github.com/craigahobbs/python-build/commit/d96d13d) - coverage 7.11, pylint 4.0
+
 ## 2025-10-07
 
 - [e2fdb4d](https://github.com/craigahobbs/python-build/commit/e2fdb4d) - use python 3.14 release, remove python 3.9
