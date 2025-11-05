@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-11-04
+
+- [33080c3](https://github.com/craigahobbs/python-build/commit/33080c3) - strip whitespace from DEFAULT_VENV_BIN
+
 ## 2025-10-19
 
 - [d96d13d](https://github.com/craigahobbs/python-build/commit/d96d13d) - coverage 7.11, pylint 4.0
