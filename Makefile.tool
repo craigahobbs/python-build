@@ -13,13 +13,13 @@ endif
 
 
 # Python virtual environment
-DEFAULT_VENV_BIN := $(PYTHON_RUN) build/env/bin
-DEFAULT_VENV_PYTHON := $(PYTHON_RUN) build/env/bin/python3
+DEFAULT_VENV_BIN := $(strip $(PYTHON_RUN) build/env/bin)
+DEFAULT_VENV_PYTHON := $(strip $(PYTHON_RUN) build/env/bin/python3)
 DEFAULT_VENV_BUILD := build/env.build
 ifeq '$(OS)' 'Windows_NT'
 ifeq ($(shell python3 -c "import sysconfig; print(sysconfig.get_preferred_scheme('user'))"),nt_user)
-DEFAULT_VENV_BIN := $(PYTHON_RUN) build/env/Scripts
-DEFAULT_VENV_PYTHON := $(PYTHON_RUN) build/env/Scripts/python.exe
+DEFAULT_VENV_BIN := $(strip $(PYTHON_RUN) build/env/Scripts)
+DEFAULT_VENV_PYTHON := $(strip $(PYTHON_RUN) build/env/Scripts/python.exe)
 endif
 endif
 
