@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-11-06
+
+- [9626ed7](https://github.com/craigahobbs/python-build/commit/9626ed7) - add DEFAULT_VENV_BIN_EX
+
 ## 2025-11-04
 
 - [33080c3](https://github.com/craigahobbs/python-build/commit/33080c3) - strip whitespace from DEFAULT_VENV_BIN
