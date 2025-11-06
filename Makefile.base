@@ -70,7 +70,8 @@ IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
 VENV_RUN_FN = $(if $(USE_PODMAN),podman run -i --rm  -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1)))
 
 # Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pip")
-DEFAULT_VENV_BIN := $(strip $(subst $$$$,$$,$(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)))
+DEFAULT_VENV_BIN_EX = $(strip $(subst $$$$,$$,$(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) $(1)build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)))
+DEFAULT_VENV_BIN := $(call DEFAULT_VENV_BIN_EX)
 DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_BIN)/$(VENV_PYTHON)
 DEFAULT_VENV_BUILD := build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES))).build
 
