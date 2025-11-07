@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-11-07
+
+- [6b1a016](https://github.com/craigahobbs/python-build/commit/6b1a016) - revert to coverage 7.10 for now
+
 ## 2025-11-06
 
 - [9626ed7](https://github.com/craigahobbs/python-build/commit/9626ed7) - add DEFAULT_VENV_BIN_EX
