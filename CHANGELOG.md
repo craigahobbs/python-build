@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-01-02
+
+- [33de63a](https://github.com/craigahobbs/python-build/commit/33de63a) - restore USE_DOCKER
+
 ## 2025-11-07
 
 - [6b1a016](https://github.com/craigahobbs/python-build/commit/6b1a016) - revert to coverage 7.10 for now
