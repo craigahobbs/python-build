@@ -1,8 +1,0 @@
-python3 -m venv --upgrade-deps build/venv/system
-build/venv/system/bin/python3 -m pip -q install --progress-bar off -e .  coverage=="X.Y.*" pylint=="X.Y.*"
-touch build/venv/system.build
-build/venv/system/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
-build/venv/system/bin/python3 -m pylint -j 0 src
-build/venv/system/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
-build/venv/system/bin/python3 -m coverage html -d build/coverage
-build/venv/system/bin/python3 -m coverage report --fail-under 100

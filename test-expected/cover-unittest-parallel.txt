@@ -1,1 +1,1 @@
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/unittest-parallel -t src/ -s src/tests/ -v --coverage-html=build/coverage --coverage-branch --coverage-fail-under 100
+build/venv/system/bin/unittest-parallel -t src/ -s src/tests/ -v --coverage-html=build/coverage --coverage-branch --coverage-fail-under 100

@@ -1,11 +1,10 @@
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pylint -j 0 src
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build -W -a -q -b doctest -d build/doc/doctrees/ doc build/doc/doctest/
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build -W -a -q -b html -d build/doc/doctrees/ doc build/doc/html/
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage html -d build/coverage
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage report --fail-under 100
+build/venv/system/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+build/venv/system/bin/python3 -m pylint -j 0 src
+build/venv/system/bin/sphinx-build -W -a -q -b doctest -d build/doc/doctrees/ doc build/doc/doctest/
+build/venv/system/bin/sphinx-build -W -a -q -b html -d build/doc/doctrees/ doc build/doc/html/
+build/venv/system/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
+build/venv/system/bin/python3 -m coverage html -d build/coverage
+build/venv/system/bin/python3 -m coverage report --fail-under 100
 if [ ! -d ../gh-pages.gh-pages ]; then git clone -b gh-pages `git config --get remote.origin.url` ../gh-pages.gh-pages; fi
 cd ../gh-pages.gh-pages && git pull
 rsync -rv --delete --exclude=.git/ build/doc/html/  ../gh-pages.gh-pages

@@ -1,5 +1,4 @@
-if [ "$(podman images -q python:3.X)" = "" ]; then podman pull -q python:3.X; fi
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --upgrade-deps build/venv/python-3-X-util
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X-util/bin/python3 -m pip -q install --progress-bar off build simple-git-changelog setuptools twine wheel
-touch build/venv/python-3-X-util.build
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X-util/bin/simple-git-changelog
+python3 -m venv --upgrade-deps build/venv/system-util
+build/venv/system-util/bin/python3 -m pip -q install --progress-bar off build simple-git-changelog setuptools twine wheel
+touch build/venv/system-util.build
+build/venv/system-util/bin/simple-git-changelog

@@ -7,7 +7,9 @@
 
 # Python image
 PYTHON_IMAGE ?= python:3
-ifneq '$(USE_PODMAN)' ''
+ifneq '$(USE_DOCKER)' ''
+VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1))
+else ifneq '$(USE_PODMAN)' ''
 PYTHON_RUN := podman run -i --rm -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME $(PYTHON_IMAGE)
 endif
 
@@ -39,7 +41,9 @@ _clean:
 .PHONY: _superclean superclean
 superclean: clean _superclean
 _superclean:
-ifneq '$(USE_PODMAN)' ''
+ifneq '$(USE_DOCKER)' ''
+	-docker rmi -f $(PYTHON_IMAGE)
+else ifneq '$(USE_PODMAN)' ''
 	-podman rmi -f $(PYTHON_IMAGE)
 endif
 

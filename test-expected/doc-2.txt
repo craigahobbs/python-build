@@ -1,2 +1,2 @@
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build -W -a -q -b doctest -d build/doc/doctrees/ doc build/doc/doctest/
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build -W -a -q -b html -d build/doc/doctrees/ doc build/doc/html/
+build/venv/system/bin/sphinx-build -W -a -q -b doctest -d build/doc/doctrees/ doc build/doc/doctest/
+build/venv/system/bin/sphinx-build -W -a -q -b html -d build/doc/doctrees/ doc build/doc/html/

@@ -1,7 +1,6 @@
-if [ "$(podman images -q python:3.X)" = "" ]; then podman pull -q python:3.X; fi
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --upgrade-deps build/venv/python-3-X
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pip -q install --progress-bar off -e .  coverage=="X.Y.*" pylint=="X.Y.*"
-touch build/venv/python-3-X.build
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage html -d build/coverage
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage report --fail-under 100
+python3 -m venv --upgrade-deps build/venv/system
+build/venv/system/bin/python3 -m pip -q install --progress-bar off -e .  coverage=="X.Y.*" pylint=="X.Y.*"
+touch build/venv/system.build
+build/venv/system/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
+build/venv/system/bin/python3 -m coverage html -d build/coverage
+build/venv/system/bin/python3 -m coverage report --fail-under 100

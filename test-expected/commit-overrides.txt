@@ -1,17 +1,10 @@
-if [ "$(podman images -q python:3.X)" = "" ]; then podman pull -q python:3.X; fi
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --upgrade-deps build/venv/python-3-X
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pip --bogus-pip-arg install --bogus-pip-install-arg -e . "foobar >= 1.0" coverage=="bogus-coverage-version" pylint=="bogus-pylint-version" sphinx=="bogus-sphinx-version" myst-parser
-touch build/venv/python-3-X.build
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
-if [ "$(podman images -q python:3.Y)" = "" ]; then podman pull -q python:3.Y; fi
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y python3 -m venv build/venv/python-3-Y
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/python3 -m pip --bogus-pip-arg install --bogus-pip-install-arg -U pip setuptools
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/python3 -m pip --bogus-pip-arg install --bogus-pip-install-arg -e . "foobar >= 1.0"
-touch build/venv/python-3-Y.build
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/python3 -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pylint --bogus-pylint-arg src
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build --bogus-sphinx-arg -b doctest -d build/doc/doctrees/ bogus-sphinx-doc build/doc/doctest/
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/sphinx-build --bogus-sphinx-arg -b html -d build/doc/doctrees/ bogus-sphinx-doc build/doc/html/
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage run --source src/ --bogus-coverage-arg -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage html -d build/coverage
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m coverage report --bogus-coverage-report-arg
+python3 -m venv --upgrade-deps build/venv/system
+build/venv/system/bin/python3 -m pip --bogus-pip-arg install --bogus-pip-install-arg -e . "foobar >= 1.0" coverage=="bogus-coverage-version" pylint=="bogus-pylint-version" sphinx=="bogus-sphinx-version" myst-parser
+touch build/venv/system.build
+build/venv/system/bin/python3 -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
+build/venv/system/bin/python3 -m pylint --bogus-pylint-arg src
+build/venv/system/bin/sphinx-build --bogus-sphinx-arg -b doctest -d build/doc/doctrees/ bogus-sphinx-doc build/doc/doctest/
+build/venv/system/bin/sphinx-build --bogus-sphinx-arg -b html -d build/doc/doctrees/ bogus-sphinx-doc build/doc/html/
+build/venv/system/bin/python3 -m coverage run --source src/ --bogus-coverage-arg -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
+build/venv/system/bin/python3 -m coverage html -d build/coverage
+build/venv/system/bin/python3 -m coverage report --bogus-coverage-report-arg

@@ -1,2 +1,1 @@
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.Y build/venv/python-3-Y/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+build/venv/system/bin/python3 -m unittest discover -t src/ -s src/tests/ -v

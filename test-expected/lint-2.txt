@@ -1,1 +1,1 @@
-podman run -i --rm  -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/venv/python-3-X/bin/python3 -m pylint -j 0 src
+build/venv/system/bin/python3 -m pylint -j 0 src

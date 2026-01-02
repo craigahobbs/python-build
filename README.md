@@ -3,7 +3,8 @@
 **python-build** is a lightweight GNU Make-based build system for best-practice Python package
 development.
 
-- Uses the system Python or the official Python images using [podman](https://podman.io/)
+- Uses the system Python or the official Python images using
+  [Docker](https://www.docker.com/products/docker-desktop/) or [podman](https://podman.io/)
 - Run unit tests with [unittest](https://docs.python.org/3/library/unittest.html)
   - Optionally run tests with [unittest-parallel](https://pypi.org/project/unittest-parallel/)
 - Code coverage using [coverage](https://pypi.org/project/coverage/)
@@ -265,11 +266,17 @@ The following pre-include make variables are exposed:
 
 ### Other Make Variables
 
+- `USE_DOCKER` - Use [Docker](https://www.docker.com/products/docker-desktop/) and test with the official Python images.
+
+  ~~~
+  make commit USE_DOCKER=1
+  ~~~
+
 - `USE_PODMAN` - Use [podman](https://podman.io/) and test with the official Python images.
 
-~~~
-make commit USE_PODMAN=1
-~~~
+  ~~~
+  make commit USE_PODMAN=1
+  ~~~
 
 
 ## Extending python-build

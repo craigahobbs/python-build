@@ -10,7 +10,7 @@
 # Windows support
 VENV_BIN := bin
 VENV_PYTHON := python3
-ifeq '$(USE_PODMAN)' ''
+ifeq '$(USE_DOCKER)$(USE_PODMAN)' ''
 ifeq '$(OS)' 'Windows_NT'
 ifeq ($(shell python3 -c "import sysconfig; print(sysconfig.get_preferred_scheme('user'))"),nt_user)
 VENV_BIN := Scripts
@@ -20,7 +20,7 @@ endif
 endif
 
 # Python container images with which to run unit tests
-ifneq '$(USE_PODMAN)' ''
+ifneq '$(USE_DOCKER)$(USE_PODMAN)' ''
 PYTHON_IMAGES ?= \
     python:3.14 \
     python:3.13 \
@@ -67,7 +67,11 @@ GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 
 # Helper functions
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
-VENV_RUN_FN = $(if $(USE_PODMAN),podman run -i --rm  -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1)))
+ifneq '$(USE_DOCKER)' ''
+VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1))
+else ifneq '$(USE_PODMAN)' ''
+VENV_RUN_FN = podman run -i --rm  -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1))
+endif
 
 # Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pip")
 DEFAULT_VENV_BIN_EX = $(strip $(subst $$$$,$$,$(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) $(1)build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)))
@@ -91,7 +95,9 @@ _clean:
 .PHONY: _superclean superclean
 superclean: clean _superclean
 _superclean:
-ifneq '$(USE_PODMAN)' ''
+ifneq '$(USE_DOCKER)' ''
+	-docker rmi -f $(PYTHON_IMAGES)
+else ifneq '$(USE_PODMAN)' ''
 	-podman rmi -f $(PYTHON_IMAGES)
 endif
 
@@ -103,7 +109,9 @@ commit: test lint doc cover
 # Function to generate venv creation rules - container_image, packages, suffix
 define VENV_RULE_FN
 build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)).build:
-ifneq '$$(USE_PODMAN)' ''
+ifneq '$$(USE_DOCKER)' ''
+	if [ "$$$$(docker images -q $(strip $(1)))" = "" ]; then docker pull -q $(strip $(1)); fi
+else ifneq '$$(USE_PODMAN)' ''
 	if [ "$$$$(podman images -q $(strip $(1)))" = "" ]; then podman pull -q $(strip $(1)); fi
 endif
 ifeq '$$(findstring $$(IMAGE),$$(PYTHON_IMAGES_NO_UPGRADE_DEPS))' ''

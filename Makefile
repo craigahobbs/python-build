@@ -46,10 +46,6 @@ test: test-$(strip $(1))
 endef
 
 
-# Use podman by default
-export USE_PODMAN=1
-
-
 # Don't test anything OS-specific
 OS := Unknown
 
@@ -58,7 +54,8 @@ OS := Unknown
 $(eval $(call TEST_RULE, changelog, changelog))
 $(eval $(call TEST_RULE, clean, clean))
 $(eval $(call TEST_RULE, commit, commit))
-$(eval $(call TEST_RULE, commit-no-podman, commit USE_PODMAN=))
+$(eval $(call TEST_RULE, commit-use-docker, commit USE_DOCKER=1))
+$(eval $(call TEST_RULE, commit-use-podman, commit USE_PODMAN=1))
 $(eval $(call TEST_RULE, commit-overrides, commit \
   PIP_ARGS='--bogus-pip-arg' \
   PIP_INSTALL_ARGS='--bogus-pip-install-arg' \
