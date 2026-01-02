@@ -46,6 +46,11 @@ test: test-$(strip $(1))
 endef
 
 
+# Un-export base makefile variables
+unexport USE_DOCKER
+unexport USE_PODMAN
+
+
 # Don't test anything OS-specific
 OS := Unknown
 
