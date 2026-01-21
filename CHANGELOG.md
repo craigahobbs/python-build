@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-01-21
+
+- [48c64ec](https://github.com/craigahobbs/python-build/commit/48c64ec) - sphinx 9.1
+
 ## 2026-01-02
 
 - [33de63a](https://github.com/craigahobbs/python-build/commit/33de63a) - restore USE_DOCKER
