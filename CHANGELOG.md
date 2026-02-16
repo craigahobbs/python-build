@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-02-16
+
+- [8e8bc92](https://github.com/craigahobbs/python-build/commit/8e8bc92) - add python3 -W error to unit test runs to catch deprecation warnings
+
 ## 2026-01-21
 
 - [48c64ec](https://github.com/craigahobbs/python-build/commit/48c64ec) - sphinx 9.1
