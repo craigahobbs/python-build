@@ -1,1 +1,1 @@
-build/venv/system/bin/python3 -m unittest -v tests.test_package
+build/venv/system/bin/python3 -W error -m unittest -v tests.test_package

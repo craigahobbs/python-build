@@ -142,11 +142,11 @@ endef
 
 define TEST_COMMANDS_FN
 ifneq '$$(TEST)' ''
-	$(1)/$(VENV_PYTHON) -m unittest $$(UNITTEST_ARGS) $$(TEST)
+	$(1)/$(VENV_PYTHON) -W error -m unittest $$(UNITTEST_ARGS) $$(TEST)
 else ifneq '$$(UNITTEST_PARALLEL)' ''
-	$(1)/unittest-parallel -t src/ -s src/tests/ $$(UNITTEST_PARALLEL_ARGS)
+	$(1)/$(VENV_PYTHON) -W error -m unittest_parallel -t src/ -s src/tests/ $$(UNITTEST_PARALLEL_ARGS)
 else
-	$(1)/$(VENV_PYTHON) -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
+	$(1)/$(VENV_PYTHON) -W error -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
 endif
 endef
 $(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call VENV_COMMAND_FN, test, $(IMAGE), TEST_COMMANDS_FN)))

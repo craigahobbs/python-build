@@ -1,4 +1,4 @@
-build/venv/system/bin/python3 -m unittest discover -t src/ -s src/tests/ -v
+build/venv/system/bin/python3 -W error -m unittest discover -t src/ -s src/tests/ -v
 build/venv/system/bin/python3 -m pylint -j 0 src
 build/venv/system/bin/sphinx-build -W -a -q -b doctest -d build/doc/doctrees/ doc build/doc/doctest/
 build/venv/system/bin/sphinx-build -W -a -q -b html -d build/doc/doctrees/ doc build/doc/html/

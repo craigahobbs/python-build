@@ -1,4 +1,4 @@
 python3 -m venv --upgrade-deps build/venv/system
 build/venv/system/bin/python3 -m pip -q install --progress-bar off -e .  unittest-parallel=="X.Y.*" coverage=="X.Y.*" pylint=="X.Y.*"
 touch build/venv/system.build
-build/venv/system/bin/unittest-parallel -t src/ -s src/tests/ -v
+build/venv/system/bin/python3 -W error -m unittest_parallel -t src/ -s src/tests/ -v

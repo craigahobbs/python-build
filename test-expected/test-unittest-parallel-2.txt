@@ -1,1 +1,1 @@
-build/venv/system/bin/unittest-parallel -t src/ -s src/tests/ -v
+build/venv/system/bin/python3 -W error -m unittest_parallel -t src/ -s src/tests/ -v

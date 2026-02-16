@@ -1,7 +1,7 @@
 python3 -m venv --upgrade-deps build/venv/system
 build/venv/system/bin/python3 -m pip --bogus-pip-arg install --bogus-pip-install-arg -e . "foobar >= 1.0" coverage=="bogus-coverage-version" pylint=="bogus-pylint-version" sphinx=="bogus-sphinx-version" myst-parser
 touch build/venv/system.build
-build/venv/system/bin/python3 -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
+build/venv/system/bin/python3 -W error -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
 build/venv/system/bin/python3 -m pylint --bogus-pylint-arg src
 build/venv/system/bin/sphinx-build --bogus-sphinx-arg -b doctest -d build/doc/doctrees/ bogus-sphinx-doc build/doc/doctest/
 build/venv/system/bin/sphinx-build --bogus-sphinx-arg -b html -d build/doc/doctrees/ bogus-sphinx-doc build/doc/html/
