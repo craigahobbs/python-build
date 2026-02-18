@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-02-18
+
+- [7959cb7](https://github.com/craigahobbs/python-build/commit/7959cb7) - coverage 7.13
+
 ## 2026-02-16
 
 - [8e8bc92](https://github.com/craigahobbs/python-build/commit/8e8bc92) - add python3 -W error to unit test runs to catch deprecation warnings
