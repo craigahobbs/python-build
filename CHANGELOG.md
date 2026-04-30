@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-04-30
+
+- [c20dac8](https://github.com/craigahobbs/python-build/commit/c20dac8) - unittest-parallel 1.8
+
 ## 2026-02-18
 
 - [7959cb7](https://github.com/craigahobbs/python-build/commit/7959cb7) - coverage 7.13
