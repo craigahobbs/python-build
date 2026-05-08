@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-05-08
+
+- [1a18910](https://github.com/craigahobbs/python-build/commit/1a18910) - add python:3.15-rc
+
 ## 2026-04-30
 
 - [c20dac8](https://github.com/craigahobbs/python-build/commit/c20dac8) - unittest-parallel 1.8
