@@ -69,9 +69,9 @@ GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 # Helper functions
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
 ifneq '$(USE_DOCKER)' ''
-VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1))
+VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $$(DOCKER_ENV) $(strip $(1))
 else ifneq '$(USE_PODMAN)' ''
-VENV_RUN_FN = podman run -i --rm  -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1))
+VENV_RUN_FN = podman run -i --rm  -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $$(DOCKER_ENV) $(strip $(1))
 endif
 
 # Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pip")
