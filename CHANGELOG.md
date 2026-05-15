@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-05-14
+
+- [a057456](https://github.com/craigahobbs/python-build/commit/a057456) - fix DOCKER_ENV
+
 ## 2026-05-13
 
 - [5e631ec](https://github.com/craigahobbs/python-build/commit/5e631ec) - add DOCKER_ENV variable
