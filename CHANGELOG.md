@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-05-20
+
+- [47976b1](https://github.com/craigahobbs/python-build/commit/47976b1) - disable pip cache for parallel builds due to pip cache corruption
+
 ## 2026-05-14
 
 - [a057456](https://github.com/craigahobbs/python-build/commit/a057456) - fix DOCKER_ENV
