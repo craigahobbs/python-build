@@ -5,12 +5,20 @@
 .DEFAULT_GOAL := help
 
 
+# Disable the pip cache if make is parallel
+IS_PARALLEL ?= $(filter -j% --jobs%,$(MAKEFLAGS))
+ifneq '$(IS_PARALLEL)' ''
+export PIP_NO_CACHE_DIR=1
+DOCKER_ENV := -e PIP_NO_CACHE_DIR=1$(if $(DOCKER_ENV), $(DOCKER_ENV))
+endif
+
+
 # Python image
 PYTHON_IMAGE ?= python:3
 ifneq '$(USE_DOCKER)' ''
-VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME $(strip $(1))
+VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
 else ifneq '$(USE_PODMAN)' ''
-PYTHON_RUN := podman run -i --rm -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME $(PYTHON_IMAGE)
+PYTHON_RUN := podman run -i --rm -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
 endif
 
 
