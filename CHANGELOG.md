@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-01
+
+- [f68b753](https://github.com/craigahobbs/python-build/commit/f68b753) - coverage 7.15
+
+- [4901bd6](https://github.com/craigahobbs/python-build/commit/4901bd6) - remove python:3.10
+
 ## 2026-06-30
 
 - [e8eb035](https://github.com/craigahobbs/python-build/commit/e8eb035) - coverage 7.14
