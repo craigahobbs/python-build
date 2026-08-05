@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-05
+
+- [a11f978](https://github.com/craigahobbs/python-build/commit/a11f978) - improve venv creation performance
+
 ## 2026-08-01
 
 - [f68b753](https://github.com/craigahobbs/python-build/commit/f68b753) - coverage 7.15
