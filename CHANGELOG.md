@@ -2,6 +2,8 @@
 
 ## 2026-08-05
 
+- [6e82e24](https://github.com/craigahobbs/python-build/commit/6e82e24) - makefile correctness and consistency fixes
+
 - [bbebecb](https://github.com/craigahobbs/python-build/commit/bbebecb) - fix publish race with parallel make - upload now waits for commit
 
 - [0d8f9b4](https://github.com/craigahobbs/python-build/commit/0d8f9b4) - re-enable pip cache for parallel builds - pip 25.3 fixed cache concurrency
