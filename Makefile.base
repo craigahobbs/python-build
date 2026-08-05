@@ -35,13 +35,6 @@ else
 PYTHON_IMAGES := system
 endif
 
-# Disable the pip cache if make is parallel
-IS_PARALLEL ?= $(filter -j% --jobs%,$(MAKEFLAGS))
-ifneq '$(IS_PARALLEL)' ''
-export PIP_NO_CACHE_DIR=1
-DOCKER_ENV := -e PIP_NO_CACHE_DIR=1$(if $(DOCKER_ENV), $(DOCKER_ENV))
-endif
-
 # Python pip option
 PIP_ARGS ?= -q --disable-pip-version-check
 PIP_INSTALL_ARGS ?= --progress-bar off --no-compile

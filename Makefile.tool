@@ -5,14 +5,6 @@
 .DEFAULT_GOAL := help
 
 
-# Disable the pip cache if make is parallel
-IS_PARALLEL ?= $(filter -j% --jobs%,$(MAKEFLAGS))
-ifneq '$(IS_PARALLEL)' ''
-export PIP_NO_CACHE_DIR=1
-DOCKER_ENV := -e PIP_NO_CACHE_DIR=1$(if $(DOCKER_ENV), $(DOCKER_ENV))
-endif
-
-
 # Python image
 PYTHON_IMAGE ?= python:3
 ifneq '$(USE_DOCKER)' ''

@@ -195,6 +195,10 @@ the [commit](#commit) target.
 make -j commit
 ~~~
 
+Parallel builds share pip's cache between concurrent pip installs, which relies on cache
+concurrency fixes in pip 25.3 and newer. For `USE_DOCKER` and `USE_PODMAN`, pip is provided by the
+Python images — if a stale image's pip is older than 25.3, run `make superclean` to re-pull.
+
 
 ## Make Variables
 
