@@ -205,6 +205,10 @@ endef
 $(eval $(call VENV_COMMAND_FN, publish, $(firstword $(PYTHON_IMAGES)), PUBLISH_COMMANDS_FN, -util))
 
 
+# The package is published only after a successful commit (required for parallel builds)
+publish-$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))-util: commit
+
+
 define CHANGELOG_COMMANDS_FN
 	$(1)/simple-git-changelog
 endef
