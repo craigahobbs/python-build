@@ -314,6 +314,37 @@ other-stuff:
 commit: other-stuff
 ~~~
 
+### Default Virtual Environment Variables
+
+Extended targets can use the default Python virtual environment (the first image in
+`PYTHON_IMAGES`) using the following make variables. For `USE_DOCKER` and `USE_PODMAN`, the command
+variables include the container run command.
+
+- `DEFAULT_VENV_BUILD` - The default virtual environment's build target. Add it as a prerequisite
+  of any target that uses the virtual environment.
+
+- `DEFAULT_VENV_BIN` - The default virtual environment's command prefix (e.g.
+  "$(DEFAULT_VENV_BIN)/pylint").
+
+- `DEFAULT_VENV_PYTHON` - The default virtual environment's Python interpreter.
+
+- `DEFAULT_VENV_BIN_EX` - Like `DEFAULT_VENV_BIN`, but a function taking an optional path prefix
+  for recipe commands that change directory (e.g. "cd build/doc/ && $(call DEFAULT_VENV_BIN_EX, ../../)/pylint").
+
+For example, to run a tool installed with `TESTS_REQUIRE`:
+
+~~~ make
+TESTS_REQUIRE := bare-script
+
+include Makefile.base
+
+.PHONY: test-bare
+test-bare: $(DEFAULT_VENV_BUILD)
+	$(DEFAULT_VENV_BIN)/bare -x src/static/*.bare
+
+commit: test-bare
+~~~
+
 
 ## Makefile.tool
 
