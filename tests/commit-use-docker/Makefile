@@ -3,5 +3,4 @@ COVERAGE_VERSION := X.Y.*
 PYLINT_VERSION := X.Y.*
 SPHINX_VERSION := X.Y.*
 UNITTEST_PARALLEL_VERSION := X.Y.*
-HOME := /bogus-home
 include ../../Makefile.base

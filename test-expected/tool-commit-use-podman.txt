@@ -1,5 +1,5 @@
-podman run -i --rm -v /bogus-home:/bogus-home -v `pwd`:`pwd` -w `pwd` -e HOME=/bogus-home python:3.X python3 -m venv --without-pip build/env
-podman run -i --rm -v /bogus-home:/bogus-home -v `pwd`:`pwd` -w `pwd` -e HOME=/bogus-home python:3.X python3 -m pip --python build/env -q --disable-pip-version-check install --progress-bar off --no-compile bogus-tool
+podman run -i --rm -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --without-pip build/env
+podman run -i --rm -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m pip --python build/env -q --disable-pip-version-check install --progress-bar off --no-compile bogus-tool
 touch build/env.build
-podman run -i --rm -v /bogus-home:/bogus-home -v `pwd`:`pwd` -w `pwd` -e HOME=/bogus-home python:3.X build/env/bin/bogus-tool test
-podman run -i --rm -v /bogus-home:/bogus-home -v `pwd`:`pwd` -w `pwd` -e HOME=/bogus-home python:3.X build/env/bin/bogus-tool lint
+podman run -i --rm -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/env/bin/bogus-tool test
+podman run -i --rm -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/env/bin/bogus-tool lint

@@ -68,16 +68,16 @@ GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 # Helper functions
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
 ifneq '$(USE_DOCKER)' ''
-VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $(HOME):$(HOME) -v `pwd`:`pwd` -w `pwd` -e HOME=$(HOME)$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
+VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
 else ifneq '$(USE_PODMAN)' ''
-VENV_RUN_FN = podman run -i --rm -v $(HOME):$(HOME) -v `pwd`:`pwd` -w `pwd` -e HOME=$(HOME)$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
+VENV_RUN_FN = podman run -i --rm -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
 endif
 
 # Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pylint"). DEFAULT_VENV_BIN_EX's optional
 # argument is a path prefix for recipes that change directory (e.g. "$(call DEFAULT_VENV_BIN_EX, ../)/pylint").
 DEFAULT_VENV_BIN_EX = $(strip $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) $(1)build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN))
-DEFAULT_VENV_BIN := $(call DEFAULT_VENV_BIN_EX)
-DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_BIN)/$(VENV_PYTHON)
+DEFAULT_VENV_BIN = $(call DEFAULT_VENV_BIN_EX)
+DEFAULT_VENV_PYTHON = $(DEFAULT_VENV_BIN)/$(VENV_PYTHON)
 DEFAULT_VENV_BUILD := build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES))).build
 
 
@@ -115,8 +115,8 @@ ifneq '$$(USE_DOCKER)' ''
 else ifneq '$$(USE_PODMAN)' ''
 	if [ "$$$$(podman images -q $(strip $(1)))" = "" ]; then podman pull -q $(strip $(1)); fi
 endif
-	$(call VENV_RUN_FN, $(1)) python3 -m venv --without-pip build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
-	$(call VENV_RUN_FN, $(1)) python3 -m pip --python build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)) $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
+	$$(call VENV_RUN_FN, $(1)) python3 -m venv --without-pip build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
+	$$(call VENV_RUN_FN, $(1)) python3 -m pip --python build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)) $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
 	touch $$@
 endef
 $(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$$(UNITTEST_PARALLEL_VERSION)") \
@@ -129,7 +129,7 @@ $(foreach IMAGE, $(wordlist 2, $(words $(PYTHON_IMAGES)), $(PYTHON_IMAGES)), \
 define VENV_COMMAND_FN
 .PHONY: $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4))
 $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4)): build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4)).build
-$(call $(3), $(call VENV_RUN_FN, $(2)) build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4))/$(VENV_BIN))
+$(call $(3), $$(call VENV_RUN_FN, $(2)) build/venv/$(call IMAGE_NAME_FN, $(2))$(strip $(4))/$(VENV_BIN))
 
 .PHONY: $(strip $(1))
 $(strip $(1)): $(strip $(1))-$(call IMAGE_NAME_FN,$(2))$(strip $(4))
