@@ -4,6 +4,11 @@
 
 .DEFAULT_GOAL := help
 
+# Sync parallel build output by target (requires GNU Make 4.0+)
+ifneq ($(filter output-sync,$(.FEATURES)),)
+MAKEFLAGS += --output-sync=target
+endif
+
 
 # Python image
 PYTHON_IMAGE ?= python:3

@@ -6,6 +6,11 @@
 
 .DEFAULT_GOAL := help
 
+# Sync parallel build output by target (requires GNU Make 4.0+)
+ifneq ($(filter output-sync,$(.FEATURES)),)
+MAKEFLAGS += --output-sync=target
+endif
+
 
 # Windows support
 VENV_BIN := bin
