@@ -2,6 +2,8 @@
 
 ## 2026-08-05
 
+- [604e90c](https://github.com/craigahobbs/python-build/commit/604e90c) - show $HOME in command output - expand VENV_RUN_FN at recipe time
+
 - [6e82e24](https://github.com/craigahobbs/python-build/commit/6e82e24) - makefile correctness and consistency fixes
 
 - [bbebecb](https://github.com/craigahobbs/python-build/commit/bbebecb) - fix publish race with parallel make - upload now waits for commit
