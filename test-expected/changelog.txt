@@ -1,4 +1,4 @@
 python3 -m venv --without-pip build/venv/system-util
-python3 -m pip --python build/venv/system-util -q --disable-pip-version-check install --progress-bar off --no-compile build simple-git-changelog setuptools twine wheel
+python3 -m pip --python build/venv/system-util -q --disable-pip-version-check install --progress-bar off --no-compile build simple-git-changelog setuptools twine
 touch build/venv/system-util.build
 build/venv/system-util/bin/simple-git-changelog

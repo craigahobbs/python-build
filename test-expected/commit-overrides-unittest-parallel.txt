@@ -3,4 +3,4 @@ python3 -m pip --python build/venv/system -q --disable-pip-version-check install
 touch build/venv/system.build
 build/venv/system/bin/python3 -W error -m unittest_parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
 build/venv/system/bin/python3 -m pylint -j 0 src
-build/venv/system/bin/unittest-parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg --coverage-html=build/coverage --bogus-unittest-parallel-coverage-arg
+build/venv/system/bin/python3 -W error -m unittest_parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg --coverage-html=build/coverage --bogus-unittest-parallel-coverage-arg

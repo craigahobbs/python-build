@@ -1,5 +1,6 @@
 PYTHON_IMAGE := python:3.X
 TESTS_REQUIRE := bogus-tool
+HOME := /bogus-home
 
 include ../../Makefile.tool
 

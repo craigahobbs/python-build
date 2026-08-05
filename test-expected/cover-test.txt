@@ -1,3 +1,3 @@
-build/venv/system/bin/python3 -m coverage run --source src/ --branch -m unittest -v tests.test_package
+build/venv/system/bin/python3 -W error -m coverage run --source src/ --branch -m unittest -v tests.test_package
 build/venv/system/bin/python3 -m coverage html -d build/coverage
 build/venv/system/bin/python3 -m coverage report --fail-under 100

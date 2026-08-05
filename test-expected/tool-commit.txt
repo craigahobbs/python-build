@@ -1,6 +1,5 @@
-mkdir -p build
 python3 -m venv --without-pip build/env
-python3 -m pip --python build/env install bogus-tool
+python3 -m pip --python build/env -q --disable-pip-version-check install --progress-bar off --no-compile bogus-tool
 touch build/env.build
 build/env/bin/bogus-tool test
 build/env/bin/bogus-tool lint

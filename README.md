@@ -288,6 +288,9 @@ The following pre-include make variables are exposed:
   make commit USE_PODMAN=1
   ~~~
 
+- `DOCKER_ENV` - Additional `docker run` or `podman run` command line arguments for the
+  `USE_DOCKER` and `USE_PODMAN` options. For example, "-e ENV_VAR=value".
+
 
 ## Extending python-build
 
@@ -356,6 +359,10 @@ The `commit` target executes the `test` and `lint` targets. The `clean` and `sup
 and the `USE_DOCKER` and `USE_PODMAN` options, behave as described above.
 
 The following make variables are supported:
+
+- `PIP_ARGS` - The pip tool's global command line arguments. Default is "-q --disable-pip-version-check".
+
+- `PIP_INSTALL_ARGS` - The pip install command's command line arguments. Default is "--progress-bar off --no-compile".
 
 - `PYTHON_IMAGE` - The Python image for the `USE_DOCKER` and `USE_PODMAN` options. Default is "python:3".
 

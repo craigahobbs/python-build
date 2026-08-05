@@ -5,6 +5,6 @@ build/venv/system/bin/python3 -W error -m unittest discover -t src/ -s src/tests
 build/venv/system/bin/python3 -m pylint --bogus-pylint-arg src
 build/venv/system/bin/sphinx-build --bogus-sphinx-arg -b doctest -d build/doc/doctrees/ bogus-sphinx-doc build/doc/doctest/
 build/venv/system/bin/sphinx-build --bogus-sphinx-arg -b html -d build/doc/doctrees/ bogus-sphinx-doc build/doc/html/
-build/venv/system/bin/python3 -m coverage run --source src/ --bogus-coverage-arg -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
+build/venv/system/bin/python3 -W error -m coverage run --source src/ --bogus-coverage-arg -m unittest discover -t src/ -s src/tests/ --bogus-unittest-args
 build/venv/system/bin/python3 -m coverage html -d build/coverage
 build/venv/system/bin/python3 -m coverage report --bogus-coverage-report-arg

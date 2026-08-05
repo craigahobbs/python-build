@@ -8,20 +8,26 @@
 # Python image
 PYTHON_IMAGE ?= python:3
 ifneq '$(USE_DOCKER)' ''
-PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
+PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v $(HOME):$(HOME) -v `pwd`:`pwd` -w `pwd` -e HOME=$(HOME)$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
 else ifneq '$(USE_PODMAN)' ''
-PYTHON_RUN := podman run -i --rm -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
+PYTHON_RUN := podman run -i --rm -v $(HOME):$(HOME) -v `pwd`:`pwd` -w `pwd` -e HOME=$(HOME)$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
 endif
 
+# Python pip option
+PIP_ARGS ?= -q --disable-pip-version-check
+PIP_INSTALL_ARGS ?= --progress-bar off --no-compile
 
 # Python virtual environment
-DEFAULT_VENV_BIN := $(strip $(PYTHON_RUN) build/env/bin)
-DEFAULT_VENV_PYTHON := $(strip $(PYTHON_RUN) build/env/bin/python3)
-DEFAULT_VENV_BUILD := build/env.build
+DEFAULT_VENV_DIR := build/env
+DEFAULT_VENV_BIN := $(strip $(PYTHON_RUN) $(DEFAULT_VENV_DIR)/bin)
+DEFAULT_VENV_PYTHON := $(strip $(PYTHON_RUN) $(DEFAULT_VENV_DIR)/bin/python3)
+DEFAULT_VENV_BUILD := $(DEFAULT_VENV_DIR).build
+ifeq '$(USE_DOCKER)$(USE_PODMAN)' ''
 ifeq '$(OS)' 'Windows_NT'
 ifeq ($(shell python3 -c "import sysconfig; print(sysconfig.get_preferred_scheme('user'))"),nt_user)
-DEFAULT_VENV_BIN := $(strip $(PYTHON_RUN) build/env/Scripts)
-DEFAULT_VENV_PYTHON := $(strip $(PYTHON_RUN) build/env/Scripts/python.exe)
+DEFAULT_VENV_BIN := $(strip $(PYTHON_RUN) $(DEFAULT_VENV_DIR)/Scripts)
+DEFAULT_VENV_PYTHON := $(strip $(PYTHON_RUN) $(DEFAULT_VENV_DIR)/Scripts/python.exe)
+endif
 endif
 endif
 
@@ -65,7 +71,6 @@ gh-pages:
 
 
 $(DEFAULT_VENV_BUILD):
-	mkdir -p build
-	$(PYTHON_RUN) python3 -m venv --without-pip build/env
-	$(PYTHON_RUN) python3 -m pip --python build/env install $(TESTS_REQUIRE)
+	$(PYTHON_RUN) python3 -m venv --without-pip $(DEFAULT_VENV_DIR)
+	$(PYTHON_RUN) python3 -m pip --python $(DEFAULT_VENV_DIR) $(PIP_ARGS) install $(PIP_INSTALL_ARGS) $(TESTS_REQUIRE)
 	touch $@

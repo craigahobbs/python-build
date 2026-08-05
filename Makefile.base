@@ -30,7 +30,7 @@ PYTHON_IMAGES ?= \
     $(PYTHON_IMAGES_EXTRA)
 
 # Exclude Python container images
-PYTHON_IMAGES := $(foreach IMAGE,$(PYTHON_IMAGES),$(if $(findstring $(IMAGE),$(PYTHON_IMAGES_EXCLUDE)),,$(IMAGE)))
+PYTHON_IMAGES := $(filter-out $(PYTHON_IMAGES_EXCLUDE),$(PYTHON_IMAGES))
 else
 PYTHON_IMAGES := system
 endif
@@ -68,13 +68,14 @@ GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 # Helper functions
 IMAGE_NAME_FN = $(subst .,-,$(subst :,-,$(strip $(1))))
 ifneq '$(USE_DOCKER)' ''
-VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
+VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $(HOME):$(HOME) -v `pwd`:`pwd` -w `pwd` -e HOME=$(HOME)$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
 else ifneq '$(USE_PODMAN)' ''
-VENV_RUN_FN = podman run -i --rm  -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
+VENV_RUN_FN = podman run -i --rm -v $(HOME):$(HOME) -v `pwd`:`pwd` -w `pwd` -e HOME=$(HOME)$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
 endif
 
-# Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pylint")
-DEFAULT_VENV_BIN_EX = $(strip $(subst $$$$,$$,$(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) $(1)build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)))
+# Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pylint"). DEFAULT_VENV_BIN_EX's optional
+# argument is a path prefix for recipes that change directory (e.g. "$(call DEFAULT_VENV_BIN_EX, ../)/pylint").
+DEFAULT_VENV_BIN_EX = $(strip $(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) $(1)build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN))
 DEFAULT_VENV_BIN := $(call DEFAULT_VENV_BIN_EX)
 DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_BIN)/$(VENV_PYTHON)
 DEFAULT_VENV_BUILD := build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES))).build
@@ -118,10 +119,10 @@ endif
 	$(call VENV_RUN_FN, $(1)) python3 -m pip --python build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)) $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
 	touch $$@
 endef
-$(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") \
+$(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$$(UNITTEST_PARALLEL_VERSION)") \
     coverage=="$$(COVERAGE_VERSION)" pylint=="$$(PYLINT_VERSION)"$(if $(SPHINX_DOC), sphinx=="$$(SPHINX_VERSION)" myst-parser)))
 $(foreach IMAGE, $(wordlist 2, $(words $(PYTHON_IMAGES)), $(PYTHON_IMAGES)), \
-    $(eval $(call VENV_RULE_FN, $(IMAGE), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)"))))
+    $(eval $(call VENV_RULE_FN, $(IMAGE), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$$(UNITTEST_PARALLEL_VERSION)"))))
 
 
 # Function to generate command rules - command_name, container_image, commands, suffix
@@ -149,13 +150,13 @@ $(foreach IMAGE, $(PYTHON_IMAGES), $(eval $(call VENV_COMMAND_FN, test, $(IMAGE)
 
 define COVER_COMMANDS_FN
 ifneq '$$(TEST)' ''
-	$(1)/$(VENV_PYTHON) -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest $$(UNITTEST_ARGS) $$(TEST)
+	$(1)/$(VENV_PYTHON) -W error -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest $$(UNITTEST_ARGS) $$(TEST)
 	$(1)/$(VENV_PYTHON) -m coverage html -d build/coverage
 	$(1)/$(VENV_PYTHON) -m coverage report $$(COVERAGE_REPORT_ARGS)
 else ifneq '$$(UNITTEST_PARALLEL)' ''
-	$(1)/unittest-parallel -t src/ -s src/tests/ $$(UNITTEST_PARALLEL_ARGS) --coverage-html=build/coverage $$(UNITTEST_PARALLEL_COVERAGE_ARGS)
+	$(1)/$(VENV_PYTHON) -W error -m unittest_parallel -t src/ -s src/tests/ $$(UNITTEST_PARALLEL_ARGS) --coverage-html=build/coverage $$(UNITTEST_PARALLEL_COVERAGE_ARGS)
 else
-	$(1)/$(VENV_PYTHON) -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
+	$(1)/$(VENV_PYTHON) -W error -m coverage run --source src/ $$(COVERAGE_ARGS) -m unittest discover -t src/ -s src/tests/ $$(UNITTEST_ARGS)
 	$(1)/$(VENV_PYTHON) -m coverage html -d build/coverage
 	$(1)/$(VENV_PYTHON) -m coverage report $$(COVERAGE_REPORT_ARGS)
 endif
@@ -190,12 +191,9 @@ _gh-pages: commit
 endif
 
 
-$(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), build simple-git-changelog setuptools twine wheel, -util))
+$(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), build simple-git-changelog setuptools twine, -util))
 
 
-.PHONY: _publish publish
-publish: _publish
-_publish: commit
 define PUBLISH_COMMANDS_FN
 	rm -rf dist/
 	$(1)/$(VENV_PYTHON) -m build -n
