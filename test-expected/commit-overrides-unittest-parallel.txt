@@ -1,5 +1,5 @@
-python3 -m venv --upgrade-deps build/venv/system
-build/venv/system/bin/python3 -m pip -q install --progress-bar off -e .  unittest-parallel=="bogus-unittest-parallel-version" coverage=="X.Y.*" pylint=="X.Y.*"
+python3 -m venv --without-pip build/venv/system
+python3 -m pip --python build/venv/system -q --disable-pip-version-check install --progress-bar off --no-compile -e .  unittest-parallel=="bogus-unittest-parallel-version" coverage=="X.Y.*" pylint=="X.Y.*"
 touch build/venv/system.build
 build/venv/system/bin/python3 -W error -m unittest_parallel -t src/ -s src/tests/ --bogus-unittest-parallel-arg
 build/venv/system/bin/python3 -m pylint -j 0 src

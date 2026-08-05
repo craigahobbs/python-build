@@ -1,5 +1,5 @@
-python3 -m venv --upgrade-deps build/venv/system
-build/venv/system/bin/python3 -m pip -q install --progress-bar off -e .  coverage=="X.Y.*" pylint=="X.Y.*"
+python3 -m venv --without-pip build/venv/system
+python3 -m pip --python build/venv/system -q --disable-pip-version-check install --progress-bar off --no-compile -e .  coverage=="X.Y.*" pylint=="X.Y.*"
 touch build/venv/system.build
 build/venv/system/bin/python3 -m coverage run --source src/ --branch -m unittest discover -t src/ -s src/tests/ -v
 build/venv/system/bin/python3 -m coverage html -d build/coverage

@@ -22,6 +22,7 @@ development.
 - [Make Options](#make-options)
 - [Make Variables](#make-variables)
 - [Extending python-build](#extending-python-build)
+- [Makefile.tool](#makefiletool)
 - [Make Tips and Tricks](#make-tips-and-tricks)
 
 
@@ -69,6 +70,11 @@ clean:
 
 Note that the makefile automatically downloads "Makefile.base" and "pylintrc" files from python-build.
 It continually updates its development dependencies to the latest stable versions.
+
+python-build creates virtual environments without pip and installs packages using the system
+Python's pip (`python3 -m pip --python <venv>`), which requires pip 22.3 or newer. Since the
+virtual environments do not contain pip, use the `TESTS_REQUIRE` make variable to install
+additional test packages.
 
 Here is a typical python-build project ".gitignore" file:
 
@@ -203,9 +209,9 @@ COVERAGE_REPORT_ARGS := $(COVERAGE_REPORT_ARGS) --fail-under 75
 
 The following variables are supported:
 
-- `PIP_ARGS` - The pip tool's global command line arguments. Default is "--no-cache-dir --disable-pip-version-check".
+- `PIP_ARGS` - The pip tool's global command line arguments. Default is "-q --disable-pip-version-check".
 
-- `PIP_INSTALL_ARGS` - The pip install command's command line arguments. Default is "--progress-bar off".
+- `PIP_INSTALL_ARGS` - The pip install command's command line arguments. Default is "--progress-bar off --no-compile".
 
 - `COVERAGE_VERSION` - The [coverage](https://pypi.org/project/coverage) package version.
 
@@ -300,6 +306,56 @@ other-stuff:
 
 commit: other-stuff
 ~~~
+
+
+## Makefile.tool
+
+"Makefile.tool" is a lightweight variant of python-build for repositories that are not Python
+packages but use Python-based tooling. It creates a Python virtual environment, "build/env",
+containing the packages defined by the `TESTS_REQUIRE` make variable.
+
+The basic "Makefile.tool" makefile is as follows:
+
+~~~ make
+TESTS_REQUIRE := tool-package
+
+# Download python-build
+PYTHON_BUILD_DIR ?= ../python-build
+define WGET
+ifeq '$$(wildcard $(notdir $(1)))' ''
+$$(info Downloading $(notdir $(1)))
+$$(shell [ -f $(PYTHON_BUILD_DIR)/$(notdir $(1)) ] && cp $(PYTHON_BUILD_DIR)/$(notdir $(1)) . || $(call WGET_CMD, $(1)))
+endif
+endef
+WGET_CMD = if command -v wget >/dev/null 2>&1; then wget -q -c $(1); else curl -f -Os $(1); fi
+$(eval $(call WGET, https://craigahobbs.github.io/python-build/Makefile.tool))
+
+# Include python-build
+include Makefile.tool
+
+test: $(DEFAULT_VENV_BUILD)
+	$(DEFAULT_VENV_BIN)/tool-package test
+
+lint: $(DEFAULT_VENV_BUILD)
+	$(DEFAULT_VENV_BIN)/tool-package lint
+
+clean:
+	rm -rf Makefile.tool
+~~~
+
+The `test`, `lint`, and `gh-pages` targets are empty by default — extend them with your tool's
+commands as above. Add the `$(DEFAULT_VENV_BUILD)` prerequisite to targets that use the virtual
+environment, and run installed tools using the `$(DEFAULT_VENV_BIN)` command prefix (or
+`$(DEFAULT_VENV_PYTHON)` to run Python).
+
+The `commit` target executes the `test` and `lint` targets. The `clean` and `superclean` targets,
+and the `USE_DOCKER` and `USE_PODMAN` options, behave as described above.
+
+The following make variables are supported:
+
+- `PYTHON_IMAGE` - The Python image for the `USE_DOCKER` and `USE_PODMAN` options. Default is "python:3".
+
+- `TESTS_REQUIRE` - The Python packages to install in the virtual environment (required).
 
 
 ## Make Tips and Tricks

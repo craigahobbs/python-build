@@ -100,6 +100,13 @@ $(eval $(call TEST_RULE, test-exclude, test))
 $(eval $(call TEST_RULE, test-test, test TEST=tests.test_package))
 $(eval $(call TEST_RULE, test-unittest-parallel, test))
 $(eval $(call TEST_RULE, test-unittest-parallel-2, test))
+$(eval $(call TEST_RULE, tool-clean, clean))
+$(eval $(call TEST_RULE, tool-commit, commit))
+$(eval $(call TEST_RULE, tool-commit-2, commit))
+$(eval $(call TEST_RULE, tool-commit-use-docker, commit USE_DOCKER=1))
+$(eval $(call TEST_RULE, tool-commit-use-podman, commit USE_PODMAN=1))
+$(eval $(call TEST_RULE, tool-help))
+$(eval $(call TEST_RULE, tool-superclean, superclean))
 
 
 .PHONY: changelog
@@ -108,8 +115,8 @@ changelog: build/venv.build
 
 
 build/venv.build:
-	python3 -m venv --upgrade-deps build/venv
-	build/venv/$(VENV_BIN)/pip -q install --progress-bar off simple-git-changelog
+	python3 -m venv --without-pip build/venv
+	python3 -m pip --python build/venv -q install --progress-bar off simple-git-changelog
 	touch $@
 
 

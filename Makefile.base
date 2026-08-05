@@ -43,8 +43,8 @@ DOCKER_ENV := -e PIP_NO_CACHE_DIR=1$(if $(DOCKER_ENV), $(DOCKER_ENV))
 endif
 
 # Python pip option
-PIP_ARGS ?= -q
-PIP_INSTALL_ARGS ?= --progress-bar off
+PIP_ARGS ?= -q --disable-pip-version-check
+PIP_INSTALL_ARGS ?= --progress-bar off --no-compile
 
 # Python unittest
 UNITTEST_ARGS ?= -v
@@ -80,7 +80,7 @@ else ifneq '$(USE_PODMAN)' ''
 VENV_RUN_FN = podman run -i --rm  -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
 endif
 
-# Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pip")
+# Default venv command prefix (e.g. "$(DEFAULT_VENV_BIN)/pylint")
 DEFAULT_VENV_BIN_EX = $(strip $(subst $$$$,$$,$(call VENV_RUN_FN, $(firstword $(PYTHON_IMAGES))) $(1)build/venv/$(call IMAGE_NAME_FN, $(firstword $(PYTHON_IMAGES)))/$(VENV_BIN)))
 DEFAULT_VENV_BIN := $(call DEFAULT_VENV_BIN_EX)
 DEFAULT_VENV_PYTHON := $(DEFAULT_VENV_BIN)/$(VENV_PYTHON)
@@ -121,13 +121,8 @@ ifneq '$$(USE_DOCKER)' ''
 else ifneq '$$(USE_PODMAN)' ''
 	if [ "$$$$(podman images -q $(strip $(1)))" = "" ]; then podman pull -q $(strip $(1)); fi
 endif
-ifeq '$$(findstring $$(IMAGE),$$(PYTHON_IMAGES_NO_UPGRADE_DEPS))' ''
-	$(call VENV_RUN_FN, $(1)) python3 -m venv --upgrade-deps build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
-else
-	$(call VENV_RUN_FN, $(1)) python3 -m venv build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) -U pip setuptools
-endif
-	$(call VENV_RUN_FN, $(1)) build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))/$(VENV_BIN)/$(VENV_PYTHON) -m pip $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
+	$(call VENV_RUN_FN, $(1)) python3 -m venv --without-pip build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3))
+	$(call VENV_RUN_FN, $(1)) python3 -m pip --python build/venv/$(call IMAGE_NAME_FN, $(1))$(strip $(3)) $$(PIP_ARGS) install $$(PIP_INSTALL_ARGS) $(strip $(2))
 	touch $$@
 endef
 $(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), -e . $$(TESTS_REQUIRE)$(if $(UNITTEST_PARALLEL), unittest-parallel=="$(UNITTEST_PARALLEL_VERSION)") \

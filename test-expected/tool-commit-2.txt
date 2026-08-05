@@ -1,0 +1,2 @@
+build/env/bin/bogus-tool test
+build/env/bin/bogus-tool lint

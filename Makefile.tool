@@ -16,7 +16,7 @@ endif
 # Python image
 PYTHON_IMAGE ?= python:3
 ifneq '$(USE_DOCKER)' ''
-VENV_RUN_FN = docker run -i --rm -u `id -g`:`id -g` -v $$$$HOME:$$$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(strip $(1))
+PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
 else ifneq '$(USE_PODMAN)' ''
 PYTHON_RUN := podman run -i --rm -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
 endif
@@ -74,6 +74,6 @@ gh-pages:
 
 $(DEFAULT_VENV_BUILD):
 	mkdir -p build
-	$(PYTHON_RUN) python3 -m venv --upgrade-deps build/env
-	$(DEFAULT_VENV_BIN)/pip install $(TESTS_REQUIRE)
+	$(PYTHON_RUN) python3 -m venv --without-pip build/env
+	$(PYTHON_RUN) python3 -m pip --python build/env install $(TESTS_REQUIRE)
 	touch $@
