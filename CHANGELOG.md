@@ -2,6 +2,8 @@
 
 ## 2026-08-05
 
+- [6dc2eb3](https://github.com/craigahobbs/python-build/commit/6dc2eb3) - sync parallel build output by target
+
 - [6d6dcfb](https://github.com/craigahobbs/python-build/commit/6d6dcfb) - fix docker -u to use user id, not group id, for the user field
 
 - [604e90c](https://github.com/craigahobbs/python-build/commit/604e90c) - show $HOME in command output - expand VENV_RUN_FN at recipe time
