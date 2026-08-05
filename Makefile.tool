@@ -8,7 +8,7 @@
 # Python image
 PYTHON_IMAGE ?= python:3
 ifneq '$(USE_DOCKER)' ''
-PYTHON_RUN := docker run -i --rm -u `id -g`:`id -g` -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
+PYTHON_RUN := docker run -i --rm -u `id -u`:`id -g` -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
 else ifneq '$(USE_PODMAN)' ''
 PYTHON_RUN := podman run -i --rm -v $$HOME:$$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$$HOME$(if $(DOCKER_ENV), $(DOCKER_ENV)) $(PYTHON_IMAGE)
 endif

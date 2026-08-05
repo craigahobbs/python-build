@@ -1,5 +1,5 @@
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --without-pip build/env
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m pip --python build/env -q --disable-pip-version-check install --progress-bar off --no-compile bogus-tool
+docker run -i --rm -u `id -u`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m venv --without-pip build/env
+docker run -i --rm -u `id -u`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X python3 -m pip --python build/env -q --disable-pip-version-check install --progress-bar off --no-compile bogus-tool
 touch build/env.build
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/env/bin/bogus-tool test
-docker run -i --rm -u `id -g`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/env/bin/bogus-tool lint
+docker run -i --rm -u `id -u`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/env/bin/bogus-tool test
+docker run -i --rm -u `id -u`:`id -g` -v $HOME:$HOME -v `pwd`:`pwd` -w `pwd` -e HOME=$HOME python:3.X build/env/bin/bogus-tool lint
