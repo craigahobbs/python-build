@@ -2,6 +2,8 @@
 
 ## 2026-08-05
 
+- [0d8f9b4](https://github.com/craigahobbs/python-build/commit/0d8f9b4) - re-enable pip cache for parallel builds - pip 25.3 fixed cache concurrency
+
 - [a11f978](https://github.com/craigahobbs/python-build/commit/a11f978) - improve venv creation performance
 
 ## 2026-08-01
