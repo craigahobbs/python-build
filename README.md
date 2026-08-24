@@ -18,6 +18,7 @@ development.
 ## Contents
 
 - [Project Setup](#project-setup)
+- [Coding Agents](#coding-agents)
 - [Make Targets](#make-targets)
 - [Make Options](#make-options)
 - [Make Variables](#make-variables)
@@ -89,6 +90,21 @@ __pycache__/
 ~~~
 
 Notice that "Makefile.base" and "pylintrc" are ignored because they are downloaded by the Makefile.
+
+
+## Coding Agents
+
+[AGENTS.md](AGENTS.md) is for coding agents working **in this repository**.
+
+[SKILL.md](SKILL.md) is for agents working in **downstream** python-build packages. Load it from
+`../python-build/SKILL.md` if that file exists, otherwise from the raw source
+[https://raw.githubusercontent.com/craigahobbs/python-build/main/SKILL.md](https://raw.githubusercontent.com/craigahobbs/python-build/main/SKILL.md).
+
+Consumer `AGENTS.md` files should point at those locations and keep only package-specific
+contracts locally.
+
+This README remains the human reference for targets and variables. Do not duplicate that
+catalog in the skill or in consumer `AGENTS.md` files.
 
 
 ## Make Targets
