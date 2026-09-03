@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-03
+
+- [d178f9f](https://github.com/craigahobbs/python-build/commit/d178f9f) - coverage 7.16
+
 ## 2026-08-05
 
 - [6dc2eb3](https://github.com/craigahobbs/python-build/commit/6dc2eb3) - sync parallel build output by target
