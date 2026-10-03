@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-03
+
+- [83d1add](https://github.com/craigahobbs/python-build/commit/83d1add) - pylint 4.1
+
 ## 2026-09-03
 
 - [d178f9f](https://github.com/craigahobbs/python-build/commit/d178f9f) - coverage 7.16
