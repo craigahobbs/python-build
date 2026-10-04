@@ -44,6 +44,8 @@ make test TEST=tests.test_module.TestClass.test_name
 
 Default `make` uses the system Python. Multi-version: `make commit USE_DOCKER=1` or `USE_PODMAN=1`. Cover, lint, doc, and publish run only on the first image in `PYTHON_IMAGES`; remaining images run tests only.
 
+A stale venv fails every target with `build/venv/system/bin/python3: No such file or directory` (`Error 127`): the system Python was upgraded or moved out from under it. The venv's `build/venv/*.build` stamp outlives the interpreter, so `make` never rebuilds it on its own. Run `make clean`, then rerun the target.
+
 HTML coverage: `build/coverage/index.html`.
 
 ### Only when asked
