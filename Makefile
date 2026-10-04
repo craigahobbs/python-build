@@ -93,6 +93,9 @@ $(eval $(call TEST_RULE, lint, lint))
 $(eval $(call TEST_RULE, lint-2, lint))
 $(eval $(call TEST_RULE, publish, publish))
 $(eval $(call TEST_RULE, publish-2, publish))
+$(eval $(call TEST_RULE, publish-overrides, publish \
+  PUBLISH_BUILD_ARGS='--bogus-build-arg' \
+))
 $(eval $(call TEST_RULE, superclean, superclean))
 $(eval $(call TEST_RULE, test, test))
 $(eval $(call TEST_RULE, test-2, test))

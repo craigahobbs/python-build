@@ -51,7 +51,7 @@ HTML coverage: `build/coverage/index.html`.
 ### Only when asked
 
 - `make changelog` — rewrites `CHANGELOG.md` from git
-- `make publish` — PyPI via twine (depends on `commit`)
+- `make publish` — source distribution (sdist only by default, no wheel) to PyPI via twine (depends on `commit`)
 - `make gh-pages` — rsync `GHPAGES_SRC` to `../<repo>.gh-pages`
 
 Version for packages is `[project].version` in `pyproject.toml`. Bump it only as part of a release.
@@ -64,6 +64,7 @@ After this skill, read the consumer `Makefile` and `AGENTS.md`. Common knobs (fu
 - `PYLINT_ARGS` — appended pylint flags (often disables missing-docstring)
 - `SPHINX_DOC` — unset means `make doc` is a no-op; `make commit` still depends on `doc`
 - `UNITTEST_PARALLEL` — use unittest-parallel instead of unittest discover
+- `PUBLISH_BUILD_ARGS` — `make publish`'s `python -m build` flags (default `-n --sdist`, source only)
 - `PYTHON_IMAGES` / `PYTHON_IMAGES_EXTRA` / `PYTHON_IMAGES_EXCLUDE` — must be set **before** `include Makefile.base`
 
 Do not lower the coverage gate, skip `cover`, or leave untested branches. `# pragma: no cover` only for version/platform-dependent code the consumer already uses that way.

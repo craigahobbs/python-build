@@ -7,6 +7,6 @@ build/venv/system/bin/python3 -W error -m coverage run --source src/ --branch -m
 build/venv/system/bin/python3 -m coverage html -d build/coverage
 build/venv/system/bin/python3 -m coverage report --fail-under 100
 rm -rf dist/
-build/venv/system-util/bin/python3 -m build -n
+build/venv/system-util/bin/python3 -m build -n --sdist
 build/venv/system-util/bin/twine check dist/*
 build/venv/system-util/bin/twine upload dist/*

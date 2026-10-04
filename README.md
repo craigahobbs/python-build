@@ -175,7 +175,9 @@ Create and update the project's changelog file.
 
 ### publish
 
-Publish the package to PyPI using twine.
+Publish the package's source distribution to PyPI using twine. By default, no wheel is published - a
+package with a C extension would otherwise upload a wheel specific to the build machine's platform
+(see `PUBLISH_BUILD_ARGS`).
 
 ### gh-pages
 
@@ -257,6 +259,9 @@ The following variables are supported:
 
 - `UNITTEST_PARALLEL_COVERAGE_ARGS` - The unittest-parallel tool's coverage-related command line arguments.
    Default is "--coverage-branch --coverage-fail-under 100".
+
+- `PUBLISH_BUILD_ARGS` - The [build](https://pypi.org/project/build) tool's command line arguments for the `publish`
+   target. Default is "-n --sdist".
 
 - `GHPAGES_RSYNC_ARGS` - Additional rsync arguments for the `gh-pages` target.
 

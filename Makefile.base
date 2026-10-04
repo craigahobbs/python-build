@@ -67,6 +67,9 @@ SPHINX_DOC ?=
 SPHINX_VERSION ?= 9.1.*
 SPHINX_ARGS ?= -W -a -q
 
+# build (publish)
+PUBLISH_BUILD_ARGS ?= -n --sdist
+
 # gh-pages source paths
 GHPAGES_SRC ?= $(if $(SPHINX_DOC),build/doc/html/)
 
@@ -201,7 +204,7 @@ $(eval $(call VENV_RULE_FN, $(firstword $(PYTHON_IMAGES)), build simple-git-chan
 
 define PUBLISH_COMMANDS_FN
 	rm -rf dist/
-	$(1)/$(VENV_PYTHON) -m build -n
+	$(1)/$(VENV_PYTHON) -m build $$(PUBLISH_BUILD_ARGS)
 	$(1)/twine check dist/*
 	$(1)/twine upload dist/*
 endef
