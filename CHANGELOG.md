@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-04
+
+- [9396c00](https://github.com/craigahobbs/python-build/commit/9396c00) - publish the source distribution only by default - add PUBLISH_BUILD_ARGS
+
 ## 2026-10-03
 
 - [83d1add](https://github.com/craigahobbs/python-build/commit/83d1add) - pylint 4.1
