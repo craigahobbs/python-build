@@ -181,8 +181,7 @@ package with a C extension would otherwise upload a wheel specific to the build 
 
 ### gh-pages
 
-Publish the project documentation (if any) to GitHub Pages. It first executes the `clean` and
-`commit` targets to produce a clean build.
+Publish the project documentation (if any) to GitHub Pages. It first executes the `commit` target.
 
 The repository is then git-cloned (or pulled) to the "../\<repository-name>.gh-pages" directory, the
 "gh-pages" branch is checked-out, and the directories and files defined by the "GHPAGES_SRC" make
@@ -247,7 +246,7 @@ The following variables are supported:
 
 - `SPHINX_VERSION` - The [Sphinx](https://pypi.org/project/Sphinx) package version.
 
-- `SPHINX_ARGS` - The sphinx-build global command line arguments. Default is "-W -a".
+- `SPHINX_ARGS` - The sphinx-build global command line arguments. Default is "-W -a -q".
 
 - `TESTS_REQUIRE` - Additional Python packages to install for unit tests.
 
@@ -417,6 +416,7 @@ The following make variables are supported:
 - `PIP_INSTALL_ARGS` - The pip install command's command line arguments. Default is "--progress-bar off --no-compile".
 
 - `PYTHON_IMAGE` - The Python image for the `USE_DOCKER` and `USE_PODMAN` options. Default is "python:3".
+  Must be defined prior to the inclusion of `Makefile.tool`.
 
 - `TESTS_REQUIRE` - The Python packages to install in the virtual environment (required).
 
