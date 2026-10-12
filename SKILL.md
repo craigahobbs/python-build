@@ -9,7 +9,7 @@ description: >
 
 # python-build (downstream)
 
-This skill is the build workflow for **packages that include** python-build. Package-specific behavior stays in the consumer `AGENTS.md`. Human reference for every target and variable is `README.md` in the same directory as this skill. Do not use this skill when changing `Makefile.base` / `Makefile.tool` themselves — that is python-build's `AGENTS.md`.
+This skill is the build workflow for **packages that include** python-build. Package-specific behavior stays in the consumer `CLAUDE.md`. Human reference for every target and variable is `README.md` in the same directory as this skill. Do not use this skill when changing `Makefile.base` / `Makefile.tool` themselves — that is python-build's `CLAUDE.md`.
 
 Load this file from `../python-build/SKILL.md` if that file exists, otherwise from [https://raw.githubusercontent.com/craigahobbs/python-build/main/SKILL.md](https://raw.githubusercontent.com/craigahobbs/python-build/main/SKILL.md). If neither is available, `make help` and the consumer `Makefile` are enough for day-to-day work; do not invent a second toolchain.
 
@@ -58,7 +58,7 @@ Version for packages is `[project].version` in `pyproject.toml`. Bump it only as
 
 ## Local overrides
 
-After this skill, read the consumer `Makefile` and `AGENTS.md`. Common knobs (full catalog in the README):
+After this skill, read the consumer `Makefile` and `CLAUDE.md`. Common knobs (full catalog in the README):
 
 - `TESTS_REQUIRE` — extra pip specs for tests
 - `PYLINT_ARGS` — appended pylint flags (often disables missing-docstring)
