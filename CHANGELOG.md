@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-25
+
+- [6418a0c](https://github.com/craigahobbs/python-build/commit/6418a0c) - python 3.15 final
+
+- [1c0fa4c](https://github.com/craigahobbs/python-build/commit/1c0fa4c) - remove dead PYTHON_IMAGES_NO_UPGRADE_DEPS from commit-overrides test
+
 ## 2026-10-04
 
 - [9396c00](https://github.com/craigahobbs/python-build/commit/9396c00) - publish the source distribution only by default - add PUBLISH_BUILD_ARGS
